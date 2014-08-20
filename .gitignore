@@ -14,3 +14,9 @@ Server/MoGuiGameSvr/GameDeZhouSvr.exe
 Server/MoGuiGameSvr/GameDeZhouSvr/gs_dz.ini
 Server/MoGuiGameSvr/GameDeZhouSvrD.exe
 Server/MoGuiGameSvr/GameLib.lib
+Server/MoGuiGameSvr/GameLibD.lib
+Server/MoGuiGameSvr/gs_dz.ini
+Server/MoGuiGameSvr/gs_dz.ini
+Server/MoGuiGameSvr/GameLib/ReadMe.txt
+Server/MoGuiGameSvr/include/德州扑克游戏协议流程图.txt
+Server/MoGuiGameSvr/testServer/testServer.vcproj
