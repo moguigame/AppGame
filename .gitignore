@@ -20,3 +20,8 @@ Server/MoGuiGameSvr/gs_dz.ini
 Server/MoGuiGameSvr/GameLib/ReadMe.txt
 Server/MoGuiGameSvr/include/德州扑克游戏协议流程图.txt
 Server/MoGuiGameSvr/testServer/testServer.vcproj
+Server/Thirteen/dbs_dz.ini
+*.tlog
+*.manifest
+*.user
+*.filters
