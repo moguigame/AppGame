@@ -1,1 +1,16 @@
 agbase/BaseSource/socket_windows/生成后事件.txt
+Libs/Memcached.lib
+Libs/MemcachedD.lib
+Libs/SocketLib.lib
+Libs/SocketLibD.lib
+Libs/Tool.lib
+Libs/ToolD.lib
+Server/MoGuiGameSvr/dbs_dz.ini
+Server/MoGuiGameSvr/DB_UID_Server.exe
+Server/MoGuiGameSvr/DB_UID_Server/dbs_dz.ini
+Server/MoGuiGameSvr/DB_UID_ServerD.exe
+Server/MoGuiGameSvr/GameDeZhouSvr.exe
+Server/MoGuiGameSvr/GameDeZhouSvr.exe
+Server/MoGuiGameSvr/GameDeZhouSvr/gs_dz.ini
+Server/MoGuiGameSvr/GameDeZhouSvrD.exe
+Server/MoGuiGameSvr/GameLib.lib
