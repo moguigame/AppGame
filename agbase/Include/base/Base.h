@@ -21,7 +21,6 @@
 	#include <semaphore.h>
 #endif
 
-#include "Atomic.h"
 #include "MemoryPool.h"
 #include "RefPtr.h"
 #include "CircleQueue.h"
@@ -34,6 +33,4 @@
 #include "Log.h"
 
 #include "SocketInterface.h"
-
-//#endif // __AGBASE_BASE_H__
 

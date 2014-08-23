@@ -1,15 +1,7 @@
 #pragma once
 
-// 注意问题：
-// 1、保证线程安全
-// 2、不支持new[] 和 delete[]，只支持new delete 操作
-// 3、new之后CMemoryPool_Public不再保存new出来的内存，与delete必须成对出现，且不能对同一内存多次delete
-// 4、所有内存都是单次::malloc出的，所以第一的申请内存的速度不快
-
-
 #include <memory>
 #include <Windows.h>
-#include "Atomic.h"
 
 namespace AGBase
 {

@@ -1,14 +1,3 @@
-//=============================================================================
-/*
-*
-*  @author guyongliang<guyongliang@gameabc.com>, 盛大网络 
-*  @version 1.0.0.1
-*  @date 2010-06-06
-*
-*  Copyright (C) 2010-2012 - All Rights Reserved
-*/
-//=============================================================================
-
 #if _MSC_VER>=1400
 #define _CRT_SECURE_NO_DEPRECATE
 #endif

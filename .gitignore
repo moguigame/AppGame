@@ -25,3 +25,14 @@ Server/Thirteen/dbs_dz.ini
 *.manifest
 *.user
 *.filters
+agbase/BaseSource/socket_windows/AGBase/BaseSource.sdf
+*.log
+*.lastbuildstate
+*.obj
+*.pdb
+*.idb
+*.sdf
+*.suo
+*.exe
+*.lib
+*.opensdf
