@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <Windows.h>
+#include "Atomic.h"
 
 namespace AGBase
 {

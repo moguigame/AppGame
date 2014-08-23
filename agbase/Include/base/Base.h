@@ -21,6 +21,7 @@
 	#include <semaphore.h>
 #endif
 
+#include "Atomic.h"
 #include "MemoryPool.h"
 #include "RefPtr.h"
 #include "CircleQueue.h"
