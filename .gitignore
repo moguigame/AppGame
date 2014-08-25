@@ -25,6 +25,7 @@ Server/Thirteen/dbs_dz.ini
 *.manifest
 *.user
 *.filters
+<<<<<<< HEAD
 Server/Thirteen/include/德州扑克游戏协议流程图.txt
 Server/Thirteen/GameDeZhouSvr/客户端流程.txt
 Server/Thirteen/GameDeZhouSvr/复件 DeZhouGameLogic.cpp
@@ -51,3 +52,16 @@ Server/Thirteen/gs_dz.ini
 *.sdf
 *.exe
 *.suo
+=======
+agbase/BaseSource/socket_windows/AGBase/BaseSource.sdf
+*.log
+*.lastbuildstate
+*.obj
+*.pdb
+*.idb
+*.sdf
+*.suo
+*.exe
+*.lib
+*.opensdf
+>>>>>>> origin/master

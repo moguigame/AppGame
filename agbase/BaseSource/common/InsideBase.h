@@ -1,7 +1,4 @@
-
-
-#ifndef __AGBASE_INSIDEBASE_H__
-#define __AGBASE_INSIDEBASE_H__
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +36,6 @@
 		#define snprintf _snprintf
 	#endif
 	
-	#define _WINDOW_MSG_LOG
 	#define WM_MSG_LOG WM_USER + 1
 
 #else
@@ -67,8 +63,5 @@
 	#define INVALID_SOCKET			-1
 
 #endif	//OS_LINUX
-
-
-#endif // __AGBASE_INSIDEBASE_H__
 
 

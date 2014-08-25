@@ -35,5 +35,3 @@
 
 #include "SocketInterface.h"
 
-//#endif // __AGBASE_BASE_H__
-

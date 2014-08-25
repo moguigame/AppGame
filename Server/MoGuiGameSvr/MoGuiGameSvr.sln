@@ -6,6 +6,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DB_UID_Server", "DB_UID_Ser
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameDeZhouSvr", "GameDeZhouSvr\GameDeZhouSvr.vcxproj", "{F2D82139-1D2F-4F80-B37D-12F1102174CD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameLib", "GameLib\GameLib.vcxproj", "{2671AD29-C082-4FD6-80E1-A3C8A3FF1AA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -20,6 +22,10 @@ Global
 		{F2D82139-1D2F-4F80-B37D-12F1102174CD}.Debug|Win32.Build.0 = Debug|Win32
 		{F2D82139-1D2F-4F80-B37D-12F1102174CD}.Release|Win32.ActiveCfg = Release|Win32
 		{F2D82139-1D2F-4F80-B37D-12F1102174CD}.Release|Win32.Build.0 = Release|Win32
+		{2671AD29-C082-4FD6-80E1-A3C8A3FF1AA6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2671AD29-C082-4FD6-80E1-A3C8A3FF1AA6}.Debug|Win32.Build.0 = Debug|Win32
+		{2671AD29-C082-4FD6-80E1-A3C8A3FF1AA6}.Release|Win32.ActiveCfg = Release|Win32
+		{2671AD29-C082-4FD6-80E1-A3C8A3FF1AA6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

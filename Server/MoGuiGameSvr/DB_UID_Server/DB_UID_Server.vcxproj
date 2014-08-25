@@ -121,6 +121,7 @@
     <ClInclude Include="..\include\PublicXYData.h" />
     <ClInclude Include="..\include\PublicXYDef.h" />
     <ClInclude Include="CDBSConfig.h" />
+    <ClInclude Include="DBServerData.h" />
     <ClInclude Include="DBServerSocket.h" />
     <ClInclude Include="..\include\MemcatchXY.h" />
     <ClInclude Include="DSTest.h" />

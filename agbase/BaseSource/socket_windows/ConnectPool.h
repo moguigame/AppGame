@@ -1,19 +1,4 @@
-//=============================================================================
-/*
-*
-*  @author guyongliang<guyongliang@gameabc.com>, Ê¢´óÍøÂç 
-*  @version 1.0.0.1
-*  @date 2010-06-06
-*
-*  Copyright (C) 2010-2012 - All Rights Reserved
-*/
-//=============================================================================
-
 #pragma once
-
-//#ifndef __AGBASE_CONNECTPOOL_H__
-//#define __AGBASE_CONNECTPOOL_H__
-
 
 namespace AGBase
 {
