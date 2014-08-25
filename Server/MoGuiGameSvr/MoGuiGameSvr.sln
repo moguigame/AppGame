@@ -1,8 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DB_UID_Server", "DB_UID_Server\DB_UID_Server_2010.vcxproj", "{C6EB0426-9812-4BE5-8837-164E32EB029F}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DB_UID_Server", "DB_UID_Server\DB_UID_Server.vcxproj", "{C6EB0426-9812-4BE5-8837-164E32EB029F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameDeZhouSvr", "GameDeZhouSvr\GameDeZhouSvr_2010.vcxproj", "{F2D82139-1D2F-4F80-B37D-12F1102174CD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameDeZhouSvr", "GameDeZhouSvr\GameDeZhouSvr.vcxproj", "{F2D82139-1D2F-4F80-B37D-12F1102174CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

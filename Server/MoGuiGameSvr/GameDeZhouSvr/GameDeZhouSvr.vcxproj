@@ -53,7 +53,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\\..\\..\\Develop SDK\Include;..\\..\\..\\Include\\base;..\\..\\..\\include\\memcached;..\\..\\..\\include\\MoGui;..\\..\\..\\include;..\\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\\..\\..\\..\\..\\Develop SDK\Include;..\\..\\..\\Include\\base;..\\..\\..\\include\\memcached;..\\..\\..\\include\\MoGui;..\\..\\..\\include;..\\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;LOGERROR;LOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -68,7 +68,7 @@
       <AdditionalOptions>/force %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>SocketLibD.lib;MemcachedD.lib;ToolD.lib;GameLibD.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)GameDeZhouSvr.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\\..\\..\\Develop SDK\Lib\OpenSSL;..\\..\\..\\Libs;..\\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\\..\\..\\..\\..\\Develop SDK\Lib\OpenSSL;..\\..\\..\\Libs;..\\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)GameDeZhouSvr.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -80,7 +80,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\\..\\..\\Develop SDK\Include;..\\..\\..\\Include\\base;..\\..\\..\\include\\memcached;..\\..\\..\\include\\MoGui;..\\..\\..\\include;..\\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\\..\\..\\..\\..\\Develop SDK\Include;..\\..\\..\\Include\\base;..\\..\\..\\include\\memcached;..\\..\\..\\include\\MoGui;..\\..\\..\\include;..\\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;LOGERROR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
@@ -92,7 +92,7 @@
       <AdditionalOptions>/force %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>SocketLib.lib;Memcached.lib;Tool.lib;GameLib.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)GameDeZhouSvr.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\\..\\..\\Develop SDK\Lib\OpenSSL;..\\..\\..\\Libs;..\\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\\..\\..\\..\\..\\Develop SDK\Lib\OpenSSL;..\\..\\..\\Libs;..\\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
