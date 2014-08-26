@@ -44,6 +44,8 @@ namespace MoGui
 			const int      Max_Player_Level         = 9;
 			const int      Min_Player_Level         = 1;
 
+			const int      Max_RecommendFriend      = 50;                  //系统自动推荐朋友总数
+
 			const short    HAND_CARDS               = 2;
 			const short    TABLE_CARDS              = 5;
 			const short    RESULT_CARDS             = 5;
