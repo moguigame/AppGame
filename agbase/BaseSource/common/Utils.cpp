@@ -180,7 +180,7 @@ struct ICMPHeader {
 	USHORT checksum;
 	USHORT id;
 	USHORT seq;
-	ULONG timestamp;    // not part of ICMP, but we need it
+	long long timestamp;    // not part of ICMP, but we need it
 };
 
 #ifdef _MSC_VER
@@ -288,7 +288,7 @@ void init_ping_packet(ICMPHeader* icmp_hdr, int packet_size, int seq_no)
 	icmp_hdr->checksum = 0;
 	icmp_hdr->id = (USHORT)GetCurrentProcessId();
 	icmp_hdr->seq = seq_no;
-	icmp_hdr->timestamp = GetTickCount();
+	icmp_hdr->timestamp = GetTickCount64();
 
 	// "You're dead meat now, packet!"
 	const unsigned long int deadmeat = 0xDEADBEEF;
@@ -424,7 +424,7 @@ int decode_reply(IPHeader* reply, int bytes, sockaddr_in* from)
 	}
 	else {
 		std::cout << nHops << " hop" << (nHops == 1 ? "" : "s");
-		std::cout << ", time: " << (GetTickCount() - icmphdr->timestamp) <<
+		std::cout << ", time: " << (GetTickCount64() - icmphdr->timestamp) <<
 			" ms." << std::endl;
 	}
 
@@ -708,73 +708,6 @@ bool PingTest( const char *ips, int timeout)
 }
 
 #endif 
-
-
-
-void SleepMillisecond(int millsec)
-{
-#if defined _WINDOWS_ || defined WIN32
-	Sleep(millsec);
-#else
-	usleep( millsec*1000 );
-	//struct timeval tv;
-	//tv.tv_sec = 0;
-	//tv.tv_usec = millsec * 1000;
-	//select(0, NULL, NULL, NULL, &tv);
-#endif
-
-	return;
-}
-
-unsigned long long GetTimeMs( void )
-{
-	unsigned long long ret_time = 0;
-#if defined _WINDOWS_ || defined WIN32
-
-	struct tm	tm;
-	time_t		now;
-	SYSTEMTIME	wtm;
-
-	GetLocalTime(&wtm);
-	tm.tm_year    = wtm.wYear - 1900;
-	tm.tm_mon     = wtm.wMonth - 1;
-	tm.tm_mday    = wtm.wDay;
-	tm.tm_hour    = wtm.wHour;
-	tm.tm_min     = wtm.wMinute;
-	tm.tm_sec     = wtm.wSecond;
-	tm. tm_isdst  = -1;
-
-	tm_to_time( &tm, &now );
-
-	ret_time = (unsigned long long)now*1000UL + wtm.wMilliseconds;
-#else
-	struct timeval now;
-	gettimeofday( &now , 0 );
-	ret_time = now.tv_sec;
-	ret_time = ret_time*1000000;
-	ret_time += now.tv_usec;
-
-	ret_time = ret_time/1000ULL;
-#endif
-
-	return ret_time;
-}
-
-unsigned long GetSecondCount( void )
-{
-#if defined _WINDOWS_ || defined WIN32
-	//return GetTickCount()/1000UL;
-	return time(NULL);
-#else
-	struct sysinfo sinfo;
-
-	sinfo.uptime = 0;
-	::sysinfo(&sinfo);
-
-	return sinfo.uptime;
-	/*return ::time(NULL);*/
-#endif
-}
 
 int time_to_tm(time_t *time_input,struct tm* tm_result)
 {

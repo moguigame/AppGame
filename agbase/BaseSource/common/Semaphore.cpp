@@ -51,12 +51,6 @@ bool CSemaphore::Wait( unsigned int ms )
 	return (::WaitForSingleObject (m_sema, ms)==WAIT_OBJECT_0) ? true : false;
 #else
 
-	unsigned long long expires64 = GetTimeMs() + ms;
-	timespec expiresTS;
-	expiresTS.tv_sec = expires64 / 1000;
-	expiresTS.tv_nsec = (expires64 % 1000) * 1000000L;
-
-	return ::sem_timedwait(&m_sema, &expiresTS)==0;
 #endif
 }
 

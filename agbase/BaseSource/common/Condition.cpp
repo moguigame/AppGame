@@ -60,42 +60,6 @@ void CCondition::Broadcast( void )
 
 #else
 
-CCondition::CCondition( void )
-{
-	int  rc = ::pthread_cond_init(&m_condid,0);
-	assert( rc == 0 );
-}
-
-CCondition::~CCondition ( void )
-{
-	::pthread_cond_destroy(&m_condid);
-}
-
-bool CCondition::Wait (CLock& locker)
-{
-	return ::pthread_cond_wait(&m_condid, &locker.m_crit)==0;
-}
-
-bool CCondition::Wait(CLock& locker, unsigned int ms)
-{
-	unsigned long long expires64 = GetTimeMs() + ms;
-	timespec expiresTS;
-	expiresTS.tv_sec = expires64 / 1000;
-	expiresTS.tv_nsec = (expires64 % 1000) * 1000000L;
-
-	return ::pthread_cond_timedwait(&m_condid, &locker.m_crit, &expiresTS)==0;
-}
-
-void CCondition::Signal ( void )
-{
-	::pthread_cond_signal(&m_condid);
-}
-
-void CCondition::Broadcast( void )
-{
-	::pthread_cond_broadcast(&m_condid);
-}
-
 #endif
 
 }

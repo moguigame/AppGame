@@ -230,7 +230,7 @@ protected:
 
 			if ( packet==0 )
 			{
-				SleepMillisecond( 200 );
+				Sleep(200 );
 			}
 			else
 			{

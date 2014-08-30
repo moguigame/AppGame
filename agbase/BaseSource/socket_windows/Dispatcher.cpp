@@ -23,7 +23,7 @@ namespace AGBase
 	bool CDispatcher::Init( CConnectPool* cpool )
 	{
 		m_cpool		= cpool;
-		m_lasttime	= GetSecondCount();
+		m_lasttime  = time(NULL);
 		m_StartTime = m_lasttime;
 
 		Start( );
@@ -90,15 +90,11 @@ namespace AGBase
 
 	int CDispatcher::Run( void )
 	{
-		static unsigned long timeStamp = 0;
-
 		while ( IsRunning( ) )
 		{
 			if( OnPriorityEvent() ) continue;
 
-			timeStamp = GetSecondCount( );
-
-			CheckTimer( timeStamp );
+			CheckTimer( );
 			DispatchPacket( );
 		}
 
@@ -118,16 +114,12 @@ namespace AGBase
 
 		if ( packet )
 		{
-			long nCurTicket = GetTickCount();
-			long nUseTick = nCurTicket-packet->m_nStartTicket;
-			if ( nUseTick > 0 )
-			{
-				if( nUseTick > m_MaxWaitTime )
-				{
+			long nUseTick = GetTickCount64() - packet->m_nStartTicket;
+			if ( nUseTick > 0 ){
+				if( nUseTick > m_MaxWaitTime ){
 					fprintf(stderr, "%s MaxWaitTime=%d \n",GetTimeString().c_str(),nUseTick);
 					m_MaxWaitTime = nUseTick;
 				}
-
 				m_TotalFinishPacket++;
 				m_TotalWaitTime += nUseTick;
 			}
@@ -146,9 +138,10 @@ namespace AGBase
 		return m_cpool->OnPriorityEvent( );
 	}
 
-	void CDispatcher::CheckTimer( unsigned long nowms )
+	void CDispatcher::CheckTimer( void )
 	{
-		if ( nowms-m_lasttime>=1 )
+		int nowms = int(time(NULL));
+		if ( nowms - m_lasttime >= 1 )
 		{
 			m_cpool->OnTimer( );
 			m_lasttime = nowms;
@@ -171,11 +164,6 @@ namespace AGBase
 				//	CPacket::GetTotalCount(),CPacket::GetUseCount(),CPacket::GetNewTimes(),CPacket::GetDeleteTimes(),
 				//	CPacket::GetNewTimes()-CPacket::GetDeleteTimes() );
 			}
-		}
-		else if ( nowms-m_lasttime < 0 )
-		{
-			fprintf(stderr, " Ê±¼ä now=%d last=%d \n", nowms, m_lasttime );
-			m_lasttime = nowms;			
 		}
 	}
 

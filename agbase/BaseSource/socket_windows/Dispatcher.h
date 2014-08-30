@@ -30,7 +30,7 @@ namespace AGBase
 
 		void DispatchPacket( void );
 		bool OnPriorityEvent( void );
-		void CheckTimer( unsigned long nowms );
+		void CheckTimer( void );
 		void OnPacket( CPacket* packet );
 
 	private:

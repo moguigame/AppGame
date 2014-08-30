@@ -182,8 +182,8 @@ void IConnectPoolCallback::OnTimer( void )
 }
 
 void IConnectPoolCallback::OnIdle( void )
-{ 
-	SleepMillisecond(1); 
+{
+	Sleep(1);
 }
 
 }

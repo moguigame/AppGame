@@ -28,7 +28,7 @@ namespace AGBase
 		int				m_type;	
 		IConnectCallback* m_callback;
 		char			m_buffer[_MAX_BUFFER_LENGTH];
-		long            m_nStartTicket;
+		long long       m_nStartTicket;
 	};
 
 
@@ -58,7 +58,7 @@ namespace AGBase
 			if ( packet )
 			{
 				packet->m_next = 0;
-				packet->m_nStartTicket = GetTickCount();
+				packet->m_nStartTicket = GetTickCount64();
 
 				if ( m_tail )
 				{

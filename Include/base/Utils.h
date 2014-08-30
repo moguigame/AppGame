@@ -18,13 +18,6 @@ namespace AGBase
 	extern std::string	GetIP(const struct sockaddr_in &addr);
 	extern bool			PingTest(const char *ips, int timeout);
 
-	// sleep, 毫秒
-	extern void			SleepMillisecond(int millsec);
-	// 获得系统时间，以毫秒表示
-	extern unsigned long long GetTimeMs( void );
-	// 获得cpu开机以来的时钟脉冲次数, 秒级别
-	extern unsigned long GetSecondCount( void );
-
 	//time_t -> tm 多线程安全
 	//time_t *time_input:输入的time_t类型的时间
 	//struct tm* tm_result:输出的tm结构的时间

@@ -6,20 +6,16 @@
 #include <time.h>
 #include <stdarg.h>
 
-#if defined _WINDOWS_ || defined WIN32
-	#ifndef WIN32_LEAN_AND_MEAN
-		#define WIN32_LEAN_AND_MEAN
-	#endif	// WIN32_LEAN_AND_MEAN
-
-	#ifndef _WIN32_WINNT
-		#define _WIN32_WINNT 0x0600
-	#endif	// _WIN32_WINNT
-
-	#include <windows.h>
-#else
-	#include <pthread.h>
-	#include <semaphore.h>
+//不包括MFC的内容
+#ifndef WIN32_LEAN_AND_MEAN
+	#define WIN32_LEAN_AND_MEAN
 #endif
+
+#ifndef _WIN32_WINNT
+	#define _WIN32_WINNT 0x0600
+#endif
+
+#include <windows.h>
 
 #include "Atomic.h"
 #include "MemoryPool.h"
