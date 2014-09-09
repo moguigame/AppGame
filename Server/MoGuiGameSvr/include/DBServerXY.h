@@ -189,7 +189,7 @@ namespace DBServerXY
 		unsigned char          m_ClientType;
 		unsigned char          m_LoginType;
 		unsigned char          m_HaveData;
-		string                 m_IP;
+		std::string            m_IP;
 		Session                m_Session;
 
 		int                    m_Socket;
@@ -922,8 +922,8 @@ namespace DBServerXY
 		enum { XY_ID = MoGui_Server_ReqPlayerOnLine };
 		enum { MAX_COUNT = 250 , };
 
-		short				   m_ServerID;
-		vector<unsigned int>   m_vecPID;
+		short				        m_ServerID;
+		std::vector<unsigned int>   m_vecPID;
 
 		DBS_ReqPlayerOnLine() { ReSet(); }
 		void ReSet()
@@ -956,9 +956,9 @@ namespace DBServerXY
 		enum { XY_ID = MoGui_Server_RespPlayerOnLine };
 		enum { MAX_COUNT = 250 , };
 
-		short				      m_ServerID;
-		vector<unsigned int>      m_vecOutPID;
-		vector<unsigned int>      m_vecOnlinePID;	
+		short				           m_ServerID;
+		std::vector<unsigned int>      m_vecOutPID;
+		std::vector<unsigned int>      m_vecOnlinePID;
 
 		DBS_RespPlayerOnLine() { ReSet(); }
 		void ReSet() 
@@ -1599,7 +1599,7 @@ namespace DBServerXY
 		enum { XY_ID = DBServerXYID_HonorInfoList };
 		enum { MAX_COUNT = 200 };
 
-		vector<DBS_HonorInfo> m_HIList;
+		std::vector<DBS_HonorInfo> m_HIList;
 
 		DBS_HonorInfoList() { ReSet(); }
 		void ReSet() { m_HIList.clear(); }
@@ -1978,9 +1978,9 @@ namespace DBServerXY
 		int                    m_Ticket;
 		int                    m_TakeMoney;
 		int                    m_StartMoney;
-		string                 m_strBlind;
-		string                 m_strAward;
-		string                 m_StrRule;
+		std::string            m_strBlind;
+		std::string            m_strAward;
+		std::string            m_StrRule;
 		UINT32                 m_StartTime;
 		int                    m_StartInterval;
 
@@ -2087,7 +2087,7 @@ namespace DBServerXY
 		unsigned short         m_GiftID;
 		int                    m_Price;
 		unsigned int           m_ActionTime;
-		string                 m_NickName;
+		std::string            m_NickName;
 
 		DBS_msgUserGiftInfo() { ReSet(); }
 		void ReSet()
@@ -2180,11 +2180,11 @@ namespace DBServerXY
 		enum { XY_ID = DBServerXYID_UserGiftInfoList };
 		enum { MAX_COUNT = 60 };
 
-		short                         m_AID;
-		unsigned int                  m_PID;
-		BYTE                          m_Flag;
-		mutable unsigned short        m_nCount;
-		vector<DBS_msgUserGiftInfo>   m_listGiftInfo;
+		short                              m_AID;
+		unsigned int                       m_PID;
+		BYTE                               m_Flag;
+		mutable unsigned short             m_nCount;
+		std::vector<DBS_msgUserGiftInfo>   m_listGiftInfo;
 
 		DBS_UserGiftInfoList() { ReSet(); }
 		void ReSet()
@@ -2274,7 +2274,7 @@ namespace DBServerXY
 		unsigned int                  m_PID;
 		SBigNumber                    m_Money;
 		mutable unsigned short        m_nCount;
-		vector<msgUserAward>          m_listAwardInfo;
+		std::vector<msgUserAward>     m_listAwardInfo;
 
 		DBS_UserAwardInfoList() { ReSet(); }
 		void ReSet()
@@ -2417,9 +2417,9 @@ namespace DBServerXY
 		BYTE                      m_Sex;
 		short                     m_Year;
 
-		string                    m_NickName;
-		string                    m_HeadPicUrl;
-		string                    m_City;
+		std::string               m_NickName;
+		std::string               m_HeadPicUrl;
+		std::string               m_City;
 
 		WDB_ChangeUserInfo() { ReSet(); }
 		void ReSet()
@@ -2623,7 +2623,7 @@ namespace DBServerXY
 		short                         m_AID;
 		unsigned int                  m_PID;
 		BYTE                          m_Flag;
-		vector<unsigned int>          m_vecFriendID;
+		std::vector<unsigned int>     m_vecFriendID;
 
 		DBS_UserFriendInfo() { ReSet(); }
 		void ReSet()
@@ -2835,7 +2835,7 @@ namespace DBServerXY
 		enum { XY_ID = DBServerXYID_RespWinLossList };
 		enum { Max_Count = 100 };
 
-		vector<unsigned int>      m_vecPID;
+		std::vector<unsigned int>      m_vecPID;
 
 		WDB_RespWinLossList() { ReSet(); }
 		void ReSet()
@@ -3193,8 +3193,8 @@ namespace DBServerXY
 		short                     m_PriceFlag;
 		int                       m_Price;
 
-		mutable short             m_nCount;
-		vector<unsigned int>      m_vecToPID;
+		mutable short                  m_nCount;
+		std::vector<unsigned int>      m_vecToPID;
 
 		WDB_SendGift() { ReSet(); }
 		void ReSet()
@@ -3265,7 +3265,7 @@ namespace DBServerXY
 		short                     m_AID;
 		unsigned int              m_PID;
 		SBigNumber                m_nMoney;
-		vector<int>               m_vecGiftIdx;
+		std::vector<int>          m_vecGiftIdx;
 
 		WDB_SoldGift() { ReSet(); }
 		void ReSet()
@@ -3389,7 +3389,7 @@ namespace DBServerXY
 		unsigned short           m_TableID;
 		BYTE                     m_SitID;
 
-		string                   m_ChatMsg;
+		std::string              m_ChatMsg;
 
 		WDB_ChatMsg() { ReSet(); }
 		void ReSet()
@@ -3660,7 +3660,7 @@ namespace DBServerXY
 		short                    m_PayMode;
 		unsigned int             m_EndTime;
 		SBigNumber               m_nMoney;
-		string                   m_strLog;
+		std::string              m_strLog;
 
 		WDB_PlayerAward() { ReSet(); }
 		void ReSet()

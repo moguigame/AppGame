@@ -14,6 +14,9 @@
 
 #include "publicdata.h"
 
+using namespace std;
+using namespace AGBase;
+
 #pragma comment(lib, "psapi.lib")
 
 int CDBConnectThread::Run( void )

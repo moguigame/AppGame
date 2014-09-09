@@ -91,7 +91,7 @@ namespace DeZhouLogic
 	{
 		enum { XY_ID = DeZhouLogic_XYID_WashOutPlayer };
 
-		vector<int>     m_listSit;
+		std::vector<int>     m_listSit;
 
 		DeZhouLogic_WashOutPlayer() { ReSet(); }
 		void ReSet(){ if(m_listSit.size())m_listSit.clear();}

@@ -11,7 +11,6 @@ namespace MoGuiXY
 {
 namespace GameXY
 {
-	using namespace std;
 	using namespace MoGui::MoGuiXY;
 	using namespace MoGui::MoGuiXY::PublicXYData;
 
@@ -681,7 +680,7 @@ namespace GameXY
 		unsigned char	m_Type;
 		unsigned short	m_RoomID;
 		unsigned char   m_ShowFlag;
-		string          m_strMsg;
+		std::string     m_strMsg;
 
 		RespJoinRoom(){ReSet();}
 		void ReSet() 
@@ -896,7 +895,7 @@ namespace GameXY
 		unsigned short  m_RoomID;
 		unsigned short	m_TableID;
 		unsigned char   m_ShowFlag;
-		string          m_strMsg;
+		std::string     m_strMsg;
 
 		RespJoinTable(){ReSet();}
 		void ReSet()
@@ -1391,8 +1390,8 @@ namespace GameXY
 		enum { XY_ID = MoGui_TABLEINFOLIST };
 		enum { MAX_TABLElIST = 20 };
 
-		unsigned short     m_RoomID;
-		vector<TableInfo>  m_TableList;
+		unsigned short          m_RoomID;
+		std::vector<TableInfo>  m_TableList;
 
 		TableInfoList(){ ReSet();}
 		void ReSet()
@@ -1457,9 +1456,9 @@ namespace GameXY
 		enum { TABLE_HIDE = 0, TABLE_SHOW = 1 };
 		enum { MAX_TABLElIST = 250 };
 
-		unsigned short          m_RoomID;
-		unsigned char           m_ShowFlag;
-		vector<unsigned short>  m_vecTableID;
+		unsigned short               m_RoomID;
+		unsigned char                m_ShowFlag;
+		std::vector<unsigned short>  m_vecTableID;
 
 		TableShowList(){ ReSet(); }
 		void ReSet()
@@ -1556,7 +1555,7 @@ namespace GameXY
 
 		unsigned char m_Flag;
 		unsigned char m_ShowFlag;
-		string        m_strMsg;
+		std::string   m_strMsg;
 
 		RespPlayerAct(){ ReSet();}
 		void ReSet() 
@@ -1667,7 +1666,7 @@ namespace GameXY
 		unsigned char       m_Flag;
 		unsigned int        m_PID;
 		unsigned char       m_ShowFlag;
-		string              m_strMsg;
+		std::string         m_strMsg;
 
 		RespTracePlayer(){ ReSet(); }
 		void ReSet()
@@ -2050,9 +2049,9 @@ namespace GameXY
 		enum {XY_ID = MoGui_TABLEPLAYERCOUNTLIST };
 		enum { MAX_TABLEPALYERCOUNTLIST = 400 };
 
-		unsigned short             m_RoomID;
-		mutable unsigned short     m_nCount;
-		vector<msgTablePC>         m_listTablePC;
+		unsigned short                  m_RoomID;
+		mutable unsigned short          m_nCount;
+		std::vector<msgTablePC>         m_listTablePC;
 
 		TablePlayerCountList(){	ReSet(); }
 		void ReSet() 
@@ -2220,9 +2219,9 @@ namespace GameXY
 		short           m_Year;
 		BYTE            m_Sex;
 
-		string          m_NickName;
-		string          m_HeadPicUrl;
-		string          m_City;
+		std::string     m_NickName;
+		std::string     m_HeadPicUrl;
+		std::string     m_City;
 
 		ChangeUserInfo(){ ReSet(); }
 		void ReSet()
@@ -2282,9 +2281,9 @@ namespace GameXY
 
 		BYTE            m_Sex;
 		short           m_Year;
-		string          m_NickName;
-		string          m_HeadPicUrl;
-		string          m_City;
+		std::string     m_NickName;
+		std::string     m_HeadPicUrl;
+		std::string     m_City;
 
 		RespChangeUserInfo(){ ReSet(); }
 		void ReSet()
@@ -2727,7 +2726,7 @@ namespace GameXY
 		unsigned short           m_TableID;
 		unsigned char            m_SitID;
 		unsigned char            m_PlayerState;
-		string                   m_strState;
+		std::string              m_strState;
 
 		PlayerStateInfo(){ReSet();}
 		void ReSet() 
@@ -2803,8 +2802,8 @@ namespace GameXY
 		enum { XY_ID = GameLobbyXYID_PlayerStateInfoList };
 		enum { MAX_COUNT = 100 };
 
-		mutable unsigned short        m_nCount;
-		vector<PlayerStateInfo>       m_listPSI;
+		mutable unsigned short             m_nCount;
+		std::vector<PlayerStateInfo>       m_listPSI;
 
 		PlayerStateInfoList(){ ReSet(); }
 		void ReSet()
@@ -3172,7 +3171,7 @@ namespace GameXY
 		INT16        m_GiftID;
 		INT32        m_Price;
 		UINT32       m_ActionTime;
-		string       m_NickName;
+		std::string  m_NickName;
 
 		msgPlayerGiftInfo(){ ReSet(); }
 		void ReSet()
@@ -3265,10 +3264,10 @@ namespace GameXY
 		enum { MAX_COUNT = 50 };
 		enum { CUR=1,LAST };
 
-		unsigned int                  m_PID;
-		unsigned char                 m_Flag;
-		mutable unsigned short        m_nCount;
-		vector<msgPlayerGiftInfo>     m_listPGI;
+		unsigned int                       m_PID;
+		unsigned char                      m_Flag;
+		mutable unsigned short             m_nCount;
+		std::vector<msgPlayerGiftInfo>     m_listPGI;
 
 		PlayerGiftInfoList(){ReSet();}
 		void ReSet() 
@@ -3325,7 +3324,7 @@ namespace GameXY
 		enum { MAX_COUNT = 200 };
 
 		unsigned int                  m_PID;
-		vector<BYTE>                  m_listHonorID;
+		std::vector<BYTE>             m_listHonorID;
 
 		PlayerHonorInfoList(){ ReSet();}
 		void ReSet()
@@ -3357,9 +3356,9 @@ namespace GameXY
 		enum { XY_ID = GameLobbyXYID_ReqSendGift };
 		enum { MAX_COUNT = 250 };
 
-		unsigned short          m_GiftID;
-		unsigned int            m_SendPID;
-		vector<unsigned int>    m_vecRecvPID;
+		unsigned short               m_GiftID;
+		unsigned int                 m_SendPID;
+		std::vector<unsigned int>    m_vecRecvPID;
 
 		PlayerReqSendGift(){ ReSet(); }
 		void ReSet()
@@ -3459,7 +3458,7 @@ namespace GameXY
 		enum { MAX_COUNT = 250 };
 
 		unsigned int       m_PID;
-		vector<int>        m_vecGiftIdx;		
+		std::vector<int>   m_vecGiftIdx;
 
 		PlayerReqSoldGift(){ ReSet(); }
 		void ReSet()
@@ -3489,7 +3488,7 @@ namespace GameXY
 
 		unsigned int       m_PID;
 		SBigNumber         m_nMoney;
-		vector<int>        m_vecGiftIdx;
+		std::vector<int>   m_vecGiftIdx;
 
 		PlayerRespSoldGift(){ ReSet(); }
 		void ReSet()
@@ -3699,7 +3698,7 @@ namespace GameXY
 		unsigned int                  m_PID;
 		SBigNumber                    m_nMoney;
 		mutable unsigned short        m_nCount;
-		vector<msgUserAward>          m_listAwardInfo;
+		std::vector<msgUserAward>     m_listAwardInfo;
 
 		UserAwardInfoList() { ReSet(); }
 		void ReSet()
@@ -3923,7 +3922,7 @@ namespace GameXY
 		unsigned char      m_Limite;               //桌子的限注规则
 
 		unsigned char      m_ChipTime;
-		string             m_Password;
+		std::string        m_Password;
 
 		int                m_nLastTime;
 
@@ -4335,7 +4334,7 @@ namespace GameXY
 
 		unsigned char              m_Flag;
 		unsigned short             m_RoomID;
-		vector<MatchRankInfo>      m_vectorMatchRank;
+		std::vector<MatchRankInfo> m_vectorMatchRank;
 
 		RespMatchRank(){ ReSet(); }
 		void ReSet() { memset(this,0,sizeof(*this)); }

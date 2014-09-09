@@ -8,9 +8,6 @@
 #include "MemcatchXY.h"
 #include "aglibmemcached.h"
 
-using namespace MoGui;
-using namespace std;
-
 class CMemOperator : public boost::noncopyable
 {
 public:
@@ -18,11 +15,11 @@ public:
 	CMemOperator(void);
 	~CMemOperator(void);
 
-	void Init(vector<string> vecServers);
+	void Init(std::vector<std::string> vecServers);
 	void TestConnect();
 
 private:
-	std::string GetKey(string str,INT16 AID,UINT32 PID);
+	std::string GetKey(const std::string& str, INT16 AID, UINT32 PID);
 	void Connect();
 	void DebugInfo(const char* logstr,...);
 	void DebugError(const char* logstr,...);
@@ -85,6 +82,6 @@ public:
 
 public:
 	bool                                 m_bCanUse;
-	vector<string>                       m_vecMemIPPort;
+	std::vector<std::string>             m_vecMemIPPort;
 	CAGLibmemcached                      m_MemCached;
 };

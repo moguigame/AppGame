@@ -14,12 +14,7 @@ namespace MoGuiXY
 {
 namespace RWDB_XY
 {
-	using namespace std;
-	using namespace AGBase;
-	using namespace MoGui::MoGuiXY;
-	using namespace MoGui::Game::DeZhou;
-
-	class ReadWriteDBMessage : public CMemoryPool_Public<ReadWriteDBMessage>
+	class ReadWriteDBMessage : public AGBase::CMemoryPool_Public<ReadWriteDBMessage>
 	{
 	public:
 		enum { MaxMsgLen = MAX_TOTAL_XY_LEN - 16 };
@@ -41,7 +36,7 @@ namespace RWDB_XY
 		}
 	};
 	typedef boost::shared_ptr<ReadWriteDBMessage> PRWDBMsg;
-	typedef queue<PRWDBMsg>                       QueueRWDBMsg;
+	typedef std::queue<PRWDBMsg>                  QueueRWDBMsg;
 
 	template<class Txieyi>
 		void MakeRWDBMsg(Txieyi& xieyi,ReadWriteDBMessage& src)
@@ -389,7 +384,7 @@ namespace RWDB_XY
 		short                    m_PayMode;
 		short                    m_CanUse;
 		unsigned int             m_EndTime;
-		string                   m_strLog;
+		std::string              m_strLog;
 
 		RWDB_AddPlayerAward() { ReSet(); }
 		void ReSet()
@@ -578,7 +573,7 @@ namespace RWDB_XY
 		INT16                m_GiftID;
 		INT32                m_Price;
 		UINT32               m_SendPID;
-		string               m_NickName;
+		std::string          m_NickName;
 		UINT32               m_ActionTime;
 
 		RWDB_WriteUserGift() { ReSet(); }
@@ -643,7 +638,7 @@ namespace RWDB_XY
 
 		short                    m_AID;
 		unsigned int             m_PID;
-		int                      m_WinRecord[MAX_PaiTypeNum];
+		int                      m_WinRecord[MoGui::Game::DeZhou::MAX_PaiTypeNum];
 
 		RWDB_UpdateWinType() { ReSet(); }
 		void ReSet(){ memset(this,0,sizeof(*this));}
@@ -652,7 +647,7 @@ namespace RWDB_XY
 		{
 			bos << src.m_AID;
 			bos << src.m_PID;
-			for(int i=0;i<MAX_PaiTypeNum;++i)
+			for (int i = 0; i<MoGui::Game::DeZhou::MAX_PaiTypeNum; ++i)
 			{
 				bos << src.m_WinRecord[i];
 			}
@@ -664,7 +659,7 @@ namespace RWDB_XY
 			src.ReSet();
 			bis >> src.m_AID;
 			bis >> src.m_PID;
-			for(int i=0;i<MAX_PaiTypeNum;++i)
+			for (int i = 0; i<MoGui::Game::DeZhou::MAX_PaiTypeNum; ++i)
 			{
 				bis >> src.m_WinRecord[i];
 			}
@@ -1091,7 +1086,7 @@ namespace RWDB_XY
 		INT64                       m_nCurGameMoney;
 		INT64                       m_nAddHongBao;
 		INT64                       m_nCurHongBao;
-		string                      m_strLogMsg;
+		std::string                 m_strLogMsg;
 
 		RWDB_GameMoneyError(){ ReSet();}
 		void ReSet()
@@ -1191,7 +1186,7 @@ namespace RWDB_XY
 
 		short                    m_AID;
 		UINT32                   m_PID;
-		string                   m_IP;
+		std::string              m_IP;
 		short                    m_Flag;
 
 		RWDB_PlayerClientError(){ ReSet();}
@@ -1229,7 +1224,7 @@ namespace RWDB_XY
 		short                    m_TableID;
 		BYTE                     m_SitID;
 
-		string                   m_ChatMsg;
+		std::string              m_ChatMsg;
 
 		RWDB_ChatLog(){ ReSet();}
 		void ReSet()
@@ -1519,9 +1514,9 @@ namespace RWDB_XY
 
 		BYTE                      m_Sex;
 		short                     m_Year;
-		string                    m_NickName;
-		string                    m_HeadPicUrl;
-		string                    m_City;
+		std::string               m_NickName;
+		std::string               m_HeadPicUrl;
+		std::string               m_City;
 
 		RWDB_ChangeUserInfo() { ReSet(); }
 		void ReSet()
@@ -1575,7 +1570,7 @@ namespace RWDB_XY
 
 		short                     m_AID;
 		unsigned int              m_PID;
-		string                    m_IP;
+		std::string               m_IP;
 
 		RWDB_PlayerLogin() { ReSet(); }
 		void ReSet(){ m_AID=0;m_PID=0;m_IP="";}
@@ -1720,7 +1715,7 @@ namespace RWDB_XY
 		UINT32                                m_PID;
 		int                                   m_AddMoguiMoney;
 		int                                   m_CurMoGuiMoney;
-		string                                m_strLog;
+		std::string                           m_strLog;
 
 		RWDB_MoGuiMoneyError(){ ReSet();}
 		void ReSet()

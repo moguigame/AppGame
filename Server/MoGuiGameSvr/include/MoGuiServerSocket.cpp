@@ -1,5 +1,9 @@
 #include ".\moguiserversocket.h"
 
+using namespace std;
+using namespace AGBase;
+using namespace Tool;
+
 MapXieYiIO CMoGuiServerSocket::s_InXieYi;
 MapXieYiIO CMoGuiServerSocket::s_OutXieYi;
 

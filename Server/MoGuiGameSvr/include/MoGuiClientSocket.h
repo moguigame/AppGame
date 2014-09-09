@@ -5,15 +5,12 @@
 #include "MoGuiGame.h"
 #include "Tool.h"
 
-typedef map<UINT16,INT64>                  MapXieYiIO;
+typedef std::map<UINT16, INT64>                  MapXieYiIO;
 
-using namespace AGBase;
-using namespace Tool;
-
-class CMoGuiClientSocket : public IConnectCallback
+class CMoGuiClientSocket : public AGBase::IConnectCallback
 {
 public:
-	CMoGuiClientSocket( IConnectPool* pPool );
+	CMoGuiClientSocket(AGBase::IConnectPool* pPool);
 	~CMoGuiClientSocket(void);
 
 	enum { SOCKET_ST_NONE,SOCKET_ST_CONNECTED,SOCKET_ST_STOP };
@@ -39,11 +36,11 @@ public:
 	bool                     Send( const char* buf, int len );
 
 	unsigned int             GetPeerLongIp( void );
-	string                   GetPeerStringIp( void );
+	std::string              GetPeerStringIp(void);
 
 	bool                     IsConnected() const { return m_ClientSocketState == SOCKET_ST_CONNECTED; }
-	IConnect*                GetConnect() const { return m_pConnect; }
-	void                     SetConnectPool( IConnectPool* pPool ){ assert(pPool);m_pPool=pPool; }
+	AGBase::IConnect*        GetConnect() const { return m_pConnect; }
+	void                     SetConnectPool(AGBase::IConnectPool* pPool){ assert(pPool); m_pPool = pPool; }
 
 	//加密的内容
 	void                     SetCrypt(bool bCrypt);
@@ -62,11 +59,11 @@ protected:
 	CMoGuiEncrypt   m_Crypt;              //加密对象
 
 private:
-	IConnectPool*   m_pPool;
-	IConnect*	    m_pConnect;
+	AGBase::IConnectPool*   m_pPool;
+	AGBase::IConnect*	    m_pConnect;
 
-	CLock		    m_lk;
-	CCondition	    m_cd;
+	AGBase::CLock		    m_lk;
+	AGBase::CCondition	    m_cd;
 
 	BYTE		    m_ClientSocketStep;   //Client Socket当前的STEP
 	BYTE			m_ClientSocketState;  //Client SOCKET当前状态 NONE CONNECTED

@@ -12,7 +12,6 @@ namespace GameXY
 {
 namespace DeZhou
 {
-	using namespace std;
 	using namespace MoGui::Game::DeZhou;
 
 	const short  GameXYID_Start                         = 0;
@@ -1772,8 +1771,8 @@ namespace DeZhou
 		enum { XY_ID = GameXYID_AddFriendInfo };
 		enum { MAX_COUNT = 500 };
 
-		mutable short             m_nCount;
-		vector<unsigned int>      m_vecReqPID;
+		mutable short                  m_nCount;
+		std::vector<unsigned int>      m_vecReqPID;
 
 		GameDeZhou_AddFriendInfo() { ReSet(); }
 		void ReSet()
@@ -2322,7 +2321,7 @@ namespace DeZhou
 	{
 		enum { XY_ID = GameXYID_WinJuBaoPeng };
 
-		vector<msgWinJuBaoPeng>     m_listWin;
+		std::vector<msgWinJuBaoPeng>     m_listWin;
 
 		GameDeZhou_WinJuBaoPeng(){ ReSet(); }
 		void ReSet() { m_listWin.clear(); }
@@ -2369,7 +2368,7 @@ namespace DeZhou
 		enum { XY_ID = GameXYID_TableWinLoss };
 		enum { MaxWinLossCount = 100 };
 
-		vector<stTablePlayerWinLoss>       m_vectorWinLoss;
+		std::vector<stTablePlayerWinLoss>       m_vectorWinLoss;
 
 		GameDeZhou_TableWinLoss() { ReSet(); }
 		void ReSet()

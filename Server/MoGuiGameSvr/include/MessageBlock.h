@@ -9,7 +9,7 @@ namespace MoGui
 {
 namespace MoGuiXY
 {
-	class MessageBlock : public CMemoryPool_Public<MessageBlock>
+	class MessageBlock : public AGBase::CMemoryPool_Public<MessageBlock>
 	{
 	public:
 		enum { MaxMsgLen = 1024 };
@@ -29,9 +29,9 @@ namespace MoGuiXY
 			memset(m_Message,0,MaxMsgLen);
 		}
 	};
-	typedef boost::shared_ptr<MessageBlock> PMsgBlock;
-	typedef queue<PMsgBlock>                QueueBlockMsg;
-	typedef list<PMsgBlock>                 ListBlockMsg;
+	typedef boost::shared_ptr<MessageBlock>      PMsgBlock;
+	typedef std::queue<PMsgBlock>                QueueBlockMsg;
+	typedef std::list<PMsgBlock>                 ListBlockMsg;
 
 	template<class Txieyi>
 	void MakeMsgToBlock(Txieyi& xieyi,MessageBlock& src)

@@ -5,16 +5,12 @@
 #include "Base.h"
 #include "MoGuiGame.h"
 
-using namespace std;
-using namespace AGBase;
-using namespace Tool;
+typedef std::map<UINT16, INT64>                  MapXieYiIO;
 
-typedef map<UINT16,INT64>                  MapXieYiIO;
-
-class CMoGuiServerSocket : public IConnectCallback
+class CMoGuiServerSocket : public AGBase::IConnectCallback
 {
 public:
-	CMoGuiServerSocket( IConnect* pConnect );
+	CMoGuiServerSocket(AGBase::IConnect* pConnect);
 	~CMoGuiServerSocket(void);
 
 	enum { SOCKET_ST_NONE,SOCKET_ST_CONNECTED,SOCKET_ST_STOP };
@@ -36,11 +32,11 @@ public:
 	virtual int              OnMsg( const char* buf, int len );
 
 	unsigned int             GetPeerLongIp( void );
-	string                   GetPeerStringIp( void );
+	std::string              GetPeerStringIp(void);
 	bool                     IsConnected() const { return m_SocketState == SOCKET_ST_CONNECTED; }
 
 	int                      CheckFlash( const char* buf, int len );
-	IConnect*                GetConnect(){ return m_pConnect; }
+	AGBase::IConnect*        GetConnect(){ return m_pConnect; }
 	void                     Close();
 	void                     Stop(int curTime);
 	unsigned int             GetStopTime();
@@ -58,7 +54,7 @@ public:
 	int				m_nSendSize;          //发送的字节数
 
 protected:
-	IConnect*	    m_pConnect;
+	AGBase::IConnect* m_pConnect;
 	int			    m_SocketState;        //是不是连接上了
 	unsigned int    m_nStopTime;
 

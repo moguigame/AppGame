@@ -101,13 +101,13 @@ namespace Tool
 
 		*p = 0;
 		std::reverse(retBuf, p);
-		return string(retBuf);
+		return std::string(retBuf);
 	}
 
 	template<class T>
 		inline void S2N(std::string& strData,T& Number)
 	{
-		stringstream ssIn;
+		std::stringstream ssIn;
 		ssIn<<strData;
 		ssIn>>Number;
 	};
@@ -142,7 +142,7 @@ namespace Tool
 		
 		*p = 0;
 		std::reverse(retBuf, p);
-		return string(retBuf);
+		return std::string(retBuf);
 	};
 
 	template<typename T>

@@ -10,7 +10,6 @@ namespace MoGui
 {
 namespace MoGuiXY
 {
-	using namespace std;
 	using namespace MoGui::MoGuiXY;
 
 	class CRecvMsgPacket
@@ -442,8 +441,8 @@ namespace PublicXY
 			return m_XieYiList.size() > 0;
 		}
 
-		short              m_XieYiID;
-		vector<Txieyi>     m_XieYiList;
+		short                   m_XieYiID;
+		std::vector<Txieyi>     m_XieYiList;
 
 		friend bostream& operator<<(bostream& bos,const XieYiList& src)
 		{

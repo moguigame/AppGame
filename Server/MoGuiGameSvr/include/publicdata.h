@@ -10,11 +10,9 @@
 
 namespace MoGui
 {
-	using namespace std;
-
 	struct stFuncTimeLog
 	{
-		string                                m_strFuncName;
+		std::string                           m_strFuncName;
 
 		long long                             m_TotalTicket;
 		long long                             m_nTimes;
@@ -23,7 +21,7 @@ namespace MoGui
 
 		long long                             m_nStartTicket;	
 
-		stFuncTimeLog(const string& strName="") 
+		stFuncTimeLog(const std::string& strName = "")
 			: m_strFuncName(strName),m_TotalTicket(0),m_nTimes(0),m_MaxTicket(0),m_MinTicket(0),m_nStartTicket(0)
 		{
 		}
@@ -38,8 +36,8 @@ namespace MoGui
 			m_nStartTicket = 0;
 		}
 	};
-	typedef map<string,stFuncTimeLog>          MapFuncTime;
-	typedef vector<stFuncTimeLog>              VectorFuncTime;
+	typedef std::map<std::string, stFuncTimeLog>          MapFuncTime;
+	typedef std::vector<stFuncTimeLog>                       VectorFuncTime;
 
 	class CCompareFuncTime
 	{
@@ -58,8 +56,8 @@ namespace MoGui
 
 		MapFuncTime m_mapFuncTime;
 
-		void EnterFunc(const string& strFuncName);
-		void ExitFunc(const string& strFuncName);
+		void EnterFunc(const std::string& strFuncName);
+		void ExitFunc(const std::string& strFuncName);
 	};
 
 	class CLogFuncTime

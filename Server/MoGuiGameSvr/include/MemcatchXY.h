@@ -439,7 +439,7 @@ namespace DeZhou
 		INT16                m_GiftID;
 		INT32                m_Price;
 		UINT32               m_SendPID;
-		string               m_NickName;
+		std::string          m_NickName;
 
 		UINT32               m_ActionTime;
 		UINT32               m_CurEndTime;

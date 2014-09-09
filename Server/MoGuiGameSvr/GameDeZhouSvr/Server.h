@@ -21,7 +21,7 @@ class CPlayer;
 class CGameRoom;
 class CGameTable;
 
-class CServer : public IConnectPoolCallback, public boost::noncopyable
+class CServer : public AGBase::IConnectPoolCallback, public boost::noncopyable
 {
 public:
 	CServer();
@@ -30,42 +30,42 @@ public:
 	enum { GetPID_Player=1,GetPID_BotUse=2,GetPID_BotIdle=4,};
 	//enum { MaxPlayerForFriend = 100; };
 
-	typedef RefPtr<CPlayer>	                                        PlayerPtr;
-	typedef map<IConnect*, GameServerSocket*>  						MapClientSocket;
-	typedef map<UINT32,PlayerPtr>            						MapPlayer;
-	typedef map<UINT16,CGameRoom*>     						        MapRoom;
-	typedef map<UINT32,UINT32>                                      MapIPTime;
-	typedef list<PlayerPtr>                                         ListPlayer;
-	typedef deque<PlayerPtr>                                        DequePlayer;
-	typedef vector<PlayerPtr>                                       VecPlayer;
-	typedef set<unsigned int>                                       SetIntIP;
+	typedef AGBase::RefPtr<CPlayer>	                                     PlayerPtr;
+	typedef std::map<AGBase::IConnect*, GameServerSocket*>  			 MapClientSocket;
+	typedef std::map<UINT32, PlayerPtr>            						 MapPlayer;
+	typedef std::map<UINT16, CGameRoom*>     						     MapRoom;
+	typedef std::map<UINT32, UINT32>                                     MapIPTime;
+	typedef std::list<PlayerPtr>                                         ListPlayer;
+	typedef std::deque<PlayerPtr>                                        DequePlayer;
+	typedef std::vector<PlayerPtr>                                       VecPlayer;
+	typedef std::set<unsigned int>                                       SetIntIP;
 
-	typedef map<UINT32,UINT32>                                      MapPIDErrorTimes;
-	typedef map<UINT32,UINT32>                                      MapPIDUseTime;
-	typedef map<string,UINT32>                                      MapIPErrorTimes;
-	typedef map<string,UINT32>                                      MapIPUseTime;
+	typedef std::map<UINT32, UINT32>                                      MapPIDErrorTimes;
+	typedef std::map<UINT32, UINT32>                                      MapPIDUseTime;
+	typedef std::map<std::string, UINT32>                                 MapIPErrorTimes;
+	typedef std::map<std::string, UINT32>                                 MapIPUseTime;
 
-	typedef map<string,ListPlayer>                                  MapCityPlayer;
-	typedef map<string,stCityTime>                                  MapCityTime;
+	typedef std::map<std::string, ListPlayer>                             MapCityPlayer;
+	typedef std::map<std::string, stCityTime>                             MapCityTime;
 
-	typedef vector<DBServerXY::DBS_RoomInfo>                        VectorRoomInfo;
-	typedef vector<DBServerXY::DBS_TableInfo>                       VectorTableInfo;
-	typedef vector<DBServerXY::DBS_HonorInfo>                       VectorHonorInfo;
-	typedef vector<DBServerXY::DBS_GameLevelInfo>                   VectorDBSGameLevelInfo;
+	typedef std::vector<DBServerXY::DBS_RoomInfo>                         VectorRoomInfo;
+	typedef std::vector<DBServerXY::DBS_TableInfo>                        VectorTableInfo;
+	typedef std::vector<DBServerXY::DBS_HonorInfo>                        VectorHonorInfo;
+	typedef std::vector<DBServerXY::DBS_GameLevelInfo>                    VectorDBSGameLevelInfo;
 
-	typedef map<short,DBServerXY::DBS_msgFaceInfo>                  MapFaceInfo;
-	typedef map<short,DBServerXY::DBS_msgGiftInfo>                  MapGiftInfo;
-	typedef map<INT16,DBServerXY::DBS_HonorInfo>                    MapDBSHonorInfo;
-	typedef map<INT16,DBServerXY::DBS_GameLevelInfo>                MapDBSGameLevelInfo;
+	typedef std::map<short, DBServerXY::DBS_msgFaceInfo>                  MapFaceInfo;
+	typedef std::map<short, DBServerXY::DBS_msgGiftInfo>                  MapGiftInfo;
+	typedef std::map<INT16, DBServerXY::DBS_HonorInfo>                    MapDBSHonorInfo;
+	typedef std::map<INT16, DBServerXY::DBS_GameLevelInfo>                MapDBSGameLevelInfo;
 
 private:
 	bool OnPriorityEvent( void );
 	void OnTimer( void );
-	void OnAccept( IConnect* connect );
-	void OnClose( IConnect* nocallbackconnect, bool bactive );
+	void OnAccept(AGBase::IConnect* connect);
+	void OnClose(AGBase::IConnect* nocallbackconnect, bool bactive);
 
 public:
-	void DealCloseSocket( IConnect* connect );
+	void DealCloseSocket(AGBase::IConnect* connect);
 	
 	INT64                                m_GetBotStep1;
 	INT64                                m_GetBotStep2;
@@ -76,7 +76,7 @@ public:
 	INT32                                m_nCloseCount;
 
 private:
-	IConnectPool*			             m_pPool;
+	AGBase::IConnectPool*			     m_pPool;
 	CGameDBSocket*                       m_pDBSocket;
 	MapRoom                              m_Rooms;                     //房间列表
 	MapClientSocket          	         m_Clients;                   //客户端连接,已经通过认证的客户端了
@@ -100,7 +100,7 @@ private:
 	const CGameServerConfig*             m_pGSConfig;
 	CMemOperator                         m_memOperator;
 
-	string                               m_GameRule;
+	std::string                          m_GameRule;
 
 	VectorRoomInfo                       m_RoomInfoVector;
 	VectorTableInfo                      m_TableInfoVector;
@@ -219,7 +219,7 @@ public:
 	UINT16             GetGameID()  const { return m_GSConf.m_cfServer.m_GameID;}
 	UINT16             GetServerID() const { return m_GSConf.m_cfServer.m_ServerID;}
 	int                GetDBPort() const{ return m_GSConf.m_cfServer.m_dbPort;}
-	string             GetDBIP() const{ return m_GSConf.m_cfServer.m_dbIp;}
+	std::string        GetDBIP() const{ return m_GSConf.m_cfServer.m_dbIp; }
 	int                GetTotalPlayerCount();
 	void               InitGameRule(const CGameServerConfig& GSConfig);
 	void               OnNewDay(UINT32 curTime);
@@ -238,8 +238,8 @@ public:
 	CGameRoom*         GetRoomByID(UINT16 roomid);
 	CGameRoom*         GetPrivateRoom();
 	void               SetBDSocket(CGameDBSocket* pDBSocket);
-	IConnect*          Connect( const char* ip, int port );
-	IConnectPool*      GetConnectPool(){ return m_pPool; }
+	AGBase::IConnect*          Connect( const char* ip, int port );
+	AGBase::IConnectPool*      GetConnectPool(){ return m_pPool; }
 
 	bool               GetGiftInfo(INT16 GiftID,DBServerXY::DBS_msgGiftInfo& GiftInfo);
 	bool               GetFaceInfo(INT16 FaceID,DBServerXY::DBS_msgFaceInfo& FaceInfo);
@@ -275,7 +275,7 @@ public:
 	void               DeleteCityPlayer(PlayerPtr pPlayer);
 	void               AddCityPlayerToClient(PlayerPtr pPlayer);
 	void               DeleteCityPlayerToClient(PlayerPtr pPlayer);
-	void               OnTimeSendCityPlayerState(string strCity);
+	void               OnTimeSendCityPlayerState(std::string strCity);
 	void               SendCityPlayerStateToPlayer(PlayerPtr pPlayer);
 	void               SendCityPlayerToPlayer(PlayerPtr pPlayer);
 
@@ -353,10 +353,10 @@ public:
 	}
 };
 
-class CDBConnectThread : public CThread,public boost::noncopyable
+class CDBConnectThread : public AGBase::CThread,public boost::noncopyable
 {
 public:
-	CDBConnectThread(string strName="CDBConnectThread") : CThread(strName),m_pDBSocket(0){}
+	CDBConnectThread(std::string strName = "CDBConnectThread") : CThread(strName), m_pDBSocket(0){}
 	~CDBConnectThread(){}
 
 	int Run( void );

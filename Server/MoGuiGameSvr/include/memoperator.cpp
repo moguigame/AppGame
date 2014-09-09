@@ -101,7 +101,7 @@ void CMemOperator::Connect()
 	}
 }
 
-std::string CMemOperator::GetKey(string str,INT16 AID,UINT32 PID)
+std::string CMemOperator::GetKey(const string& str,INT16 AID,UINT32 PID)
 {
 	return str + "_" + Tool::N2S(AID) + "_" + Tool::N2S(PID);
 }

@@ -19,14 +19,10 @@ namespace Game
 {
 namespace DeZhou
 {
-	using namespace std;
-	using namespace AGBase;
-	using namespace MoGui;
-
-	typedef  list<unsigned int>            ListPID;
-	typedef  set<unsigned int>             SetPID;
-	typedef  vector<unsigned int>          VectorPID;
-	typedef  vector<BYTE>                  VectorHonorID;
+	typedef  std::list<unsigned int>            ListPID;
+	typedef  std::set<unsigned int>             SetPID;
+	typedef  std::vector<unsigned int>          VectorPID;
+	typedef  std::vector<BYTE>                  VectorHonorID;
 
 	struct stXieYiLog
 	{
@@ -37,7 +33,7 @@ namespace DeZhou
 		stXieYiLog(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stXieYiLog>              VectorXieYiLog;
+	typedef std::vector<stXieYiLog>              VectorXieYiLog;
 	class CCompareXieYiTotalByte
 	{
 	public:
@@ -79,18 +75,18 @@ namespace DBS
 		stAreaInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 
-		void InitLandMoney(const string& strLang)
+		void InitLandMoney(const std::string& strLang)
 		{
-			vector<string> vecStr = Tool::SplitString(strLang,",");
+			std::vector<std::string> vecStr = Tool::SplitString(strLang, ",");
 			for (size_t i=0;i<vecStr.size()&&i<Max_Player_Level;i++)
 			{
 				Tool::S2N(vecStr.at(i),m_LandMoney[i]);
 				m_LandMoney[i] = max(m_LandMoney[i],0);
 			}
 		}
-		void InitJoinMoney(const string& strJoin)
+		void InitJoinMoney(const std::string& strJoin)
 		{
-			vector<string> vecStr = Tool::SplitString(strJoin,",");
+			std::vector<std::string> vecStr = Tool::SplitString(strJoin, ",");
 			for (size_t i=0;i<vecStr.size()&&i<Max_Player_Level;i++)
 			{
 				Tool::S2N(vecStr.at(i),m_JoinMoney[i]);
@@ -98,8 +94,8 @@ namespace DBS
 			}
 		}
 	};
-	typedef vector<stAreaInfo>         VectorAreaInfo;
-	typedef map<short,stAreaInfo>      MapAreaInfo;
+	typedef std::vector<stAreaInfo>         VectorAreaInfo;
+	typedef std::map<short, stAreaInfo>      MapAreaInfo;
 
 	struct stDBUserAward
 	{
@@ -115,7 +111,7 @@ namespace DBS
 		stDBUserAward(){ Init(); }
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stDBUserAward>   VectorAward;
+	typedef std::vector<stDBUserAward>   VectorAward;
 
 	struct stDBGameRight
 	{
@@ -130,7 +126,7 @@ namespace DBS
 		stDBGameRight(){ Init(); }
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stDBGameRight>  VectorRight;
+	typedef std::vector<stDBGameRight>  VectorRight;
 
 	struct stUpdateUserGameInfo
 	{
@@ -192,7 +188,7 @@ namespace DBS
 			m_EndTime = 0;
 		}
 	};
-	typedef vector<stRoomInfo> VectorRoomInfo;
+	typedef std::vector<stRoomInfo> VectorRoomInfo;
 
 	struct stTableInfo
 	{
@@ -226,7 +222,7 @@ namespace DBS
 			m_TableEndTime = 0;
 		}
 	};
-	typedef vector<stTableInfo>     VectorTableInfo;
+	typedef std::vector<stTableInfo>     VectorTableInfo;
 
 	struct stFaceInfo
 	{
@@ -240,8 +236,8 @@ namespace DBS
 		stFaceInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stFaceInfo>             VectorFaceInfo;
-	typedef map<INT16,stFaceInfo>          MapFaceInfo;
+	typedef std::vector<stFaceInfo>             VectorFaceInfo;
+	typedef std::map<INT16, stFaceInfo>          MapFaceInfo;
 
 	struct stGiftInfo
 	{
@@ -258,9 +254,9 @@ namespace DBS
 		stGiftInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef list<stGiftInfo>           ListGiftInfo;
-	typedef vector<stGiftInfo>         VectorGiftInfo;
-	typedef map<INT16,stGiftInfo>      MapGiftInfo;
+	typedef std::list<stGiftInfo>           ListGiftInfo;
+	typedef std::vector<stGiftInfo>         VectorGiftInfo;
+	typedef std::map<INT16, stGiftInfo>      MapGiftInfo;
 
 
 	struct ProductInfo
@@ -268,7 +264,7 @@ namespace DBS
 		int                m_ProductID;
 		int                m_Price;
 		short              m_ProductType;
-		string             m_ProductRule;
+		std::string        m_ProductRule;
 
 		ProductInfo(){ Init(); }
 		void Init()
@@ -279,8 +275,8 @@ namespace DBS
 			m_ProductRule = "";
 		}
 	};
-	typedef vector<ProductInfo>   VectorProductInfo;
-	typedef map<int,ProductInfo>  MapProductInfo;
+	typedef std::vector<ProductInfo>   VectorProductInfo;
+	typedef std::map<int, ProductInfo>  MapProductInfo;
 
 	struct stHuiYuanInfo
 	{
@@ -296,7 +292,7 @@ namespace DBS
 		stHuiYuanInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef map<int,stHuiYuanInfo>                      MapHuiYuanInfo;
+	typedef std::map<int, stHuiYuanInfo>                      MapHuiYuanInfo;
 	
 
 	struct stMoguiExchangeInfo
@@ -307,7 +303,7 @@ namespace DBS
 		stMoguiExchangeInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef map<int,stMoguiExchangeInfo>                MapMoguiExchangeInfo;
+	typedef std::map<int, stMoguiExchangeInfo>                MapMoguiExchangeInfo;
 	
 
 	struct stUserProduct
@@ -324,7 +320,7 @@ namespace DBS
 		stUserProduct(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stUserProduct> VectorUserProduct;
+	typedef std::vector<stUserProduct> VectorUserProduct;
 
 	struct stHonorInfo
 	{
@@ -336,8 +332,8 @@ namespace DBS
 		stHonorInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stHonorInfo>     VectorHonorInfo;
-	typedef map<INT16,stHonorInfo>  MapHonorInfo;
+	typedef std::vector<stHonorInfo>     VectorHonorInfo;
+	typedef std::map<INT16, stHonorInfo>  MapHonorInfo;
 
 	struct stPlayTimesInfo
 	{
@@ -349,8 +345,8 @@ namespace DBS
 		stPlayTimesInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stPlayTimesInfo>     VectorPTLevelInfo;
-	typedef map<INT16,stPlayTimesInfo>  MapPTLevelInfo;
+	typedef std::vector<stPlayTimesInfo>     VectorPTLevelInfo;
+	typedef std::map<INT16, stPlayTimesInfo>  MapPTLevelInfo;
 
 	struct stDBMatchInfo
 	{
@@ -385,8 +381,8 @@ namespace DBS
 			m_StartInterval = 0;
 		}
 	};
-	typedef vector<stDBMatchInfo>      VectorDBMatchInfo;
-	typedef map<int,stDBMatchInfo>     MapDBMatchInfo;
+	typedef std::vector<stDBMatchInfo>      VectorDBMatchInfo;
+	typedef std::map<int, stDBMatchInfo>     MapDBMatchInfo;
 
 	struct stDBUserGiftInfo
 	{
@@ -395,7 +391,7 @@ namespace DBS
 		UINT32               m_RecvPID;
 		INT32                m_Price;
 		UINT32               m_SendPID;
-		string               m_NickName;
+		std::string          m_NickName;
 		UINT32               m_ActionTime;	
 
 		stDBUserGiftInfo(){Init();}
@@ -410,7 +406,7 @@ namespace DBS
 			m_ActionTime = 0;
 		}
 	};
-	typedef vector<stDBUserGiftInfo>     VectorDBUserGiftInfo;
+	typedef std::vector<stDBUserGiftInfo>     VectorDBUserGiftInfo;
 	class CCompareUGI
 	{
 	public:
@@ -429,7 +425,7 @@ namespace DBS
 		INT16                m_GiftID;
 		INT32                m_Price;
 		UINT32               m_ActionTime;
-		string               m_NickName;
+		std::string               m_NickName;
 
 		stUserGiftInfo(){ Init(); }
 		void Init()
@@ -441,7 +437,7 @@ namespace DBS
 			m_NickName= "";
 		}
 	};
-	typedef vector<stUserGiftInfo>     VectorUserGiftInfo;
+	typedef std::vector<stUserGiftInfo>     VectorUserGiftInfo;
 
 	struct stUserFriendInfo
 	{
@@ -455,7 +451,7 @@ namespace DBS
 		stUserFriendInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stUserFriendInfo>                         VectorFriendInfo;
+	typedef std::vector<stUserFriendInfo>                         VectorFriendInfo;
 
 	struct stUserFriendFlag
 	{
@@ -465,7 +461,7 @@ namespace DBS
 		stUserFriendFlag(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stUserFriendFlag>    VectorFriendFlag;
+	typedef std::vector<stUserFriendFlag>    VectorFriendFlag;
 
 	struct stAddUserMoney
 	{
@@ -637,9 +633,9 @@ namespace DBS
 			m_stGameMatchInfo.Init();
 		}
 	};
-	typedef vector<stBotPlayerData>     VectorBotPlayerData;
+	typedef std::vector<stBotPlayerData>     VectorBotPlayerData;
 
-	class DBServerPlayerInfo : public CMemoryPool_Public<DBServerPlayerInfo, 100>
+	class DBServerPlayerInfo : public AGBase::CMemoryPool_Public<DBServerPlayerInfo, 100>
 	{
 	public:
 		static long                              s_nMoneyLogCount;
@@ -664,7 +660,7 @@ namespace DBS
 		VectorFriendFlag                         m_vectorFriend;            //所有好友的数字ID和FLAG
 
 		VectorUserGiftInfo                       m_vectorUserGiftInfo;    //礼品信息
-		vector<string>                           m_vectorMoneyLog;
+		std::vector<std::string>                 m_vectorMoneyLog;
 
 		VectorUserProduct                        m_vectorUserProduct;
 		DezhouLib::CPlayerRightInfo              m_RightInfo;
@@ -732,7 +728,7 @@ namespace DBS
 				}
 			}
 		}
-		void AddMoneyLog(INT64 nAddMoney,string strLog="")
+		void AddMoneyLog(INT64 nAddMoney, std::string strLog = "")
 		{
 			if( N_CeShiLog::c_MoneyLog )
 			{
@@ -874,7 +870,7 @@ namespace DBS
 		}
 	};
 	typedef DBServerPlayerInfo*                          PDBServerPlayerInfo;
-	typedef map<unsigned int,DBServerPlayerInfo*>     	 MapDBPlayerInfo;
+	typedef std::map<unsigned int, DBServerPlayerInfo*>     	 MapDBPlayerInfo;
 };
 namespace GS
 {
@@ -974,7 +970,7 @@ namespace GS
 		stPlayerOnLine(){ Init(); }
 		void Init(){ memset(this,0,sizeof(*this)); }
 	};
-	typedef map<short,stPlayerOnLine> MapPlayerOnLine;
+	typedef std::map<short, stPlayerOnLine> MapPlayerOnLine;
 
 	struct TablePoolMoney
 	{
@@ -1103,12 +1099,12 @@ namespace GS
 	{
 		UINT16           				 m_RoomID;
 
-		string              			 m_RoomName;
-		string              			 m_Password;                                    //房间密码
-		string                           m_RoomRule;
-		string                           m_RoomRuleEX;
-		string                           m_MatchRule;
-		string                           m_AreaRule;
+		std::string              	     m_RoomName;
+		std::string              	     m_Password;                                    //房间密码
+		std::string                      m_RoomRule;
+		std::string                      m_RoomRuleEX;
+		std::string                      m_MatchRule;
+		std::string                      m_AreaRule;
 
 		CreateRoomInfo(){ ReSet();}
 		void ReSet()
@@ -1127,11 +1123,11 @@ namespace GS
 	struct CreateTableInfo
 	{
 		UINT16				    m_TableID;
-		string					m_TableName;
-		string                  m_Password;
-		string                  m_TableRule;
-		string                  m_TableRuleEX;
-		string                  m_MatchRule;
+		std::string				m_TableName;
+		std::string             m_Password;
+		std::string             m_TableRule;
+		std::string             m_TableRuleEX;
+		std::string             m_MatchRule;
 		UINT32                  m_FoundByWho;
 		UINT32                  m_EndTime;
 
@@ -1183,10 +1179,10 @@ namespace GS
 		int                    m_Ticket;
 		int                    m_TakeMoney;
 		int                    m_StartMoney;
-		vector<int>            m_vecBlind;
-		vector<int>            m_vecTime;
-		vector<int>            m_vecAwardMoney;
-		vector<int>            m_vecAwardJF;
+		std::vector<int>       m_vecBlind;
+		std::vector<int>       m_vecTime;
+		std::vector<int>       m_vecAwardMoney;
+		std::vector<int>       m_vecAwardJF;
 		int                    m_FirstAwoke;           //第一次提醒距离游戏开始的间隔
 		int                    m_SecondAwoke;          //第二次提醒距离游戏开始的间隔
 		int                    m_StartSit;
@@ -1212,7 +1208,7 @@ namespace GS
 			m_StartInterval = 0;
 		}
 	};
-	typedef map<int,stMatchInfo>             MapMatchInfo;
+	typedef std::map<int, stMatchInfo>             MapMatchInfo;
 
 	struct stForbidenPlayer
 	{
@@ -1235,7 +1231,7 @@ namespace GS
 			m_ReqTime = 0;
 		}
 	};
-	typedef list<stAddFriendInfo>       ListReqFriend;
+	typedef std::list<stAddFriendInfo>       ListReqFriend;
 
 	//主要是指机器人的要求
 	struct stBogPlayer
@@ -1265,7 +1261,7 @@ namespace GS
 			m_PaiValue = 0;
 		}
 	};
-	typedef  vector<stPlayerInfo>   VecPlayerInfo;
+	typedef  std::vector<stPlayerInfo>   VecPlayerInfo;
 
 	struct PlayerChipStep
 	{
@@ -1277,7 +1273,7 @@ namespace GS
 		PlayerChipStep() { ReSet(); }
 		void ReSet() { memset( this, 0, sizeof( *this ) ); }
 
-		string GetString()
+		std::string GetString()
 		{
 			return  "CS gs="  + Tool::N2S(m_Step) + 
 				" SitID=" + Tool::N2S(m_SitID) +
@@ -1285,13 +1281,13 @@ namespace GS
 				" Left="  + Tool::N2S(m_LeftMoney,8);
 		}
 	};
-	typedef  list<PlayerChipStep>    ListChipStep;
-	typedef  vector<PlayerChipStep>  VecChipStep;			
+	typedef  std::list<PlayerChipStep>    ListChipStep;
+	typedef  std::vector<PlayerChipStep>  VecChipStep;
 
 	struct stMoneyPool
 	{
-		int              m_Flag;
-		vector<INT64>    m_vecMoney;
+		int                   m_Flag;
+		std::vector<INT64>    m_vecMoney;
 
 		stMoneyPool() { Init(); }
 		void Init()
@@ -1300,17 +1296,17 @@ namespace GS
 			m_vecMoney.clear();
 		}
 
-		string GetString()
+		std::string GetString()
 		{
-			string strRet = "MP  " + Tool::N2S(m_Flag);
-			for (vector<INT64>::iterator itorMoney=m_vecMoney.begin();itorMoney!=m_vecMoney.end();++itorMoney)
+			std::string strRet = "MP  " + Tool::N2S(m_Flag);
+			for (std::vector<INT64>::iterator itorMoney = m_vecMoney.begin(); itorMoney != m_vecMoney.end(); ++itorMoney)
 			{
 				strRet += " " + Tool::N2S(*itorMoney,8);
 			}
 			return strRet;
 		}
 	};
-	typedef vector<stMoneyPool>     VecMoneyPool;
+	typedef std::vector<stMoneyPool>     VecMoneyPool;
 
 	struct stXieYiTime
 	{
@@ -1321,7 +1317,7 @@ namespace GS
 		stXieYiTime() { ReSet(); }
 		void ReSet() { memset( this, 0, sizeof( *this ) ); }
 	};
-	typedef map<int,stXieYiTime>         MapXieYiTime;
+	typedef std::map<int, stXieYiTime>         MapXieYiTime;
 
 	struct stCityTime
 	{
@@ -1363,7 +1359,7 @@ namespace GS
 			this->m_Position    = src.m_Position;
 		}
 	};
-	typedef  vector<stMatchPlayerRank>     VectorMatchPlayerRank;
+	typedef  std::vector<stMatchPlayerRank>     VectorMatchPlayerRank;
 	class CompareMatchPlayer
 	{
 	public:
@@ -1395,7 +1391,7 @@ namespace GS
 			return lSrc.m_WinLossMoney >= rSrc.m_WinLossMoney;
 		}
 	};
-	typedef vector<stWinLossPlayerInfo> VectorWinLossPlayerInfo;
+	typedef std::vector<stWinLossPlayerInfo> VectorWinLossPlayerInfo;
 };
 };
 };
