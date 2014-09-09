@@ -4,6 +4,8 @@
 
 #include <MemCacheClient.h>
 
+using namespace AGBase;
+
 #ifndef snprintf
 #define snprintf _snprintf
 #endif

@@ -12,7 +12,7 @@ class otl_datetime;
 
 namespace Tool
 {
-	using namespace std;
+
 
 	#define safe_delete(p) { if(p) { delete p; p = NULL; } }
 	#define safe_delete_arr(p) { if(p) { delete[] p; p = NULL; } }
@@ -105,7 +105,7 @@ namespace Tool
 	}
 
 	template<class T>
-		inline void S2N(string& strData,T& Number)
+		inline void S2N(std::string& strData,T& Number)
 	{
 		stringstream ssIn;
 		ssIn<<strData;
@@ -113,7 +113,7 @@ namespace Tool
 	};
 
 	template<class T>
-		inline string ZN2S(T nNumber,int nWidth=0)
+	inline std::string ZN2S(T nNumber, int nWidth = 0)
 	{
 		static char retBuf[32];
 		static char digits[19] =  
@@ -146,9 +146,9 @@ namespace Tool
 	};
 
 	template<typename T>
-	string ArrayToString(const T* pData,int nLen)
+	std::string ArrayToString(const T* pData, int nLen)
 	{
-		string retString("");
+		std::string retString("");
 		for ( int nCount=0;nCount<nLen;nCount++ )
 		{
 			retString += (N2S(*(pData+nCount))+" ");
@@ -168,20 +168,20 @@ namespace Tool
 		return Ret;
 	}
 
-	extern vector<string> SplitString(const string& src,const string& trim );
-	extern map<string,long long> GetRuleMapInData(const string& src,const string& strFirst,const string& strSecond);
-	extern map<string,string> GetRuleMapInString(const string& src,const string& strFirst,const string& strSecond);
-	extern bool GetKeyValue(const string& strSource,const string& strKey,long long& nValue);
-	extern string GetKeyString(const string& strSource,const string& strKey);
+	extern std::vector<std::string> SplitString(const std::string& src, const std::string& trim);
+	extern std::map<std::string, long long> GetRuleMapInData(const std::string& src, const std::string& strFirst, const std::string& strSecond);
+	extern std::map<std::string, std::string> GetRuleMapInString(const std::string& src, const std::string& strFirst, const std::string& strSecond);
+	extern bool GetKeyValue(const std::string& strSource, const std::string& strKey, long long& nValue);
+	extern std::string GetKeyString(const std::string& strSource, const std::string& strKey);
 
 	extern bool   GetGUID(std::string& strGUID);
 	extern bool   GetGUID(unsigned char* pGUID);
 	extern int    GetGUIDNumber(int nInit=0);
-	extern string MemoryToString(const void *memory, int size);
+	extern std::string MemoryToString(const void *memory, int size);
 	extern void   StringToMemory(std::string& strSrc,const void *memory);
-	extern string GetMD5(const void *memory,int nSize);
+	extern std::string GetMD5(const void *memory, int nSize);
 	extern void   GetMD5(const void *memory,int nSize,void* outMemory);
-	extern string EncryptTo64(const void* pBuf,int nSize);
+	extern std::string EncryptTo64(const void* pBuf, int nSize);
 
 	class CGameEncrypt : public boost::noncopyable
 	{

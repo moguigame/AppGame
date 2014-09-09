@@ -41,6 +41,8 @@ extern "C"
 #pragma comment(lib, "Iphlpapi.lib")
 #pragma comment(lib, "kernel32.lib")
 
+using namespace std;
+
 namespace Tool
 {
 	void   GetMacAddr(vector<string>& vecAddr);

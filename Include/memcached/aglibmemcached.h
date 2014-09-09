@@ -9,8 +9,6 @@
 #include <biostream.h>
 #include <Lock.h>
 
-using namespace AGBase;
-
 class MemCacheClient;
 
 typedef MemCacheClient slibmemcached;
