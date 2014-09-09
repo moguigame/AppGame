@@ -2,6 +2,9 @@
 #include "DSTest.h"
 #include <Psapi.h>
 
+using namespace std;
+using namespace AGBase;
+
 #pragma comment(lib, "psapi.lib") 
 
 long DBServerPlayerInfo::s_nMoneyLogCount = 0;

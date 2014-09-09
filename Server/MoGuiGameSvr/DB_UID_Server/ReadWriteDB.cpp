@@ -4,6 +4,9 @@
 #include "CDBSConfig.h"
 #include "DBOperatorXY.h"
 
+using namespace std;
+using namespace AGBase;
+
 using namespace MoGui::MoGuiXY::RWDB_XY;
 
 int CDBOperator::s_MaxID = 0;

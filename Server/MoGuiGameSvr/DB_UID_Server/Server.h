@@ -13,7 +13,6 @@
 #include "ReadWriteDB.h"
 #include "memoperator.h"
 
-using namespace AGBase;
 using namespace MoGui::MoGuiXY::PublicXY;
 using namespace MoGui::Game::DeZhou;
 using namespace MoGui::Game::DeZhou::DBS;
@@ -22,15 +21,15 @@ class CDBOperator;
 class CDBServerSocket;
 class CDBMsgThread;
 
-class CServer : public IConnectPoolCallback, public boost::noncopyable
+class CServer : public AGBase::IConnectPoolCallback, public boost::noncopyable
 {
 public:
 	CServer();
 	~CServer( void );
 	
-	typedef map<IConnect*, CDBServerSocket*>                 MapClientSocket;
-	typedef map<short,vector<UINT32> >                       MapCheckOnline;
-	typedef map<UINT32,INT16>                                MapPIDAID;
+	typedef std::map<AGBase::IConnect*, CDBServerSocket*>               MapClientSocket;
+	typedef std::map<short, std::vector<UINT32> >                       MapCheckOnline;
+	typedef std::map<UINT32, INT16>                                     MapPIDAID;
 
 	enum eRightFlag
 	{
@@ -40,15 +39,15 @@ public:
 protected:
 	bool OnPriorityEvent( void );
 	void OnTimer( void );
-	void OnAccept( IConnect* connect );
-	void OnClose( IConnect* nocallbackconnect, bool bactive );
+	void OnAccept(AGBase::IConnect* connect);
+	void OnClose(AGBase::IConnect* nocallbackconnect, bool bactive);
 
 public:
-	void DealCloseSocket( IConnect* connect );
+	void DealCloseSocket(AGBase::IConnect* connect);
 
 public:
 private:
-	IConnectPool*			             m_pPool;
+	AGBase::IConnectPool*			     m_pPool;
 	MapClientSocket          	         m_ClientsSocket;
 	MapDBPlayerInfo                      m_PlayerInfos;
 	CMemOperator                         m_memOperator;
@@ -85,9 +84,9 @@ private:
 
 	bool                                 m_bStartDBThread;
 	CRWDBMsgManage                       m_RWDBMsgManager;            //读写数据库消息管理器
-	vector<CDBMsgThread*>                m_vecDBMsgThread;
+	std::vector<CDBMsgThread*>                m_vecDBMsgThread;
 
-	CLock		                         m_ckVectorGift;
+	AGBase::CLock		                 m_ckVectorGift;
 	VectorDBUserGiftInfo                 m_vectorUserGift;
 
 public:	
@@ -105,12 +104,12 @@ private:
 	bool               IsBotPlayer(INT16 AID,UINT32 PID);
 	int                InitServerData();
 	int                InitBaseInfo();
-	void               GetHuiYuanInfo(DBS::stHuiYuanInfo& stHY,const string& strRule);
-	void               GetMoguiExchangeInfo(DBS::stMoguiExchangeInfo& stME,const string& strRule);
+	void               GetHuiYuanInfo(DBS::stHuiYuanInfo& stHY, const std::string& strRule);
+	void               GetMoguiExchangeInfo(DBS::stMoguiExchangeInfo& stME, const std::string& strRule);
 	void               SendPlayerGameData(CDBServerSocket* pSocket,INT16 AID,UINT32 PID);
 	void               SendPlayerFriend(CDBServerSocket* pSocket,INT16 AID,UINT32 PID);
 	void               SendPlayerGift(CDBServerSocket* pSocket,INT16 AID,UINT32 PID);
-	void               GetPlayerAwardInfo(INT16 AID,UINT32 PID,map<INT16,INT64>& mapAwardMoney);
+	void               GetPlayerAwardInfo(INT16 AID, UINT32 PID, std::map<INT16, INT64>& mapAwardMoney);
 	int                SendPlayerAward(INT16 AID,UINT32 PID);
 	void               DoUserProduct(const DBS::stUserProduct& stUP);
 	void               DoPlayerHuiYuan(const DBS::stUserProduct& stUP,const DBS::stHuiYuanInfo& stHY);
@@ -129,7 +128,7 @@ private:
 	
 	void               AddUserGameMoney(INT16 AID,UINT32 PID,INT64 nMoney,bool bUpToDB=true);
 	void               UpdatePlayerDataToMemcach(DBServerPlayerInfo* pPlayerInfo);
-	void               AddPlayerMoneyLog(UINT32 PID,INT64 nAddMoney,const string& strLog);
+	void               AddPlayerMoneyLog(UINT32 PID,INT64 nAddMoney,const std::string& strLog);
 	void               PrintPlayerMoneyLog(DBServerPlayerInfo* pPlayerInfo);
 
 	INT64              GetPlayerRight(DBServerPlayerInfo* pPlayerInfo);
@@ -214,10 +213,10 @@ private:
 	}
 };
 
-class CDBMsgThread : public CThread,public boost::noncopyable
+class CDBMsgThread : public AGBase::CThread,public boost::noncopyable
 {
 public:
-	CDBMsgThread(string strName="CDBMsgThread") : CThread(strName),m_pDBServer(0){}
+	CDBMsgThread(std::string strName = "CDBMsgThread") : CThread(strName), m_pDBServer(0){}
 	~CDBMsgThread(){}
 
 	int Run( void );

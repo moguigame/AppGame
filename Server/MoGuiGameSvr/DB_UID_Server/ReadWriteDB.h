@@ -106,7 +106,7 @@ public:
 	int ReadUserAward(INT16 AID,UINT32 PID,VectorAward& vectorAward);
 	int ReadUserRight(INT16 AID,UINT32 PID,VectorRight& vectorRight);
 
-	int RWDB_Test(INT16 AID,UINT32 PID,string strCity);
+	int RWDB_Test(INT16 AID,UINT32 PID,std::string strCity);
 	inline void DebugError(const char* logstr,...);
 	inline void DebugInfo(const char* logstr,...);
 
@@ -131,8 +131,8 @@ public:
 	static UINT32             s_LastReadOperator;
 	static UINT32             s_LastTime;
 
-	static vector<string>     s_vectorFriendTableName;
-	static vector<string>     s_vectorGiftTableName;
+	static std::vector<std::string>     s_vectorFriendTableName;
+	static std::vector<std::string>     s_vectorGiftTableName;
 
 	static void StaticInit();
 

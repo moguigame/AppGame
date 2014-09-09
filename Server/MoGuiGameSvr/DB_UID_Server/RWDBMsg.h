@@ -9,9 +9,7 @@
 
 #include "gamedef.h"
 
-using namespace AGBase;
 using namespace MoGui::MoGuiXY::RWDB_XY;
-using namespace Tool;
 using namespace MoGui::Game;
 
 class CRWDBMsgManage : public boost::noncopyable
@@ -39,7 +37,7 @@ public:
 		va_end(args);
 		if (len>0 && len<=MAX_LOG_BUF_SIZE )
 		{
-			Log_Text(LOGLEVEL_INFO,logbuf);
+			AGBase::Log_Text(AGBase::LOGLEVEL_INFO, logbuf);
 			fprintf_s(stderr,"%s %s\n",Tool::GetTimeString(m_CheckTime).c_str(),logbuf);
 		}
 	}
@@ -74,7 +72,7 @@ public:
 		PRWDBMsg pMsg;
 		if ( m_semaphore.Wait(INFINITE) )
 		{
-			CSelfLock l(m_lockMsg);
+			AGBase::CSelfLock l(m_lockMsg);
 			pMsg = m_queueMsg.front();
 			m_queueMsg.pop();
 
@@ -109,10 +107,10 @@ public:
 	}
 
 private:
-	CLock                m_lockMsg;
-	CCondition           m_condMsg;
-	CSemaphore           m_semaphore;
-	QueueRWDBMsg         m_queueMsg;
+	AGBase::CLock                m_lockMsg;
+	AGBase::CCondition           m_condMsg;
+	AGBase::CSemaphore           m_semaphore;
+	QueueRWDBMsg                 m_queueMsg;
 
 	UINT32               m_StartTime;
 	UINT32               m_CheckTime;
