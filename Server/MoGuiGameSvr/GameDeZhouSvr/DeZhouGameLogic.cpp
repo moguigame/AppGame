@@ -7,6 +7,9 @@
 #include "CGameServerConfig.h"
 #include "MatchRule.h"
 
+using namespace std;
+using namespace AGBase;
+
 int CDeZhouGameLogic::s_nWinTimes[MAX_PALYER_ON_TABLE] = {0};
 MapBotFace CDeZhouGameLogic::s_mapBotFace;
 MapBotChat CDeZhouGameLogic::s_mapBotChat;

@@ -40,5 +40,5 @@ private:
 	bool            m_bAutoConnect;
 
 	int             m_nPort;
-	string          m_IP;
+	std::string     m_IP;
 };

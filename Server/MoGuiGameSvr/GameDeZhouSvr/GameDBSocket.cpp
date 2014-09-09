@@ -2,6 +2,9 @@
 
 #include "server.h"
 
+using namespace std;
+using namespace AGBase;
+
 CGameDBSocket::CGameDBSocket(  CServer* server ):CMoGuiClientSocket( server->GetConnectPool() )
 {
 	assert(server);

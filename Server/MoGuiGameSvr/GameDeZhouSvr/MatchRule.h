@@ -55,8 +55,8 @@ public:
 	UINT32                         m_RegisterTime;                  //指设定开始比赛的时间
 	int                            m_IntervalTime;                  //比赛间隔时间
 	INT64                          m_MatchGUID;                     //比赛唯一识别码
-	vector<INT32>                  m_vecAwardMoney;                 //每一名应该拿的资金游戏币数量
-	vector<INT32>                  m_vecAwardJF;                    //比赛积分
+	std::vector<INT32>             m_vecAwardMoney;                 //每一名应该拿的资金游戏币数量
+	std::vector<INT32>             m_vecAwardJF;                    //比赛积分
 
 	short                          m_FirstInterval;                 //两次提醒离游戏开始的间隔
 	short                          m_SecondInterval;
@@ -81,8 +81,8 @@ public:
 	int                            m_BigBlind;                      //当前大盲注和小盲注
 	int                            m_SmallBlind;
 
-	vector<int>                    m_vecBlind;
-	vector<int>                    m_vecTime;
+	std::vector<int>               m_vecBlind;
+	std::vector<int>               m_vecTime;
 
 	//主要是用于测试用的，计算平衡
 	INT64                          m_TotalMatchMoney;               //比赛的全部游戏币

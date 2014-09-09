@@ -224,19 +224,19 @@ public:
 	}
 };
 
-typedef map<int,vector<short> >                   MapBotFace;
-typedef map<int,vector<string> >                  MapBotChat;
-typedef vector<short>                             VectorFaceID;
-typedef vector<short>                             VectorGiftID;
-class CDeZhouGameLogic : public CMemoryPool_Public<CDeZhouGameLogic, 1>, public boost::noncopyable
+typedef std::map<int, std::vector<short> >                   MapBotFace;
+typedef std::map<int, std::vector<std::string> >             MapBotChat;
+typedef std::vector<short>                                   VectorFaceID;
+typedef std::vector<short>                                   VectorGiftID;
+class CDeZhouGameLogic : public AGBase::CMemoryPool_Public<CDeZhouGameLogic, 1>, public boost::noncopyable
 {
 public:
 	explicit CDeZhouGameLogic(CGameTable* pTable);
 	virtual ~CDeZhouGameLogic(void);
 
-	typedef RefPtr<CPlayer>	                          PlayerPtr;
-	typedef map<UINT32,PlayerPtr>                     MapPlayer;
-	typedef map<UINT32,INT64>                         MapTablePlayerWinLoss;
+	typedef AGBase::RefPtr<CPlayer>	                        PlayerPtr;
+	typedef std::map<UINT32, PlayerPtr>                     MapPlayer;
+	typedef std::map<UINT32, INT64>                         MapTablePlayerWinLoss;
 
 	static int s_nWinTimes[MAX_PALYER_ON_TABLE];
 	static MapBotFace                s_mapBotFace;
@@ -262,7 +262,7 @@ public:
 
 	UINT32                         m_StartGameTime;                                 //游戏开始的指定时间
 	UINT32                         m_CurTime;
-	string                         m_ClientTableRule;                               //发送给客户端的规则内容
+	std::string                    m_ClientTableRule;                               //发送给客户端的规则内容
 
 	BYTE	                       m_TableType;                               		//桌子类型，比赛，普通等
 	BYTE						   m_Limite;                                        //是否为有限桌
@@ -338,7 +338,7 @@ public:
 
 public:
 	void                           OnTimer(UINT32 curTime);
-	string                         GetGameRule();
+	std::string                    GetGameRule();
 	int                            InitGameRule();
 	int                            InitGameLogic();
 	bool                           IsTableMatch()const{return m_TableType==TABLE_TYPE_TableMatch;}

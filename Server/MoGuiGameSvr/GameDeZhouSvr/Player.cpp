@@ -3,6 +3,9 @@
 #include "gameroom.h"
 #include "gametable.h"
 
+using namespace std;
+using namespace AGBase;
+
 PLAYERLIST CPlayer::s_pPlayerList;
 int CPlayer::s_State[PLAYER_ST_END] = {0};
 int CPlayer::s_FinishValue[4]={0};
@@ -2129,7 +2132,7 @@ void CPlayer::CheckFriend()
 	 }
  }
 
-void CPlayer::AddMoneyLog(INT64 nAddMoney,string strLog)
+void CPlayer::AddMoneyLog(INT64 nAddMoney,const string& strLog)
 {
 	if( N_CeShiLog::c_MoneyLog )
 	{

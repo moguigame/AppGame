@@ -5,19 +5,16 @@
 
 #include "boost/shared_ptr.hpp"
 
-using namespace AGBase;
-using namespace std;
-
 class CServer;
 class CPlayer;
 
-class GameServerSocket : public CMoGuiServerSocket, public CMemoryPool_Public<GameServerSocket, 100>, public boost::noncopyable
+class GameServerSocket : public CMoGuiServerSocket, public AGBase::CMemoryPool_Public<GameServerSocket, 100>, public boost::noncopyable
 {
 public:
-	GameServerSocket( CServer* server, IConnect* connect );
+	GameServerSocket(CServer* server, AGBase::IConnect* connect);
 	virtual ~GameServerSocket(void);
 
-	typedef RefPtr<CPlayer>	                   PlayerPtr;
+	typedef AGBase::RefPtr<CPlayer>	                   PlayerPtr;
 
 public:
 	UINT32      m_LoginTime;
@@ -26,7 +23,7 @@ private:
 	PlayerPtr   m_pPlayer;
 
 	UINT32      m_LoginPID;           //验证时玩家送上来的NID;
-	string      m_strSessionKey;      //当前当次验证产生的SESSION
+	std::string m_strSessionKey;      //当前当次验证产生的SESSION
 
 	int         m_Step;               //记录玩家发送XY的步聚
 	UINT32      m_nStartTime;         //连接上来的时间
@@ -48,8 +45,8 @@ public:
 	void        SetActiveTime(UINT32 nTime){m_nActiveTime=nTime;}
 	UINT32      GetSocketPID() const { return m_LoginPID; }
 	void        SetSocketPID(UINT32 PID) { m_LoginPID = PID; }
-	string      GetSessionKey(){ return m_strSessionKey;}
-	void        SetSessionKey(const string& strKey){ m_strSessionKey = strKey; }
+	std::string GetSessionKey(){ return m_strSessionKey; }
+	void        SetSessionKey(const std::string& strKey){ m_strSessionKey = strKey; }
 	std::string GetIPString();
 	short       GetCloseFlag(){ return m_CloseFlag; };
 

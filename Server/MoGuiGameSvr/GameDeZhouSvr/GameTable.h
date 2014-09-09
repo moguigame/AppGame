@@ -15,16 +15,16 @@ class CServer;
 class CDeZhouGameLogic;
 class CGameServerConfig;
 
-class CGameTable : public CMemoryPool_Public<CGameTable, 1>, public boost::noncopyable
+class CGameTable : public AGBase::CMemoryPool_Public<CGameTable, 1>, public boost::noncopyable
 {
 public:
 	CGameTable(CGameRoom* pRoom,CreateTableInfo& cti);
 	virtual ~CGameTable(void);
 
-	typedef RefPtr<CPlayer>	                   PlayerPtr;
-	typedef map<UINT32,PlayerPtr>              MapPlayer;
-	typedef map<BYTE,PlayerPtr>                MapSitPlayer;
-	typedef map<string,stFuncTimeLog>          MapFuncTime;
+	typedef AGBase::RefPtr<CPlayer>	                PlayerPtr;
+	typedef std::map<UINT32,PlayerPtr>              MapPlayer;
+	typedef std::map<BYTE, PlayerPtr>               MapSitPlayer;
+	typedef std::map<std::string, stFuncTimeLog>    MapFuncTime;
 
 	static CMapFunctionTime                    s_TableFuncTime;
 
@@ -47,11 +47,11 @@ private:
 	UINT16						   m_TableID;
 	UINT32                         m_TableIdx;                                      //独一无二的桌子序列，唯一识别码
 
-	string                         m_TableName;
-	string                         m_Password;                                      //桌子密码
-	string                         m_TableRule;	
-	string                         m_TableRuleEX;
-	string                         m_TableMatchRule;                                //桌子的比赛规则
+	std::string                    m_TableName;
+	std::string                    m_Password;                                      //桌子密码
+	std::string                    m_TableRule;
+	std::string                    m_TableRuleEX;
+	std::string                    m_TableMatchRule;                                //桌子的比赛规则
 	
 	UINT32                         m_FoundByWho;                                    //桌子的创建者
 	
@@ -81,11 +81,11 @@ public:
 	int                            GetTableMatchState()const{ return m_TableMatchState; }
 	void                           SetTableMatchState(int State){ m_TableMatchState = State; }
 	void                           SetClearTableTime(UINT32 nTime){ m_TimeToClearTable = nTime; }
-	const string&                  GetTableName(){ return m_TableName;}
-	const string&                  GetTableRule() const { return m_TableRule; }
-	const string&                  GetTableRuleEX()const { return m_TableRuleEX; }
-	const string&                  GetTableMatchRule()const {return m_TableMatchRule; }
-	const string&                  GetTablePassword() const { return m_Password; }
+	const std::string&             GetTableName(){ return m_TableName; }
+	const std::string&             GetTableRule() const { return m_TableRule; }
+	const std::string&             GetTableRuleEX()const { return m_TableRuleEX; }
+	const std::string&             GetTableMatchRule()const { return m_TableMatchRule; }
+	const std::string&             GetTablePassword() const { return m_Password; }
 	UINT32                         GetFoundPID()const{ return m_FoundByWho; }
 
 	int                            InitTable(CreateTableInfo& cti);
@@ -155,7 +155,7 @@ public:
 	void                           InitMatchTableData();
 	void                           ClearAllPlayer();
 	bool                           PutPlayerSitDown(PlayerPtr pPlayer,INT64 nTableMoney);
-	int                            GetPlayerTableMoney(vector<PlayerPtr>&,vector<INT64>&);
+	int                            GetPlayerTableMoney(std::vector<PlayerPtr>&, std::vector<INT64>&);
 	void                           OnChangeBlind(int BigBlind,int SmallBlind);
 
 	void                           TestPlayerNumber();

@@ -1,5 +1,7 @@
 #include "GameLog.h"
 
+using namespace std;
+
 CGameLog::CGameLog(CGameTable* pTable)
 {
 	if ( pTable )

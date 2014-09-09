@@ -6,6 +6,9 @@
 #include "CGameServerConfig.h"
 #include "MatchRule.h"
 
+using namespace AGBase;
+using namespace std;
+
 CMapFunctionTime CGameRoom::s_RoomFuncTime;
 
 CGameRoom::CGameRoom( CServer* pServer,CreateRoomInfo& cri )

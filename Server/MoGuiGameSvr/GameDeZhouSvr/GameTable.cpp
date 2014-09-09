@@ -4,6 +4,9 @@
 #include "dezhougamelogic.h"
 #include "CGameServerConfig.h"
 
+using namespace std;
+using namespace AGBase;
+
 CMapFunctionTime CGameTable::s_TableFuncTime;
 
 void CGameTable::DebugError(const char* logstr,...)

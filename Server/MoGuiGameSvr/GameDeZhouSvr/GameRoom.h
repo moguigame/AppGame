@@ -5,8 +5,6 @@
 
 #include "player.h"
 
-using namespace AGBase;
-using namespace std;
 using namespace MoGui::Game::DeZhou::GS;
 
 class CPlayer;
@@ -15,31 +13,31 @@ class CServer;
 class CMatchRule;
 class CGameServerConfig;
 
-class CGameRoom  : public CMemoryPool_Public<CGameRoom, 1>, public boost::noncopyable
+class CGameRoom  : public AGBase::CMemoryPool_Public<CGameRoom, 1>, public boost::noncopyable
 {
 public:
 	CGameRoom( CServer* pServer,CreateRoomInfo& cri );
 	virtual ~CGameRoom(void);
 
-	typedef RefPtr<CPlayer>	            PlayerPtr;
-	typedef map< UINT16,CGameTable*>    MapTable;
-	typedef map<UINT32,PlayerPtr>       MapPlayer;
-	typedef list<CGameTable*>           ListTable;
-	typedef map<int,list<CGameTable*> > MapListTable;
-	typedef map<string,stFuncTimeLog>   MapFuncTime;
+	typedef AGBase::RefPtr<CPlayer>	          PlayerPtr;
+	typedef std::map< UINT16,CGameTable*>     MapTable;
+	typedef std::map<UINT32, PlayerPtr>       MapPlayer;
+	typedef std::list<CGameTable*>            ListTable;
+	typedef std::map<int, std::list<CGameTable*> > MapListTable;
+	typedef std::map<std::string, stFuncTimeLog>   MapFuncTime;
 
-	static CMapFunctionTime             s_RoomFuncTime;
+	static CMapFunctionTime                   s_RoomFuncTime;
 
 private:
 	CServer*                       m_pServer;
 	const CGameServerConfig*       m_pGSConfig;
 	UINT16						   m_RoomID;
-	string                         m_RoomName;
-	string                         m_Password;               //房间密码
-	string                         m_RoomRule;
-	string                         m_RoomRuleEX;
-	string                         m_RoomMatchRule;
-	string                         m_AreaRule;
+	std::string                    m_RoomName;
+	std::string                    m_Password;               //房间密码
+	std::string                    m_RoomRule;
+	std::string                    m_RoomRuleEX;
+	std::string                    m_RoomMatchRule;
+	std::string                    m_AreaRule;
 
 	UINT16						   m_MaxPlayerInRoom;
 	UINT16		                   m_CurPlayerInRoom;
@@ -50,10 +48,10 @@ private:
 	long long                      m_nMinPlayMoney;
 	long long                      m_nMaxPlayMoney;
 
-	vector<INT16>				   m_vecForBidAreaSee;       //禁止访问和允许访问的区域，两个数组只有一个有效
-	vector<INT16>				   m_vecAllowAreaSee;
-	vector<INT16>                  m_vecForBidAreaPlay;      //充许哪些区域的玩家可以游戏
-	vector<INT16>                  m_vecAllowAreaPlay;
+	std::vector<INT16>			   m_vecForBidAreaSee;       //禁止访问和允许访问的区域，两个数组只有一个有效
+	std::vector<INT16>			   m_vecAllowAreaSee;
+	std::vector<INT16>             m_vecForBidAreaPlay;      //充许哪些区域的玩家可以游戏
+	std::vector<INT16>             m_vecAllowAreaPlay;
 
 	BYTE                           m_RoomPlace;              //指房间放在初级中级高级比赛场等
 	BYTE                           m_RoomType;               //排队，随便从，单桌赛，全房间赛，自建房间
@@ -106,10 +104,10 @@ public:
 	int                            GetTableCount()const{ return int(m_Tables.size());}
 	const BYTE                     GetRoomType()const{ return m_RoomType;}
 	const BYTE                     GetRoomMatchState()const{ return m_MatchRoomState; }
-	string                         GetRoomRule(){ return m_RoomRule; }
-	string                         GetRoomRuleEx(){ return m_RoomRuleEX; }
+	std::string                    GetRoomRule(){ return m_RoomRule; }
+	std::string                    GetRoomRuleEx(){ return m_RoomRuleEX; }
 	CMatchRule*                    GetRoomMatchRule()const{ assert(m_pRoomMatchRule); return m_pRoomMatchRule; }
-	string                         GetClientRoomRule();
+	std::string                    GetClientRoomRule();
 	bool                           IsPlayerInRoom(PlayerPtr pPlayer);
 	void                           SetShowHideTable();
 	void                           SetTableMatchTableState();
@@ -144,7 +142,7 @@ public:
 	bool                           IsRoomPlayerFull() const { return m_CurPlayerInRoom >= m_MaxPlayerInRoom; }
 	bool                           IsRoomTableFull()const{ return m_Tables.size()>=m_MaxTableInRoom;}
 	bool                           IsNeedPassword() const { return m_Password.length() > 0; }
-	bool                           CheckPassword(const string& pwd){ return m_Password == pwd; }
+	bool                           CheckPassword(const std::string& pwd){ return m_Password == pwd; }
 	bool                           PlayerCanSee(PlayerPtr pPlayer);
 	bool                           PlayerCanPlay(PlayerPtr pPlayer);
 

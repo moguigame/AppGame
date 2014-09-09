@@ -12,7 +12,7 @@ public:
 	explicit CGameLog(CGameTable* pTable);
 	~CGameLog();
 
-	typedef  list<string>                  ListGameStep;
+	typedef  std::list<std::string>                  ListGameStep;
 
 private:
 	CGameTable*             m_pTable;
@@ -21,5 +21,5 @@ private:
 public:
 	void Init();
 	void Print();
-	void AddStepString(const string& strStep);
+	void AddStepString(const std::string& strStep);
 };

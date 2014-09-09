@@ -18,10 +18,10 @@ using namespace MoGui::Game::DeZhou;
 using namespace MoGui::Game::DeZhou::GS;
 
 class CPlayer;
-typedef std::list<CPlayer*> PLAYERLIST;
-typedef RefPtr<CPlayer>	 PlayerPtr;
+typedef std::list<CPlayer*>      PLAYERLIST;
+typedef AGBase::RefPtr<CPlayer>	 PlayerPtr;
 
-class CPlayer : public RefCount
+class CPlayer : public AGBase::RefCount
 {
 public:
 	CPlayer();
@@ -139,7 +139,7 @@ public:
 
 public:
 	BYTE                          m_ChangeName;
-	string                        m_NickName;
+	std::string                   m_NickName;
 	BYTE                          m_Sex;
 	BYTE                          m_Age;
 	short                         m_Year;
@@ -149,20 +149,20 @@ private:
 	UINT16                        m_AID;
 	UINT32                        m_PID;
 
-	string						  m_HeadPicURL;
-	string                        m_HomePageURL;
-	string                        m_City;
+	std::string					  m_HeadPicURL;
+	std::string                   m_HomePageURL;
+	std::string                   m_City;
 
 public:
     UINT16                        GetAID() const { return m_AID; }
 	void                          SetAID(INT16 AID){ m_AID = AID;}
 	UINT32                        GetPID() const { return m_PID; }
 	void                          SetPID(UINT32 PID){ m_PID = PID;}
-	const string&                 GetNickName() const { return m_NickName; }
-	const string&                 GetHeadPicURL() const { return m_HeadPicURL; }
-	const string&                 GetHomePageURL() const { return m_HomePageURL; }
-	const string&                 GetCity()const { return m_City; }
-	void                          SetCity(const string& strCity){ m_City = strCity; }
+	const std::string&            GetNickName() const { return m_NickName; }
+	const std::string&            GetHeadPicURL() const { return m_HeadPicURL; }
+	const std::string&            GetHomePageURL() const { return m_HomePageURL; }
+	const std::string&            GetCity()const { return m_City; }
+	void                          SetCity(const std::string& strCity){ m_City = strCity; }
 
 private:
 	////////////////////////游戏属性////////////////////////////////////
@@ -173,7 +173,7 @@ private:
 
 public:
 	BYTE                         m_OpenBank;
-	vector<string>               m_vectorMoneyLog;
+	std::vector<std::string>     m_vectorMoneyLog;
 
 	INT64                        GetGameMoney()const{return m_nGameMoney;}; //取这个主要是用玩显示，不能参与任何数值的计算
 	void                         DecGameMoney(INT64 nMoney);
@@ -190,7 +190,7 @@ public:
 	void                         SetBankMoney(INT64 nMoney){ assert(nMoney>=0);if(nMoney>=0) m_nBankMoney=nMoney;}
 	bool                         IsOpenBank(void){ return m_OpenBank>0; }
 
-    void                         AddMoneyLog(INT64 nAddMoney,string strLog);
+	void                         AddMoneyLog(INT64 nAddMoney, const std::string& strLog);
     void                         ClearMoneyLog();
 
 public:
@@ -210,7 +210,7 @@ public:
 
 	int                          m_WinRecord[WinTypeNum];
 	int                          m_Achieve[4];
-	vector<BYTE>                 m_listHonor;
+	std::vector<BYTE>            m_listHonor;
 
 	UINT32                       m_InvitePID;                               //玩家被谁邀请进来游戏的
 	UINT32                       m_JoinTime;                                //玩家加入游戏的时间
@@ -253,7 +253,7 @@ public:
 	int                          m_RightTimes;                              //次数
 
     //////////////////////玩家其它信息///////////////////////////////////
-	typedef map<UINT16,UINT32>    MapSendRoomTableInfo;	               
+	typedef std::map<UINT16, UINT32>    MapSendRoomTableInfo;
 	MapSendRoomTableInfo          m_mapRoomTime;                            //表示已经发送过房间里桌子列表的房间ID号	
 
 	bool                          HaveSendTableInfoList( UINT16 roomid);
@@ -289,7 +289,7 @@ public:
 	void                          AddReqFriend(UINT32 PID,UINT32 CurTime);
 
 	//礼物表
-	typedef map<int,DBServerXY::DBS_msgUserGiftInfo>            MapUserGiftInfo;
+	typedef std::map<int,DBServerXY::DBS_msgUserGiftInfo>            MapUserGiftInfo;
 
 	MapUserGiftInfo               m_curMapUserGiftInfo;
 	MapUserGiftInfo               m_outMapUserGiftInfo;

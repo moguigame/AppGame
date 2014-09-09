@@ -4,6 +4,9 @@
 #include "server.h"
 #include "player.h"
 
+using namespace AGBase;
+using namespace std;
+
 GameServerSocket::GameServerSocket( CServer* server, IConnect* connect ):CMoGuiServerSocket(connect)
 {
 	TraceStackPath logTP("GameServerSocket::GameServerSocket");
