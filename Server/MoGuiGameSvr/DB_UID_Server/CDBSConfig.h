@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-
-using namespace std;
+#include <string>
+#include <vector>
 
 class CDBSConfig
 {
@@ -32,9 +32,9 @@ public:
 	void OnNewDay(UINT32 CurTime)
 	{
 	}
-	void DebugError(const string& strLog)
+	void DebugError(const std::string& strLog)
 	{
-		cout<<strLog<<" Error----------------------------------------"<<endl;
+		std::cout << strLog << " Error----------------------------------------" << std::endl;
 	}
 	bool CeshiMode()
 	{
@@ -43,67 +43,67 @@ public:
 
 	void Init()
 	{
-		string strPath;
+		std::string strPath;
 		char CurPath[256],TempBuf[256];
 
 		::GetCurrentDirectory(255,CurPath);
-		strPath = string(CurPath)+"\\"+"dbs_dz.ini";
+		strPath = std::string(CurPath) + "\\" + "dbs_dz.ini";
 
 		m_GameID = ::GetPrivateProfileInt("serverconfig","gameid",0,strPath.c_str());
 		if ( m_GameID == 0 ) DebugError("m_GameID");
-		cout<<"GameID="<<m_GameID<<endl;
+		std::cout << "GameID=" << m_GameID << std::endl;
 
 		m_Port = ::GetPrivateProfileInt("serverconfig","port",0,strPath.c_str());
 		if(m_Port == 0) DebugError("m_Port");
-		cout<<"m_Port="<<m_Port<<endl;
+		std::cout << "m_Port=" << m_Port << std::endl;
 
 		m_ConnectCount = ::GetPrivateProfileInt("serverconfig","connectcount",0,strPath.c_str());
 		if(m_ConnectCount == 0) DebugError("m_ConnectCount");
-		cout<<"m_ConnectCount="<<m_ConnectCount<<endl;
+		std::cout << "m_ConnectCount=" << m_ConnectCount << std::endl;
 
 		m_OutCount = ::GetPrivateProfileInt("serverconfig","outcount",0,strPath.c_str());
 		if(m_OutCount == 0) DebugError("m_OutCount");
-		cout<<"m_OutCount="<<m_OutCount<<endl;
+		std::cout << "m_OutCount=" << m_OutCount << std::endl;
 
 		m_MemCount = ::GetPrivateProfileInt("serverconfig","cachcount",0,strPath.c_str());
 		if(m_MemCount == 0) DebugError("m_MemCount");
-		cout<<"m_MemCount="<<m_MemCount<<endl;
+		std::cout << "m_MemCount=" << m_MemCount << std::endl;
 
 		if( m_MemCount > 0 )
 		{
-			string strTemp,strKey;
+			std::string strTemp, strKey;
 			for (int nLoop=0;nLoop<m_MemCount;nLoop++)
 			{
 				strKey = "cach" + Tool::N2S(nLoop+1);
 				::GetPrivateProfileString("serverconfig",strKey.c_str(),"",TempBuf,255,strPath.c_str());
-				strTemp = string(TempBuf);
-				if (strTemp.empty()) cout<<"strTemp Error"<<endl;
-				cout<<"strTemp="<<strTemp<<endl;
+				strTemp = std::string(TempBuf);
+				if (strTemp.empty()) std::cout << "strTemp Error" << std::endl;
+				std::cout << "strTemp=" << strTemp << std::endl;
 				m_MemcachIpPort.push_back(strTemp);
 			}
 		}
 		
 		//::GetPrivateProfileString("serverconfig","connect","",TempBuf,255,strPath.c_str());
-		//m_strDBConnect = string(TempBuf);
+		//m_strDBConnect = std::string(TempBuf);
 		//if (m_strDBConnect.empty()) DebugError("m_strDBConnect");
 		//cout<<"m_strDBConnect="<<m_strDBConnect<<endl;
 
 		m_ThreadCount = ::GetPrivateProfileInt("serverconfig","threadcount",0,strPath.c_str());
 		if( m_ThreadCount<1 || m_ThreadCount>4 ) DebugError("m_ThreadCount");
-		cout<<"m_DBCount="<<m_ThreadCount<<endl;
+		std::cout << "m_DBCount=" << m_ThreadCount << std::endl;
 
 		m_QuickDB = ::GetPrivateProfileInt("serverconfig","quickdb",0,strPath.c_str());
-		cout<<"m_QuickDB="<<m_QuickDB<<endl;
+		std::cout << "m_QuickDB=" << m_QuickDB << std::endl;
 
 		m_CeShiMode = ::GetPrivateProfileInt("serverconfig","ceshimode",0,strPath.c_str());
-		cout<<"m_CeShiMode="<<m_CeShiMode<<endl;
+		std::cout << "m_CeShiMode=" << m_CeShiMode << std::endl;
 
 		std::string strName,strPW;
 		::GetPrivateProfileString("serverconfig","name","",TempBuf,255,strPath.c_str());
-		strName = string(TempBuf);
+		strName = std::string(TempBuf);
 
 		::GetPrivateProfileString("serverconfig","password","",TempBuf,255,strPath.c_str());
-		strPW = string(TempBuf);
+		strPW = std::string(TempBuf);
 
 		if ( strName.length() && strPW.length() )
 		{
@@ -121,8 +121,8 @@ public:
 			DebugError(" Name Password ");
 		}
 
-		cout<<endl;
-		cout<<endl;
+		std::cout << std::endl;
+		std::cout << std::endl;
 	}
 
 public:
@@ -133,15 +133,16 @@ public:
 	int                m_OutCount;
 
 	int                m_MemCount;
-	vector<string>     m_MemcachIpPort;
 
-	string             m_NamePW;
-	string             m_strDBConfig;
-	string             m_strDBUser;
-	string             m_strDBGame;
-	string             m_strDBLog;
-	string             m_strDBFriend;
-	string             m_strDBProp;
+	std::vector<std::string>     m_MemcachIpPort;
+
+	std::string             m_NamePW;
+	std::string             m_strDBConfig;
+	std::string             m_strDBUser;
+	std::string             m_strDBGame;
+	std::string             m_strDBLog;
+	std::string             m_strDBFriend;
+	std::string             m_strDBProp;
 
 	int                m_ThreadCount;
 	int                m_QuickDB;             //指是否要通过多线程快速记录玩家的游戏币

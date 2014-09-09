@@ -8,7 +8,6 @@
 
 using namespace MoGui::Game::DeZhou;
 using namespace MoGui::MoGuiXY::PublicXY;
-using namespace std;
 
 class CDBOperator;
 class CServer;

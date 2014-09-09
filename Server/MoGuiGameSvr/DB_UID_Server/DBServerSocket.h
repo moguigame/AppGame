@@ -4,10 +4,10 @@
 
 class CServer;
 
-class CDBServerSocket : public CMoGuiServerSocket,public CMemoryPool_Public<CDBServerSocket, 1>, public boost::noncopyable
+class CDBServerSocket : public CMoGuiServerSocket, public AGBase::CMemoryPool_Public<CDBServerSocket, 1>, public boost::noncopyable
 {
 public:
-	CDBServerSocket( CServer* server, IConnect* connect );
+	CDBServerSocket(CServer* server, AGBase::IConnect* connect);
 	virtual ~CDBServerSocket(void);
 
 public:

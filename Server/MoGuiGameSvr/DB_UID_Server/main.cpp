@@ -1,8 +1,5 @@
 #include "server.h"
 
-using namespace AGBase;
-using namespace std;
-
 int main(int argc, char** argv)
 {
 	CServer s;

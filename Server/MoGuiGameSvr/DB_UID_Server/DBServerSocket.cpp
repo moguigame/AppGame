@@ -2,6 +2,9 @@
 
 #include "server.h"
 
+using namespace std;
+using namespace AGBase;
+
 CDBServerSocket::CDBServerSocket( CServer* server, IConnect* connect ):CMoGuiServerSocket(connect)
 {
 	assert( connect );
