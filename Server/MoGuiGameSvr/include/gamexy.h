@@ -565,7 +565,7 @@ namespace DeZhou
 		{
 			bos << spi.m_SitID;
 			bos << spi.m_GiftID;
-			bos << spi.m_PID;			
+			bos << spi.m_PID;
 
 			bos << spi.m_nJF;
 			bos << spi.m_nExperience;

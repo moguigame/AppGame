@@ -109,12 +109,9 @@ public:
 		{
 			m_NamePW = strName + "/" + strPW;
 
-			m_strDBConfig = m_NamePW + "@Config";
 			m_strDBUser   = m_NamePW + "@User";
 			m_strDBGame   = m_NamePW + "@Game";
 			m_strDBLog    = m_NamePW + "@Log";
-			m_strDBFriend = m_NamePW + "@Friend";
-			m_strDBProp   = m_NamePW + "@Prop";
 		}
 		else
 		{
@@ -137,12 +134,9 @@ public:
 	std::vector<std::string>     m_MemcachIpPort;
 
 	std::string             m_NamePW;
-	std::string             m_strDBConfig;
 	std::string             m_strDBUser;
 	std::string             m_strDBGame;
 	std::string             m_strDBLog;
-	std::string             m_strDBFriend;
-	std::string             m_strDBProp;
 
 	int                m_ThreadCount;
 	int                m_QuickDB;             //指是否要通过多线程快速记录玩家的游戏币

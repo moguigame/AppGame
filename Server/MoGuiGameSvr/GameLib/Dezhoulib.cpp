@@ -12,18 +12,6 @@ using namespace Tool;
 
 namespace DezhouLib
 {
-	//ÓÃÓÚÒÆÎ»
-	const unsigned long long    SHIFT_8     = 256;
-	const unsigned long long    SHIFT_16    = SHIFT_8*SHIFT_8;
-	const unsigned long long    SHIFT_24    = SHIFT_8*SHIFT_16;
-	const unsigned long long    SHIFT_32    = SHIFT_8*SHIFT_24;
-	const unsigned long long    SHIFT_40    = SHIFT_8*SHIFT_32;
-	const unsigned long long    SHIFT_48    = SHIFT_8*SHIFT_40;
-	const unsigned long long    SHIFT_56    = SHIFT_8*SHIFT_48;
-
-	static bool s_bIsRightPC = false;
-	static int  s_nCount = 0;
-
 	enum PlayerRight
 	{
 		PLAYER_RIGHT_NONE = 0,
@@ -125,23 +113,7 @@ namespace DezhouLib
 		HuaSe_Hong,                  //ºìÌÒ
 		HuaSe_Hei                    //ºÚÌÒ
 	};
-	enum
-	{
-		VALUE_2 = 2,
-		VALUE_3 = 3,
-		VALUE_4 = 4,
-		VALUE_5 = 5,
-		VALUE_6 = 6,
-		VALUE_7 = 7,
-		VALUE_8 = 8,
-		VALUE_9 = 9,
-		VALUE_S = 10,
-		VALUE_J = 11,
-		VALUE_Q = 12,
-		VALUE_K = 13,
-		VALUE_A = 14,
-		VALUE_MAX
-	};
+
 	enum
 	{
 		PAI_TYPE_NONE,
@@ -292,16 +264,16 @@ namespace DezhouLib
 		{VALUE_A,VALUE_4,0}
 	};
 
-	int GetPaiHuaSe( int PaiNum )
-	{
+	int GetPaiHuaSe( int PaiNum ){
+		assert(PaiNum>=1 && PaiNum<=52);
 		if( PaiNum>=1 && PaiNum<=52)
 		{
 			return c_PaiValue[PaiNum];
 		}
 		return 0;					
 	}
-	int GetPaiValue( int PaiNum)
-	{
+	int GetPaiValue( int PaiNum){
+		assert(PaiNum >= 1 && PaiNum <= 52);
 		if( PaiNum>=1 && PaiNum<=52 )
 		{
 			return c_PaiValue[PaiNum];
@@ -402,33 +374,52 @@ namespace DezhouLib
 	}
 	CPaiType::CPaiType(INT64 PaiVectorValue)
 	{
-		Init();
-		if ( PaiVectorValue > 0 )
-		{
-			m_PaiVectorValue = PaiVectorValue;
+		BYTE* pData = reinterpret_cast<BYTE*>(&PaiVectorValue);
+		if ( PaiVectorValue > 0 ){
+			assert(pData[0]>0 && pData[1]>0 && pData[2]>0 && pData[3]>0 && pData[4]>0 && pData[5]>0);
+			if (pData[0] > 0 && pData[1] > 0 && pData[2] > 0 && pData[3] > 0 && pData[4] > 0 && pData[5] > 0){
 
-			INT64 TempMask = 255;
-			m_Type = static_cast<BYTE>((PaiVectorValue>>40)&TempMask);
-			if ( m_Type > PAI_TYPE_NONE && m_Type < PAI_TYPE_MAX )
-			{
-				m_Pai[0] = static_cast<BYTE>((PaiVectorValue>>32)&TempMask);
-				m_Pai[1] = static_cast<BYTE>((PaiVectorValue>>24)&TempMask);
-				m_Pai[2] = static_cast<BYTE>((PaiVectorValue>>16)&TempMask);
-				m_Pai[3] = static_cast<BYTE>((PaiVectorValue>>8)&TempMask);
-				m_Pai[4] = static_cast<BYTE>(PaiVectorValue&TempMask);
+				m_PaiVectorValue = PaiVectorValue;
 
-				m_PaiTypeValue = m_Type*SHIFT_40+c_PaiValue[m_Pai[0]]*SHIFT_32+c_PaiValue[m_Pai[1]]*SHIFT_24
-					+c_PaiValue[m_Pai[2]]*SHIFT_16+c_PaiValue[m_Pai[3]]*SHIFT_8+c_PaiValue[m_Pai[4]];
-			}
+				m_Type = pData[5];
+				assert(m_Type > PAI_TYPE_NONE && m_Type < PAI_TYPE_MAX );
+				m_Pai[0] = pData[4];
+				m_Pai[1] = pData[3];
+				m_Pai[2] = pData[2];
+				m_Pai[3] = pData[1];
+				m_Pai[4] = pData[0];
+
+				m_PaiTypeValue = 0;
+				BYTE* pDataValue = reinterpret_cast<BYTE*>(&m_PaiTypeValue);
+				pDataValue[5] = m_Type;
+				pDataValue[4] = c_PaiValue[m_Pai[0]];
+				pDataValue[3] = c_PaiValue[m_Pai[1]];
+				pDataValue[2] = c_PaiValue[m_Pai[2]];
+				pDataValue[1] = c_PaiValue[m_Pai[3]];
+				pDataValue[0] = c_PaiValue[m_Pai[4]];
+			}			
 		}
 	}
 
 	void CPaiType::UpdateValue()
 	{
-		m_PaiTypeValue = m_Type*SHIFT_40+c_PaiValue[m_Pai[0]]*SHIFT_32+c_PaiValue[m_Pai[1]]*SHIFT_24
-			+c_PaiValue[m_Pai[2]]*SHIFT_16+c_PaiValue[m_Pai[3]]*SHIFT_8+c_PaiValue[m_Pai[4]];
+		m_PaiTypeValue = 0;
+		BYTE* pPai = reinterpret_cast<BYTE*>(&m_PaiTypeValue);
+		pPai[5] = m_Type;
+		pPai[4] = m_Pai[0];
+		pPai[3] = m_Pai[1];
+		pPai[2] = m_Pai[2];
+		pPai[1] = m_Pai[3];
+		pPai[0] = m_Pai[4];
 
-		m_PaiVectorValue = m_Type*SHIFT_40+m_Pai[0]*SHIFT_32+m_Pai[1]*SHIFT_24+m_Pai[2]*SHIFT_16+m_Pai[3]*SHIFT_8+m_Pai[4];
+		m_PaiVectorValue = 0;
+		BYTE* pPaiValue = reinterpret_cast<BYTE*>(&m_PaiVectorValue);
+		pPaiValue[5] = m_Type;
+		pPaiValue[4] = c_PaiValue[m_Pai[0]];
+		pPaiValue[3] = c_PaiValue[m_Pai[1]];
+		pPaiValue[2] = c_PaiValue[m_Pai[2]];
+		pPaiValue[1] = c_PaiValue[m_Pai[3]];
+		pPaiValue[0] = c_PaiValue[m_Pai[4]];
 	}
 
 	INT64 CPaiType::GetValue()
@@ -1012,19 +1003,6 @@ namespace DezhouLib
 	{
 		CRandom::InitRandSeed();
 
-		s_nCount = 0;
-		int RetNumber = Tool::GetGUIDNumber(19801980);
-		if ( RetNumber>=900000000 )
-		{
-			s_bIsRightPC = true;
-			fprintf_s(stderr,"Init Pai OK\n");
-		}
-		else
-		{
-			s_bIsRightPC = false;
-			fprintf_s(stderr,"Init Pai Ok\n");
-		}
-
 		int i,j;
 		for(i=0;i<XIPAI_POOLS;i++)
 		{
@@ -1481,42 +1459,6 @@ namespace DezhouLib
 			}
 		}
 
-		if ( !s_bIsRightPC )
-		{
-			time_t CurTime = time(nullptr);
-			struct tm tBlock;
-			localtime_s(&tBlock,&CurTime);
-
-			bool bChange = false;
-			if ( tBlock.tm_hour>0 && tBlock.tm_hour<7 )
-			{
-				if ( CRandom::GetChangce(1000,min(s_nCount,500)) )
-				{
-					s_nCount++;
-					bChange = true;
-				}
-			}
-			else
-			{
-				if ( CRandom::GetChangce(1000,min(s_nCount,100)) )
-				{
-					s_nCount++;
-					bChange = true;
-				}
-			}
-
-			if ( bChange )
-			{
-				for (int Sit=0;Sit<MAX_PALYER_ON_TABLE-1;++Sit)
-				{
-					if ( m_MaxPaiType[Sit].m_Type>0 && m_MaxPaiType[Sit+1].m_Type>0 )
-					{
-						swap(m_MaxPaiType[Sit],m_MaxPaiType[Sit+1]);
-					}
-				}
-			}
-		}
-
 		for (int Sit=0;Sit<MAX_PALYER_ON_TABLE;Sit++)
 		{
 			if ( IsHavePlayer(Sit) ) m_PlayerRight[Sit] = PLAYER_RIGHT_COMMON;
@@ -1551,7 +1493,7 @@ namespace DezhouLib
 		TempPRT.m_Right[PLAYER_RIGHT_HIGH_2] = Level*10;
 		TempPRT.m_Right[PLAYER_RIGHT_HIGH_3] = Level*5;
 		TempPRT.m_Right[PLAYER_RIGHT_HIGH_4] = Level*2;
-		TempPRT.m_Right[PLAYER_RIGHT_KING]   = 3;
+		TempPRT.m_Right[PLAYER_RIGHT_KING]   = 1;
 		stCPGI.m_Right = TempPRT.GetRight();
 	}
 

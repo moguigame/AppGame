@@ -421,7 +421,6 @@ namespace MoGui
 				const int First_Recv20                     = 4;    //广交朋友，收到20份礼物
 				const int First_ShowFace100                = 5;    //有说有笑，发出100次表情
 				const int First_Friend1                    = 6;    //至少有你，有一个牌友
-				const int Frist_Invite1                    = 7;    //好友分享，成功邀请一名好友
 				const int Frist_WinJuBaoPeng               = 8;    //铜聚宝盆，以三条及以上牌型获得一次聚宝盆奖励
 
 				const int First_ThreeWin1                  = 11;    //三条，以三条获得一场胜利
@@ -452,7 +451,6 @@ namespace MoGui
 				const int Second_Recv200                   = 54;    //魅力四射，收到200份礼物
 				const int Second_ShowFace500               = 55;    //笑口常开，发送500次表情
 				const int Second_Friend30                  = 56;    //广交朋友，有30名牌友
-				const int Second_Invite10                  = 57;    //集结号，  发微博邀请到10名玩家
 				const int Second_WinJuBaoPengFour          = 58;    //银聚宝盆，以四条获得一次聚宝盆奖励
 
 				const int Second_ThreeWin20                = 61;    //三条高手，以三条获得20场胜利
@@ -465,9 +463,7 @@ namespace MoGui
 				const int Seoncd_Win5W                     = 68;    //赢5万，一把赢得5万游戏币
 				const int Seoncd_Win25W                    = 69;    //赢25万，一把赢得25万游戏币
 				const int Second_MoneyUp1000W              = 70;    //千万富翁，游戏币数量到达1000W
-
-
-				//const int Second_AllInWin50                = 71;    //勇往直前，50次ALLIN获得胜利
+				
 				const int Seoncd_GoOnWin6                  = 72;    //连胜六局，连续6局获得胜利
 				const int Second_Land10                    = 73;    //连战十日，连续10天每天游戏不低于半小时
 
@@ -481,7 +477,6 @@ namespace MoGui
 				const int Third_Recv1000                   = 104;    //魅力之星，收到1000份礼物
 				const int Third_ShowFace2500               = 105;    //表情达人，发送2500次表情
 				const int Third_Friend100                  = 106;    //高朋满坐，拥有100名牌友
-				const int Third_Invite30                   = 107;    //招兵买马，邀请到30名玩家
 				const int Third_WinJuBaoPengHuaStr         = 108;    //金聚宝盆，以同花顺获得一次聚宝盆奖励
 
 				const int Third_ThreeWin50                 = 111;    //三条王子，以三条获得50场胜利
@@ -494,8 +489,7 @@ namespace MoGui
 				const int Third_Win100W                    = 118;    //赢100万，一把赢得100万游戏币
 				const int Third_Win500W                    = 119;    //赢500万，一把赢得500万游戏币
 				const int Third_MoneyUp10000W              = 120;    //亿万富翁，游戏币数量到达1亿
-
-				//const int Third_AllInWin100                = 121;    //百战百胜，200次AllIn获得胜利
+				
 				const int Third_GoOnWin10                  = 122;    //越战越勇，连续10局获得胜利
 				const int Third_Land15                     = 123;    //连战半月，连续15天每天游戏不低于半小时
 
@@ -509,7 +503,6 @@ namespace MoGui
 				const int Fouth_Recv10000                  = 154;    //万人迷，  收到10000份礼物
 				const int Fouth_ShowFace10000              = 155;    //表情王子，发送10000次表情
 				const int Fouth_Friend200                  = 156;    //朋友遍天下，拥用200名牌友
-				const int Fouth_Invite100                  = 157;    //德州王子，邀请到100名玩家
 				const int Fouth_WinJuBaoPengKing           = 158;    //钻石聚宝盆，以天皇同花顺获得一次聚宝盆奖励
 
 				const int Fouth_ThreeWin100                = 161;    //三条之神，以三条获得100场胜利
@@ -523,19 +516,10 @@ namespace MoGui
 				const int Fouth_Win20000W                  = 169;    //赢2亿，一把赢得2亿游戏币
 				const int Third_MoneyUp10E	               = 170;    //大富豪，游戏币数量到达10亿
 
-				//const int Fouth_AllInWin500                = 171;    //战无不胜，2000次AllIn获得胜利
 				const int Fouth_GoOnWin15                  = 172;    //势不可挡，连续15局获得胜利
 				const int Fouth_Land30                     = 173;    //魔鬼玩家，连续30天每天游戏不低于半小时
 
-
-				//游戏达人
-				//超级玩家
 			}
-			
-			enum PlayerTask
-			{
-
-			};
 
 			enum ProductType
 			{

@@ -175,6 +175,12 @@ namespace MoGui
 		PM_EveryDay = 2                 //每天一次 
 	};
 
+	
+	//记录错误标识
+	const int GameError_PlayerClientError                 = 1;
+	const int GameError_AddMoney                          = 101;
+	const int GameError_AddMoguiMoney                     = 201;
+
 	namespace N_IncomeAndPay
 	{
 		//1000以下为单独增加 3000以上为单独减 1000到3000之间为即可以增也可以减，其中1000到2000间为增加 2000到3000间为减少 而且必须要有一一对应关系且相差1000的差值

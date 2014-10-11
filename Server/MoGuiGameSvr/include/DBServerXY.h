@@ -106,7 +106,7 @@ namespace DBServerXY
 	const short  DBServerXYID_WDB_MaxMoney                         = MoGui_SERVER_DB_FRIST+42;
 
 	const short  DBServerXYID_WDB_PlayerAction                     = MoGui_SERVER_DB_FRIST+46;
-	const short  DBServerXYID_WDB_PlayerClientError                = MoGui_SERVER_DB_FRIST+47;
+	const short  DBServerXYID_WDB_PlayerClientError                = MoGui_SERVER_DB_FRIST + 47;
 
 	const short  DBServerXYID_WDB_PlayerAward                      = MoGui_SERVER_DB_FRIST+51;
 
@@ -400,8 +400,8 @@ namespace DBServerXY
 
 		unsigned char                 m_Sex;
 
-		BYTE                          m_PlayerType;
-		BYTE                          m_ChangeName;
+		unsigned char                 m_PlayerType;
+		unsigned char                 m_ChangeName;
 
 		std::string                   m_NickName;
 		std::string					  m_HeadPicURL;
@@ -409,7 +409,7 @@ namespace DBServerXY
 		std::string                   m_City;
 
 		SBigNumber                    m_nBankMoney;
-		BYTE                          m_OpenBank;
+		unsigned char                 m_OpenBank;
 		SBigNumber                    m_nMoGuiMoney;
 		SBigNumber 					  m_nGameMoney;
 		SBigNumber                    m_nMatchJF;
@@ -2336,9 +2336,9 @@ namespace DBServerXY
 
 		SBigNumber                    m_AddMoney;
 		SBigNumber                    m_DayMoney;
-		BYTE                          m_OpenBank;
+		unsigned char                 m_OpenBank;
 		UINT32                        m_FreeFaceTime;
-		BYTE                          m_VipLevel;
+		unsigned char                 m_VipLevel;
 		UINT32                        m_VipEndTime;
 		UINT32                        m_ActionTime;
 
@@ -3622,8 +3622,8 @@ namespace DBServerXY
 		short                    m_AID;
 		unsigned int             m_PID;
 
-		std::string              m_strIP;
 		short                    m_Flag;
+		std::string              m_strDes;
 
 		WDB_PlayerClientError() { ReSet(); }
 		void ReSet(){ memset(this,0,sizeof(*this));}
@@ -3631,9 +3631,9 @@ namespace DBServerXY
 		friend bostream& operator<<( bostream& bos, const WDB_PlayerClientError& src )
 		{
 			bos << src.m_AID;
-			bos << src.m_PID;
-			InString(bos,src.m_strIP,20);
+			bos << src.m_PID;			
 			bos << src.m_Flag;
+			InString(bos, src.m_strDes, 250);
 
 			return bos;
 		}
@@ -3642,9 +3642,9 @@ namespace DBServerXY
 			src.ReSet();
 
 			bis >> src.m_AID;
-			bis >> src.m_PID;
-			OutString(bis,src.m_strIP,20);
+			bis >> src.m_PID;			
 			bis >> src.m_Flag;
+			OutString(bis, src.m_strDes, 250);
 
 			return bis;
 		}

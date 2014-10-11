@@ -4495,11 +4495,12 @@ int CServer::OnWDBPlayerClientError( CDBServerSocket* pSocket,CRecvMsgPacket& ms
 	DBServerXY::WDB_PlayerClientError msgPCE;
 	TransplainMsg(msgPack,msgPCE);
 
-	RWDB_PlayerClientError rwdbMsgPCE;
+	RWDB_GameError rwdbMsgPCE;
 	rwdbMsgPCE.m_AID     = msgPCE.m_AID;
 	rwdbMsgPCE.m_PID     = msgPCE.m_PID;
-	rwdbMsgPCE.m_IP      = msgPCE.m_strIP;
 	rwdbMsgPCE.m_Flag    = msgPCE.m_Flag;
+	rwdbMsgPCE.m_Des     = msgPCE.m_strDes;
+	rwdbMsgPCE.m_Key     = std::string("PlayerClientError");
 
 	m_RWDBMsgManager.PushRWDBMsg(rwdbMsgPCE);
 

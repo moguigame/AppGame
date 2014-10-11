@@ -172,7 +172,7 @@ private:
     INT64                        m_nMatchJF;                                //用于竞换奖品的
 
 public:
-	BYTE                         m_OpenBank;
+	unsigned char                m_OpenBank;
 	std::vector<std::string>     m_vectorMoneyLog;
 
 	INT64                        GetGameMoney()const{return m_nGameMoney;}; //取这个主要是用玩显示，不能参与任何数值的计算
@@ -397,7 +397,6 @@ public:
 	void     CheckRecvGift();
 	void     CheckShowFace();
 	void     CheckFriend();
-	void     CheckInvite();
 	void     CheckWinMoney(INT64 nWinMoney);
 	void     CheckOwnMoneyHonor();
 	void     CheckJuBaoPeng(int nType);

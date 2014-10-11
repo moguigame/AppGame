@@ -109,14 +109,12 @@ namespace RWDB_XY
 	const short RWDB_XYID_MakeFriend                               = 31;
 	const short RWDB_XYID_SendMoney                                = 32;
 	const short RWDB_XYID_IncomeAndPay                             = 33;
-	const short RWDB_XYID_GameMoneyError                           = 34;
 
 	const short RWDB_XYID_PlayerActionLog                          = 41;
-	const short RWDB_XYID_PlayerClientError                        = 42;
+	const short RWDB_XYID_GameError                                = 42;
 	const short RWDB_XYID_ChatLog                                  = 43;
 
 	const short RWDB_XYID_MoGuiMoneyLog                            = 51;
-	const short RWDB_XYID_MoGuiMoneyError                          = 52;
 
 	const short RWDB_XYID_TableInfo                                = 71;
 	const short RWDB_XYID_UpdateGiftInfo                           = 72;
@@ -1076,58 +1074,6 @@ namespace RWDB_XY
 		}
 	};
 
-	struct RWDB_GameMoneyError
-	{
-		enum { XY_ID = RWDB_XYID_GameMoneyError };
-
-		short                       m_AID;
-		UINT32                      m_PID;
-		INT64                       m_nAddMoney;
-		INT64                       m_nCurGameMoney;
-		INT64                       m_nAddHongBao;
-		INT64                       m_nCurHongBao;
-		std::string                 m_strLogMsg;
-
-		RWDB_GameMoneyError(){ ReSet();}
-		void ReSet()
-		{
-			m_AID = 0;
-			m_PID = 0;
-			m_nAddMoney = 0;
-			m_nCurGameMoney = 0;
-			m_nAddHongBao = 0;
-			m_nCurHongBao = 0;
-			m_strLogMsg = "";
-		}
-	
-		friend bostream& operator<<( bostream& bos, const RWDB_GameMoneyError& src )
-		{
-			bos << src.m_AID;
-			bos << src.m_PID;
-			bos << src.m_nAddMoney;
-			bos << src.m_nCurGameMoney;
-			bos << src.m_nAddHongBao;
-			bos << src.m_nCurHongBao;
-			InString(bos,src.m_strLogMsg,MAX_MSG_LEN);
-
-			return bos;
-		}
-		friend bistream& operator>>( bistream& bis, RWDB_GameMoneyError& src )
-		{
-			src.ReSet();
-
-			bis >> src.m_AID;
-			bis >> src.m_PID;
-			bis >> src.m_nAddMoney;
-			bis >> src.m_nCurGameMoney;
-			bis >> src.m_nAddHongBao;
-			bis >> src.m_nCurHongBao;
-			OutString(bis,src.m_strLogMsg,MAX_MSG_LEN);
-
-			return bis;
-		}
-	};
-
 	struct RWDB_PlayerActionLog
 	{
 		enum { XY_ID = RWDB_XYID_PlayerActionLog };
@@ -1180,34 +1126,39 @@ namespace RWDB_XY
 		}
 	};
 
-	struct RWDB_PlayerClientError
+	struct RWDB_GameError
 	{
-		enum { XY_ID = RWDB_XYID_PlayerClientError };
+		enum { XY_ID = RWDB_XYID_GameError };
 
 		short                    m_AID;
 		UINT32                   m_PID;
-		std::string              m_IP;
-		short                    m_Flag;
+		int                      m_Flag;
+		std::string              m_Key;
+		std::string              m_Des;
 
-		RWDB_PlayerClientError(){ ReSet();}
+		RWDB_GameError(){ ReSet(); }
 		void ReSet(){ memset(this,0,sizeof(*this));}
 
-		friend bostream& operator<<( bostream& bos, const RWDB_PlayerClientError& src )
+		friend bostream& operator<<(bostream& bos, const RWDB_GameError& src)
 		{
 			bos << src.m_AID;
-			bos << src.m_PID;
-			InString(bos,src.m_IP,20);
+			bos << src.m_PID;			
 			bos << src.m_Flag;
+			InString(bos, src.m_Key, 50);
+			InString(bos, src.m_Des, 255);
+
 			return bos;
 		}
-		friend bistream& operator>>( bistream& bis, RWDB_PlayerClientError& src )
+		friend bistream& operator>>(bistream& bis, RWDB_GameError& src)
 		{
 			src.ReSet();
 
 			bis >> src.m_AID;
-			bis >> src.m_PID;
-			OutString(bis,src.m_IP,20);
-			bis >> src.m_Flag;		
+			bis >> src.m_PID;			
+			bis >> src.m_Flag;
+			OutString(bis, src.m_Key, 50);
+			OutString(bis, src.m_Des, 255);
+
 			return bis;
 		}
 	};
@@ -1701,50 +1652,6 @@ namespace RWDB_XY
 			bis >> src.m_AID;
 			bis >> src.m_Money;
 			bis >> src.m_Flag;
-			OutString(bis,src.m_strLog,MAX_MSG_LEN);
-
-			return bis;
-		}
-	};
-
-	struct RWDB_MoGuiMoneyError
-	{
-		enum { XY_ID = RWDB_XYID_MoGuiMoneyError };
-
-		short                                 m_AID;
-		UINT32                                m_PID;
-		int                                   m_AddMoguiMoney;
-		int                                   m_CurMoGuiMoney;
-		std::string                           m_strLog;
-
-		RWDB_MoGuiMoneyError(){ ReSet();}
-		void ReSet()
-		{
-			m_AID = 0;
-			m_PID = 0;
-			m_AddMoguiMoney = 0;
-			m_CurMoGuiMoney = 0;
-			m_strLog = "";
-		}
-
-		friend bostream& operator<<( bostream& bos, const RWDB_MoGuiMoneyError& src )
-		{
-			bos << src.m_AID;
-			bos << src.m_PID;
-			bos << src.m_AddMoguiMoney;
-			bos << src.m_CurMoGuiMoney;
-			InString(bos,src.m_strLog,MAX_MSG_LEN);
-
-			return bos;
-		}
-		friend bistream& operator>>( bistream& bis, RWDB_MoGuiMoneyError& src )
-		{
-			src.ReSet();
-
-			bis >> src.m_AID;
-			bis >> src.m_PID;
-			bis >> src.m_AddMoguiMoney;
-			bis >> src.m_CurMoGuiMoney;
 			OutString(bis,src.m_strLog,MAX_MSG_LEN);
 
 			return bis;

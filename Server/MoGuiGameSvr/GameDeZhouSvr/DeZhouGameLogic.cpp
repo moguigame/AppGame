@@ -5349,12 +5349,12 @@ void CDeZhouGameLogic::EndGame()
 					if ( EndPlayer > 1 )
 					{
 						stHandPai& rTempHP = m_GP[Sit].m_HandPai;
-						if ( DezhouLib::GetPaiValue(rTempHP.m_Pai[0])==14 && DezhouLib::GetPaiValue(rTempHP.m_Pai[1])==14 )
+						if ( (DezhouLib::GetPaiValue(rTempHP.m_Pai[0])==DezhouLib::VALUE_A) && (DezhouLib::GetPaiValue(rTempHP.m_Pai[1])==DezhouLib::VALUE_A) )
 						{
 							pPlayer->FinishHonor(N_Honor::First_AAWin);
 						}
-						else if ( (DezhouLib::GetPaiValue(rTempHP.m_Pai[0])==7 && DezhouLib::GetPaiValue(rTempHP.m_Pai[1])==2)
-							|| (DezhouLib::GetPaiValue(rTempHP.m_Pai[0])==2 && DezhouLib::GetPaiValue(rTempHP.m_Pai[1])==7) )
+						else if ((DezhouLib::GetPaiValue(rTempHP.m_Pai[0]) == DezhouLib::VALUE_7 && DezhouLib::GetPaiValue(rTempHP.m_Pai[1]) == DezhouLib::VALUE_2)
+							|| (DezhouLib::GetPaiValue(rTempHP.m_Pai[0]) == DezhouLib::VALUE_2 && DezhouLib::GetPaiValue(rTempHP.m_Pai[1]) == DezhouLib::VALUE_7))
 						{
 							pPlayer->FinishHonor(N_Honor::First_27Win);
 						}

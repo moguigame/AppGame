@@ -3755,9 +3755,9 @@ namespace GameXY
 		SBigNumber                    m_nAddMoney;
 		SBigNumber                    m_nGameMoney;
 		SBigNumber                    m_nDayGivenMoney;
-		BYTE                          m_OpenBank;
+		unsigned char                 m_OpenBank;
 		UINT32                        m_FreeFaceTime;
-		BYTE                          m_VipLevel;
+		unsigned char                 m_VipLevel;
 		UINT32                        m_VipEndTime;
 		UINT32                        m_ActionTime;
 

@@ -25,7 +25,7 @@ void CDBOperator::StaticInit()
 	for ( int i=0;i<16;i++)
 	{
 		s_vectorFriendTableName.push_back("friend_" + N2S(i));
-		s_vectorGiftTableName.push_back("dezhou_gift_" + N2S(i));
+		s_vectorGiftTableName.push_back("gift_" + N2S(i));
 	}
 	s_vectorFriendTableName.push_back("");
 	s_vectorGiftTableName.push_back("");
@@ -62,17 +62,6 @@ CDBOperator::CDBOperator(CServer* pServer)
 
 		InitTableName(m_CurTime);
 
-		m_strDBConfig = m_pConfig->m_strDBConfig;
-		otl_connect::otl_initialize();
-		try
-		{
-			m_DBConfigConnect.rlogon(m_strDBConfig.c_str());
-		}
-		catch(otl_exception& p)
-		{
-			CatchDBException(p);
-		}
-
 		m_strDBUser = m_pConfig->m_strDBUser;
 		otl_connect::otl_initialize();
 		try
@@ -106,28 +95,6 @@ CDBOperator::CDBOperator(CServer* pServer)
 			CatchDBException(p);
 		}
 
-		m_strDBFriend = m_pConfig->m_strDBFriend;
-		otl_connect::otl_initialize();
-		try
-		{
-			m_DBFriendConnect.rlogon(m_strDBFriend.c_str());
-		}
-		catch(otl_exception& p)
-		{
-			CatchDBException(p);
-		}
-
-		m_strDBProp = m_pConfig->m_strDBProp;
-		otl_connect::otl_initialize();
-		try
-		{
-			m_DBPropConnect.rlogon(m_strDBProp.c_str());
-		}
-		catch(otl_exception& p)
-		{
-			CatchDBException(p);
-		}
-
 		m_mapFaceInfo.clear();
 		m_mapGiftInfo.clear();
 	}
@@ -139,12 +106,9 @@ CDBOperator::CDBOperator(CServer* pServer)
 
 CDBOperator::~CDBOperator(void)
 {
-	m_DBConfigConnect.logoff();
 	m_DBUserConnect.logoff();
 	m_DBGameConnect.logoff();
 	m_DBLogConnect.logoff();
-	m_DBFriendConnect.logoff();
-	m_DBPropConnect.logoff();
 }
 
 void CDBOperator::DebugError(const char* logstr,...)
@@ -203,12 +167,9 @@ int CDBOperator::OnActiveDBConnect()
 	{
 		m_LastCheckTime = m_CurTime;
 
-		ActiveDBConnect(m_DBConfigConnect,m_strDBConfig);
 		ActiveDBConnect(m_DBUserConnect,m_strDBUser);
 		ActiveDBConnect(m_DBGameConnect,m_strDBGame);
 		ActiveDBConnect(m_DBLogConnect,m_strDBLog);
-		ActiveDBConnect(m_DBFriendConnect,m_strDBFriend);
-		ActiveDBConnect(m_DBPropConnect,m_strDBProp);
 
 		if ( N_CeShiLog::c_FuncTimeLog )
 		{
@@ -403,11 +364,6 @@ int CDBOperator::OnRWDBMsg(ReadWriteDBMessage* pMsg)
 			ret = OnTableInfo(pMsg);
 		}
 		break;
-	case RWDB_GameMoneyError::XY_ID:
-		{
-			ret = OnGameMoneyError(pMsg);
-		}
-		break;
 	case RWDB_UpdateGiftInfo::XY_ID:
 		{
 			ret = OnUpdateGiftInfo(pMsg);
@@ -416,11 +372,6 @@ int CDBOperator::OnRWDBMsg(ReadWriteDBMessage* pMsg)
 	case RWDB_MoGuiMoneyLog::XY_ID:
 		{
 			ret = OnMoGuiMoneyLog(pMsg);
-		}
-		break;
-	case RWDB_MoGuiMoneyError::XY_ID:
-		{
-			ret = OnMoGuiMoneyError(pMsg);
 		}
 		break;
 	case RWDB_UpdateAwardInfo::XY_ID:
@@ -468,9 +419,9 @@ int CDBOperator::OnRWDBMsg(ReadWriteDBMessage* pMsg)
 			ret = OnPlayerActionLog(pMsg);
 		}
 		break;
-	case RWDB_PlayerClientError::XY_ID:
+	case RWDB_GameError::XY_ID:
 		{
-			ret = OnPlayerClientErr(pMsg);
+			ret = OnGameError(pMsg);
 		}
 		break;
 	case RWDB_ChatLog::XY_ID:
@@ -737,18 +688,15 @@ int CDBOperator::OnAddGameMoney(ReadWriteDBMessage* pMsg)
 			stDBGameMoney stGM;
 			if ( ReadUserGameMoney(AID,PID,stGM) == DB_RESULT_SUCCESS )
 			{
-				RWDB_GameMoneyError rwdbGME;
-				rwdbGME.m_AID            = AID;
-				rwdbGME.m_PID            = PID;
-				rwdbGME.m_nAddMoney      = nAddMoney;
-				rwdbGME.m_nCurGameMoney  = stGM.m_GameMoney;
-				rwdbGME.m_nAddHongBao    = nHongBao;
-				rwdbGME.m_nCurHongBao    = stGM.m_HongBao;
-				rwdbGME.m_strLogMsg      = "OnAddGameMoney";
+				RWDB_GameError rwdbGE;
+				rwdbGE.m_AID = AID;
+				rwdbGE.m_PID = PID;
+				rwdbGE.m_Flag = GameError_AddMoney;
+				rwdbGE.m_Des = "AddMoney=" + N2S(nAddMoney) + " CurMoney=" + N2S(stGM.m_GameMoney) + " AddHaoBao=" + N2S(nHongBao) + " CurHaoBao=" + N2S(stGM.m_HongBao);
+				rwdbGE.m_Key = "OnAddGameMoney";
 				CRWDBMsgManage*    pMsgManager = m_pServer->GetRWDBManager();
-				if ( pMsgManager )
-				{
-					pMsgManager->PushRWDBMsg(rwdbGME);
+				if ( pMsgManager ){
+					pMsgManager->PushRWDBMsg(rwdbGE);
 				}
 
 				DebugError("OnAddGameMoney AID=%d PID=%d nAddMoney=%s CurMoney=%s AddHongBao=%s CurHongBao=%s",
@@ -773,22 +721,22 @@ int CDBOperator::OnWriteUserGift(ReadWriteDBMessage* pMsg)
 	ExplainRWDBMsg(*pMsg,msgWUG);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBPropConnect,m_strDBProp);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
-		std::string strTableName = getGiftTableName(msgWUG.m_RecvPID);
-		if ( strTableName.length() > 0 )
+		std::string strGiftTableName = getGiftTableName(msgWUG.m_RecvPID);
+		if (strGiftTableName.length() > 0)
 		{
-			string strSQL = "insert into " + strTableName + 
+			string strSQL = "insert into " + strGiftTableName +
 				" (RecvPID,SendPID,GiftID,Price,Flag,Name,CreateTime) \
 				values(:f1<unsigned int>,:f2<unsigned int>,:f3<short>,:f4<int>,:f5<short>,:f6<char[50]>,now()) ";
-			otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBPropConnect);
+			otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 			TempDBStream<<msgWUG.m_RecvPID<<msgWUG.m_SendPID<<msgWUG.m_GiftID<<msgWUG.m_Price<<short(N_Gift::GiftST_OnSale)<<msgWUG.m_NickName;
 			TempDBStream.close();
 
 			strSQL = "select @@IDENTITY";
 			//strSQL = "select SCOPE_IDENTITY()";
-			TempDBStream.open(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBPropConnect);
+			TempDBStream.open(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 			if( !TempDBStream.eof() )
 			{
 				TempDBStream >> msgWUG.m_GiftIdx;
@@ -808,7 +756,7 @@ int CDBOperator::OnWriteUserGift(ReadWriteDBMessage* pMsg)
 	catch(otl_exception &p)
 	{
 		CatchDBException(p);
-		CheckOTLException(p,m_DBPropConnect,m_strDBProp);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -1143,12 +1091,6 @@ int CDBOperator::OnAddPlayerInfo(ReadWriteDBMessage* pMsg)
 				string strSQL = "update dezhou_gameinfo set OpenBank=:f1<short> where PID=:f102<unsigned int> ";
 				otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBGameConnect);
 				TempDBStream<<short(msgAPI.m_AddValue)<<msgAPI.m_PID;
-				TempDBStream.flush();
-
-				//if ( TempDBStream.get_rpc() == 0 )
-				//{
-				//	DebugError("OnAddPlayerInfo PID=%d OpenBank=%d",msgAPI.m_PID,int(msgAPI.m_AddValue));
-				//}
 				TempDBStream.close();			
 			}
 			break;
@@ -1223,12 +1165,12 @@ int CDBOperator::OnMakeFriend(ReadWriteDBMessage* pMsg)
 	ExplainRWDBMsg(*pMsg,msgMF);
 
 	int nRet = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBFriendConnect,m_strDBFriend);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		otl_stream TempDBStream;
 		string strSQL = "update " + getFriendTableName(msgMF.m_LeftPID) + " set Flag=:f1<short> where LeftPID=:f2<unsinged int> and RightPID=:f3<unsinged int>";
-		TempDBStream.open( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBFriendConnect );
+		TempDBStream.open(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream <<msgMF.m_Flag<<msgMF.m_LeftPID<<msgMF.m_RightPID;
 		TempDBStream.flush();
 
@@ -1236,7 +1178,7 @@ int CDBOperator::OnMakeFriend(ReadWriteDBMessage* pMsg)
 		{
 			otl_stream DBStream;
 			strSQL = "insert into " + getFriendTableName(msgMF.m_LeftPID) + " (LeftPID,RightPID,Flag) values(:f1<unsigned int>,:f2<unsigned int>,:f3<short>) ";
-			DBStream.open( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBFriendConnect );
+			DBStream.open(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 			DBStream <<msgMF.m_LeftPID<<msgMF.m_RightPID<<msgMF.m_Flag;
 			DBStream.close();
 		}
@@ -1245,7 +1187,7 @@ int CDBOperator::OnMakeFriend(ReadWriteDBMessage* pMsg)
 	catch(otl_exception &p)
 	{
 		CatchDBException(p);
-		CheckOTLException(p,m_DBFriendConnect,m_strDBFriend);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		nRet = DB_RESULT_DBERROR;
 	}
 
@@ -1345,7 +1287,7 @@ int CDBOperator::OnTableInfo(ReadWriteDBMessage* pMsg)
 	ExplainRWDBMsg(*pMsg,msgTI);
 
 	int nRet = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		string TableName = "dezhou_tableprivate_" + Tool::N2S(msgTI.m_ServerID);
@@ -1363,7 +1305,7 @@ int CDBOperator::OnTableInfo(ReadWriteDBMessage* pMsg)
 						EndTime     = :f7<timestamp>\
 						where Idx=:f8<int> ";
 
-		otl_stream DBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect);
+		otl_stream DBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		DBStream<<msgTI.m_TableID<<msgTI.m_TableName<<msgTI.m_Password<<msgTI.m_TableRule
 			<<msgTI.m_TableRuleEX<<msgTI.m_TableMatchRule<<msgTI.m_FoundByWho<<TempOTLTime<<Idx;
 		DBStream.flush();
@@ -1373,7 +1315,7 @@ int CDBOperator::OnTableInfo(ReadWriteDBMessage* pMsg)
 			string TableName = "dezhou_tableprivate_" + Tool::N2S(msgTI.m_ServerID);
 			strSQL = "insert into " + TableName + " (Idx,ServerID,RoomID,TableID,TableName,PassWord,TableRule,TableRuleEX,MatchRule,FoundByWho,EndTime) "
 				+ " values(:f1<int>,:f2<short>,:f3<short>,:f4<short>,:f5<char[50]>,:f6<char[10]>,:f7<char[255]>,:f8<char[255]>,:f28<char[255]>,:f9<unsigned int>,:f10<timestamp> ) ";
-			otl_stream tempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect);
+			otl_stream tempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 			tempDBStream<<Idx<<msgTI.m_ServerID<<msgTI.m_RoomID<<msgTI.m_TableID<<msgTI.m_TableName<<msgTI.m_Password
 				<<msgTI.m_TableRule<<msgTI.m_TableRuleEX<<msgTI.m_TableMatchRule<<msgTI.m_FoundByWho<<TempOTLTime;
 		}
@@ -1383,34 +1325,7 @@ int CDBOperator::OnTableInfo(ReadWriteDBMessage* pMsg)
 	catch(otl_exception &p)
 	{
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
-		nRet = DB_RESULT_DBERROR;
-	}
-
-	return nRet;
-}
-
-int CDBOperator::OnGameMoneyError(ReadWriteDBMessage* pMsg)
-{
-	CLogFuncTime lft(m_FuncTime,"OnGameMoneyError");
-
-	RWDB_GameMoneyError msgGME;
-	ExplainRWDBMsg(*pMsg,msgGME);
-
-	int nRet = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBLogConnect,m_strDBLog);
-	try
-	{
-		string strSQL = "insert into dezhou_money_error (AID,PID,AddMoney,CurMoney,AddHongBao,CurHongBao,LogMsg,ActionTime) \
-						values(:f1<short>,:f2<unsigned int>,:f11<bigint>,:f12<bigint>,:f21<bigint>,:f22<bigint>,:f31<char[255]>,now())";
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect);
-		TempDBStream<<msgGME.m_AID<<msgGME.m_PID<<msgGME.m_nAddMoney<<msgGME.m_nCurGameMoney<<msgGME.m_nAddHongBao<<msgGME.m_nCurHongBao<<msgGME.m_strLogMsg;
-		TempDBStream.close();
-	}
-	catch(otl_exception &p)
-	{
-		CatchDBException(p);
-		CheckOTLException(p,m_DBLogConnect,m_strDBLog);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		nRet = DB_RESULT_DBERROR;
 	}
 
@@ -1425,11 +1340,11 @@ int CDBOperator::OnUpdateGiftInfo(ReadWriteDBMessage* pMsg)
 	ExplainRWDBMsg(*pMsg,msgUGI);
 
 	int nRet = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBPropConnect,m_strDBProp);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		std::string strSQL = "update " + getGiftTableName(msgUGI.m_PID) + " set Flag=:f1<short> where Idx=:f2<int>";
-		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBPropConnect );
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream<<msgUGI.m_Flag<<msgUGI.m_GiftIdx;
 
 		TempDBStream.close();		
@@ -1437,7 +1352,7 @@ int CDBOperator::OnUpdateGiftInfo(ReadWriteDBMessage* pMsg)
 	catch(otl_exception &p)
 	{
 		CatchDBException( p );
-		CheckOTLException(p,m_DBPropConnect,m_strDBProp);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		nRet = DB_RESULT_DBERROR;
 	}
 
@@ -1491,32 +1406,6 @@ int CDBOperator::OnMoGuiMoneyLog(ReadWriteDBMessage* pMsg)
 						values(:f1<unsigned int>,:f2<short>,:f4<int>,:f5<short>,:f6<char[255]>,now())";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect);
 		TempDBStream<<msgMML.m_PID<<msgMML.m_AID<<msgMML.m_Money<<msgMML.m_Flag<<msgMML.m_strLog;
-		TempDBStream.close();
-	}
-	catch(otl_exception &p)
-	{
-		CatchDBException(p);
-		CheckOTLException(p,m_DBLogConnect,m_strDBLog);
-		nRet = DB_RESULT_DBERROR;
-	}
-
-	return nRet;
-}
-int CDBOperator::OnMoGuiMoneyError(ReadWriteDBMessage* pMsg)
-{
-	CLogFuncTime lft(m_FuncTime,"OnMoGuiMoneyError");
-
-	RWDB_MoGuiMoneyError msgMME;
-	ExplainRWDBMsg(*pMsg,msgMME);
-
-	int nRet = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBLogConnect,m_strDBLog);
-	try
-	{
-		string strSQL = "insert into dezhou_mogui_error (AID,PID,AddMoney,CurMoney,Log,ActionTime) \
-						values(:f11<short>,:f1<unsigned int>,:f2<int>,:f21<int>,:f3<char[255]>,now())";
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect);
-		TempDBStream<<msgMME.m_AID<<msgMME.m_PID<<msgMME.m_AddMoguiMoney<<msgMME.m_CurMoGuiMoney<<msgMME.m_strLog;
 		TempDBStream.close();
 	}
 	catch(otl_exception &p)
@@ -1654,7 +1543,7 @@ int CDBOperator::OnChangeUserInfo(ReadWriteDBMessage* pMsg)
 	try
 	{
 		{
-			std::string strSQL = "update user_root set NickName=:f1<char[255]>,ChangeName=0 where PID=:f2<unsigned int>";
+			std::string strSQL = "update user_root set NickName=:f1<char[255]>,InfoFlag=0 where PID=:f2<unsigned int>";
 			otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBUserConnect );
 			TempDBStream<<msgCN.m_NickName<<msgCN.m_PID;
 			TempDBStream.flush();
@@ -1821,21 +1710,21 @@ int CDBOperator::OnPlayerActionLog(ReadWriteDBMessage* pMsg)
 	return ret;
 }
 
-int CDBOperator::OnPlayerClientErr(ReadWriteDBMessage* pMsg)
+int CDBOperator::OnGameError(ReadWriteDBMessage* pMsg)
 {
-	CLogFuncTime lft(m_FuncTime,"OnPlayerClientErr");
+	CLogFuncTime lft(m_FuncTime,"OnGameError");
 
-	RWDB_PlayerClientError msgPCE;
+	RWDB_GameError msgPCE;
 	ExplainRWDBMsg(*pMsg,msgPCE);
 
 	int ret = DB_RESULT_SUCCESS;
 	CheckDBConnect(m_DBLogConnect,m_strDBLog);
 	try
 	{
-		std::string strSQL = "insert into dezhou_error_log (AID,PID,IP,Flag,LogTime) \
-							 values(:f1<short>,:f2<unsigned int>,:f3<char[20]>,:f4<short>,now())";
+		std::string strSQL = "insert into dezhou_error_log (AID,PID,Flag,Key,Des,ActionTime) \
+							 values(:f1<short>,:f2<unsigned int>,:f3<int>,:f4<char[50]>,:f5<char[255]>,now())";
 		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect );
-		TempDBStream<<msgPCE.m_AID<<msgPCE.m_PID<<msgPCE.m_IP<<msgPCE.m_Flag;
+		TempDBStream << msgPCE.m_AID << msgPCE.m_PID << msgPCE.m_Flag << msgPCE.m_Key << msgPCE.m_Des;
 		TempDBStream.close();
 	}
 	catch(otl_exception &p)
@@ -1851,14 +1740,14 @@ int CDBOperator::OnPlayerClientErr(ReadWriteDBMessage* pMsg)
 int CDBOperator::RWDB_Test(INT16 AID,UINT32 PID,string strCity)
 {
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 	}
 	catch(otl_exception &p)
 	{
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -1919,21 +1808,20 @@ int CDBOperator::AddUserMoGuiMoney(INT16 AID,UINT32 PID,int nAddMoney)
 		TempDBStream<<nAddMoney<<PID<<nAddMoney;
 		TempDBStream.flush();
 
-		if ( TempDBStream.get_rpc() == 0 )
-		{
+		if ( TempDBStream.get_rpc() == 0 ){
 			stDBMoguiInfo stDBMM;
 			ReadUserMoguiMoney(AID,PID,stDBMM);
 
-			RWDB_MoGuiMoneyError rwdbMME;
-			rwdbMME.m_AID            = AID;
-			rwdbMME.m_PID            = PID;
-			rwdbMME.m_AddMoguiMoney  = nAddMoney;
-			rwdbMME.m_CurMoGuiMoney  = stDBMM.m_MoGuiMoney;
-			rwdbMME.m_strLog         = "AddUserMoGuiMoney";
+			RWDB_GameError rwdbGE;
+			rwdbGE.m_AID = AID;
+			rwdbGE.m_PID = PID;
+			rwdbGE.m_Flag = GameError_AddMoguiMoney;
+			rwdbGE.m_Des = "AddMogui=" + N2S(nAddMoney) + " " + "CurMogui=" + N2S(stDBMM.m_MoGuiMoney);
+			rwdbGE.m_Key = "AddUserMoGuiMoney";
+			
 			CRWDBMsgManage*    pMsgManager = m_pServer->GetRWDBManager();
-			if ( pMsgManager )
-			{
-				pMsgManager->PushRWDBMsg(rwdbMME);
+			if ( pMsgManager ){
+				pMsgManager->PushRWDBMsg(rwdbGE);
 			}
 
 			DebugError("AddUserMoGuiMoney AID=%d PID=%d nMoguiMoney=%d CurMoney=%d",AID,PID,nAddMoney,stDBMM.m_MoGuiMoney);
@@ -2013,16 +1901,15 @@ int CDBOperator::DBAddUserGameMoney(INT16 AID,UINT32 PID,INT64 nAddMoney)
 			stDBGameMoney stGM;
 			if ( ReadUserGameMoney(AID,PID,stGM) == DB_RESULT_SUCCESS )
 			{
-				RWDB_GameMoneyError rwdbGME;
-				rwdbGME.m_AID            = AID;
-				rwdbGME.m_PID            = PID;
-				rwdbGME.m_nAddMoney      = nAddMoney;
-				rwdbGME.m_nCurGameMoney  = stGM.m_GameMoney;
-				rwdbGME.m_strLogMsg      = "DBAddUserGameMoney";
+				RWDB_GameError rwdbGE;
+				rwdbGE.m_AID = AID;
+				rwdbGE.m_PID = PID;
+				rwdbGE.m_Flag = GameError_AddMoney;
+				rwdbGE.m_Des = "AddMoney=" + N2S(nAddMoney) + " CurMoney=" + N2S(stGM.m_GameMoney);
+				rwdbGE.m_Key = "DBAddUserGameMoney";
 				CRWDBMsgManage*    pMsgManager = m_pServer->GetRWDBManager();
-				if ( pMsgManager )
-				{
-					pMsgManager->PushRWDBMsg(rwdbGME);
+				if ( pMsgManager ){
+					pMsgManager->PushRWDBMsg(rwdbGE);
 				}
 
 				DebugError("DBAddUserGameMoney AID=%d PID=%d nAddMoney=%s CurMoney=%s",
@@ -2173,18 +2060,15 @@ int CDBOperator::UpdateWinLossMoney(const stWinLossMoney& stWLM)
 				stDBGameMoney stGM;
 				if ( ReadUserGameMoney(stWLM.m_AID,stWLM.m_PID,stGM) == DB_RESULT_SUCCESS )
 				{
-					RWDB_GameMoneyError rwdbGME;
-					rwdbGME.m_AID            = stWLM.m_AID;
-					rwdbGME.m_PID            = stWLM.m_PID;
-					rwdbGME.m_nAddMoney      = stWLM.m_nGameMoney;
-					rwdbGME.m_nCurGameMoney  = stGM.m_GameMoney;
-					rwdbGME.m_nAddHongBao    = stWLM.m_nHongBao;
-					rwdbGME.m_nCurHongBao    = stGM.m_HongBao;
-					rwdbGME.m_strLogMsg      = "UpdateWinLossMoney";
+					RWDB_GameError rwdbGE;
+					rwdbGE.m_AID = stWLM.m_AID;
+					rwdbGE.m_PID = stWLM.m_PID;
+					rwdbGE.m_Flag = GameError_AddMoney;
+					rwdbGE.m_Des = "AddMoney=" + N2S(stWLM.m_nGameMoney) + " CurMoney=" + N2S(stGM.m_GameMoney) + " AddHaoBao=" + N2S(stWLM.m_nHongBao) + " CurHaoBao=" + N2S(stGM.m_HongBao);
+					rwdbGE.m_Key = "UpdateWinLossMoney";
 					CRWDBMsgManage*    pMsgManager = m_pServer->GetRWDBManager();
-					if ( pMsgManager )
-					{
-						pMsgManager->PushRWDBMsg(rwdbGME);
+					if ( pMsgManager ){
+						pMsgManager->PushRWDBMsg(rwdbGE);
 					}
 
 					DebugError("UpdateWinLossMoney AID=%d PID=%d nAddMoney=%s CurMoney=%s AddHongBao=%s CurHongBao=%s",
@@ -2211,7 +2095,7 @@ int CDBOperator::WriteTableInfo(stTableInfo& stTI)
 	InterlockedIncrement(&s_WriteOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 
 	try
 	{
@@ -2223,7 +2107,7 @@ int CDBOperator::WriteTableInfo(stTableInfo& stTI)
 
 		strSQL = "update " + strTableName + " set TableName=:f21<char[50]>,PassWord=:f22<char[20]>,TableRule=:f6<char[255]>,\
 											TableRuleEX=:f7<char[255]>,MatchRule=:f8<char[255]> where Idx=:f1<int>";
-		TempDBStream.open(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect);
+		TempDBStream.open(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream<<stTI.m_TableName<<stTI.m_Password<<stTI.m_TableRule<<stTI.m_TableRuleEX<<stTI.m_MatchRule<<Idx;
 		TempDBStream.flush();
 
@@ -2234,7 +2118,7 @@ int CDBOperator::WriteTableInfo(stTableInfo& stTI)
 			strSQL = "insert into " + strTableName + 
 				" (Idx,ServerID,RoomID,TableID,TableName,TableRule,TableRuleEX,MatchRule,FoundByWho) \
 				values(:f1<int>,:f2<short>,:f3<short>,:f4<short>,:f5<char[50]>,:f6<char[255]>,:f7<char[255]>,:f8<char[255]>,:f9<unsigned int> )";
-			TempDBStream.open(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect);
+			TempDBStream.open(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 
 			TempDBStream<<Idx
 				<<stTI.m_ServerID
@@ -2251,7 +2135,7 @@ int CDBOperator::WriteTableInfo(stTableInfo& stTI)
 	catch(otl_exception &p)
 	{
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2264,13 +2148,13 @@ int CDBOperator::ReadFaceInfo(VectorFaceInfo& vectorFI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		vectorFI.clear();
 
 		stFaceInfo stFI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,"select FaceID,Type,PriceFlag,Price,MinPrice,MaxPrice from dezhou_info_face ",m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select FaceID,Type,PriceFlag,Price,MinPrice,MaxPrice from dezhou_info_face ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stFI.Init();
@@ -2290,7 +2174,7 @@ int CDBOperator::ReadFaceInfo(VectorFaceInfo& vectorFI)
 	{
 		vectorFI.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2310,13 +2194,13 @@ int CDBOperator::ReadHonorInfo(VectorHonorInfo& vectorHI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		vectorHI.clear();
 
 		stHonorInfo stHI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,"select ID,Type,Idx,Money from dezhou_info_honor ",m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select ID,Type,Idx,Money from dezhou_info_honor ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stHI.Init();
@@ -2332,7 +2216,7 @@ int CDBOperator::ReadHonorInfo(VectorHonorInfo& vectorHI)
 	{
 		vectorHI.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2344,13 +2228,13 @@ int CDBOperator::ReadGameLevelInfo(VectorPTLevelInfo& vectorGLI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		vectorGLI.clear();
 
 		stPlayTimesInfo stGLI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,"select Level,TotalPlay,AddPlay,Money from dezhou_info_playtimes ",m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select Level,TotalPlay,AddPlay,Money from dezhou_info_playtimes ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stGLI.Init();
@@ -2366,7 +2250,7 @@ int CDBOperator::ReadGameLevelInfo(VectorPTLevelInfo& vectorGLI)
 	{
 		vectorGLI.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2378,14 +2262,14 @@ int CDBOperator::ReadAreaInfo(VectorAreaInfo& vectorArea)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		vectorArea.clear();
 
 		stAreaInfo stAI;
 		string strLandMoney,strJoinMoney;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,"select AID,JoinMoney,LandMoney from dezhou_info_area ",m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select AID,JoinMoney,LandMoney from dezhou_info_area ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stAI.Init();
@@ -2404,7 +2288,7 @@ int CDBOperator::ReadAreaInfo(VectorAreaInfo& vectorArea)
 	{
 		vectorArea.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2416,13 +2300,13 @@ int CDBOperator::ReadProductInfo(VectorProductInfo& vectorPI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		vectorPI.clear();
 
 		ProductInfo stPI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,"select ProductID,Price,ProductType,ProductRule from dezhou_info_product ",m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select ProductID,Price,ProductType,ProductRule from dezhou_info_product ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stPI.Init();
@@ -2438,7 +2322,7 @@ int CDBOperator::ReadProductInfo(VectorProductInfo& vectorPI)
 	{
 		vectorPI.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2458,8 +2342,7 @@ int CDBOperator::UpdateUserProduct(int Idx,INT16 UseFlag)
 		TempDBStream<<UseFlag<<Idx;
 		TempDBStream.flush();
 
-		if ( TempDBStream.get_rpc() == 0 )
-		{
+		if ( TempDBStream.get_rpc() == 0 ){
 			DebugError("UpdateUserProduct Idx=%d UseFlag=%d",Idx,UseFlag);
 		}		
 		TempDBStream.close();
@@ -2567,13 +2450,13 @@ int CDBOperator::ReadGiftInfo(VectorGiftInfo& vectorGI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		vectorGI.clear();
 
 		stGiftInfo stGI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,"select GiftID,Type,PriceFlag,Price,MinPrice,MaxPrice,Rebate,CurLastTime,TotalLastTime from dezhou_info_gift ",m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select GiftID,Type,PriceFlag,Price,MinPrice,MaxPrice,Rebate,CurLastTime,TotalLastTime from dezhou_info_gift ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stGI.Init();
@@ -2596,7 +2479,7 @@ int CDBOperator::ReadGiftInfo(VectorGiftInfo& vectorGI)
 	{
 		vectorGI.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2617,7 +2500,7 @@ int CDBOperator::ReadMatchInfo(INT16 ServerID,VectorDBMatchInfo& vectorMI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		stDBMatchInfo stMI;
@@ -2626,7 +2509,7 @@ int CDBOperator::ReadMatchInfo(INT16 ServerID,VectorDBMatchInfo& vectorMI)
 
 		string strTableName = "dezhou_matchinfo_"+N2S(ServerID);
 		string strSQL = "select MatchID,MatchType,Ticket,TakeMoney,StartMoney,Blind,Award,StrRule,StartTime,StartInterval from " + strTableName;
-		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect );
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 
 		while ( !TempDBStream.eof() )
 		{
@@ -2652,7 +2535,7 @@ int CDBOperator::ReadMatchInfo(INT16 ServerID,VectorDBMatchInfo& vectorMI)
 	{
 		vectorMI.clear();
 		CatchDBException(p);
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 	
@@ -2665,12 +2548,12 @@ int CDBOperator::ReadFriendInfo(INT16 AID,UINT32 PID,VectorFriendInfo& vectorFI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBFriendConnect,m_strDBFriend);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		std::string strSQL = "select RightPID,Flag from " + getFriendTableName(PID)
 			+ " where LeftPID=:f1<unsigned int> and Flag>0 ";
-		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBFriendConnect );
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream<<PID;
 
 		stUserFriendInfo stFI;
@@ -2690,7 +2573,7 @@ int CDBOperator::ReadFriendInfo(INT16 AID,UINT32 PID,VectorFriendInfo& vectorFI)
 		vectorFI.clear();
 
 		CatchDBException( p );
-		CheckOTLException(p,m_DBFriendConnect,m_strDBFriend);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2703,14 +2586,14 @@ int CDBOperator::ReadRoomInfo(INT16 ServerID,VectorRoomInfo& vectorRI)
 
 	int ret = DB_RESULT_SUCCESS;
 
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		UINT32 curTime = UINT32(time(NULL));
 		string strTableName = "dezhou_roominfo_"+N2S(ServerID);
 		string strSQL = "select ServerID,RoomID,RoomName,Password,AreaRule,RoomRule,RoomRuleEX,MatchRule,EndTime from "
 			+ strTableName + " where ServerID=:f<short> ";
-		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect );
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 
 		TempDBStream << ServerID;
 		while ( !TempDBStream.eof() )
@@ -2741,7 +2624,7 @@ int CDBOperator::ReadRoomInfo(INT16 ServerID,VectorRoomInfo& vectorRI)
 	{	
 		vectorRI.clear();
 		CatchDBException( p );
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -2753,7 +2636,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBConfigConnect,m_strDBConfig);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		UINT32 curTime = UINT32(time(NULL));
@@ -2761,7 +2644,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 		string strSQL = "select RoomID,TableID,TableName,PassWord,TableRule,TableRuleEX,MatchRule,FoundByWho,EndTime from " + strTableName +
 			" where ServerID=:f<short>";
 
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream<<ServerID;
 		while ( !TempDBStream.eof() )
 		{
@@ -2794,7 +2677,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 		ret = DB_RESULT_DBERROR;
 		vectorTI.clear();
 		CatchDBException( p );
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 	}
 
 	//读取自建桌子的数据
@@ -2805,7 +2688,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 		string strSQL = "select RoomID,TableID,TableName,PassWord,TableRule,TableRuleEX,MatchRule,FoundByWho,EndTime from " + strTableName +
 			" where ServerID=:f<short>";
 
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBConfigConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream<<ServerID;
 		while ( !TempDBStream.eof() )
 		{
@@ -2837,7 +2720,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 	{
 		ret = DB_RESULT_DBERROR;
 		CatchDBException( p );
-		CheckOTLException(p,m_DBConfigConnect,m_strDBConfig);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 	}
 
 	return ret;
@@ -2848,14 +2731,14 @@ int CDBOperator::ReadUserGiftInfo(INT16 AID,UINT32 PID,VectorDBUserGiftInfo& vec
 	InterlockedIncrement(&s_ReadOperator);
 
 	int ret = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBPropConnect,m_strDBProp);
+	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
 		UINT32 curTime = UINT32(time(NULL));
 	
 		std::string strSQL = "select Idx,SendPID,GiftID,Price,Name,CreateTime from " + getGiftTableName(PID) + 
 			" where RecvPID=:f1<unsigned int> and Flag=1";
-		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBPropConnect );
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 		TempDBStream<<PID;
 
 		UINT32 nEndTime = 0;
@@ -2908,7 +2791,7 @@ int CDBOperator::ReadUserGiftInfo(INT16 AID,UINT32 PID,VectorDBUserGiftInfo& vec
 	{
 		vectorUGI.clear();
 		CatchDBException( p );
-		CheckOTLException(p,m_DBPropConnect,m_strDBProp);
+		CheckOTLException(p, m_DBGameConnect, m_strDBGame);
 		ret = DB_RESULT_DBERROR;
 	}
 
@@ -3088,7 +2971,7 @@ int CDBOperator::ReadUserDataInfo(INT16 AID,UINT32 PID,stUserDataInfo& stUDI)
 	CheckDBConnect(m_DBUserConnect,m_strDBUser);
 	try
 	{
-		string strSQL = "select NickName,ChangeName,Sex,HeadPicURL,HomeURL,City,GameInfo,InviteAID,InvitePID,PlayerLevel,JoinTime \
+		string strSQL = "select NickName,InfoFlag,Sex,HeadPicURL,HomeURL,City,GameInfo,InviteAID,InvitePID,PlayerLevel,JoinTime \
 						from v_userdatainfo where PID=:f1<unsigned int> limit 1";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBUserConnect );
 		TempDBStream<<PID;

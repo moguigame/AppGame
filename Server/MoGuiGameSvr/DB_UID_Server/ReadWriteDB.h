@@ -51,10 +51,8 @@ public:
 
 	int OnIncomAndPay(ReadWriteDBMessage* pMsg);
 	int OnChangeBankLog(ReadWriteDBMessage* pMsg);
-	int OnGameMoneyError(ReadWriteDBMessage* pMsg);
 
 	int OnMoGuiMoneyLog(ReadWriteDBMessage* pMsg);
-	int OnMoGuiMoneyError(ReadWriteDBMessage* pMsg);
 
 	int OnUpdateAwardInfo(ReadWriteDBMessage* pMsg);
 	int OnUpdateRightInfo(ReadWriteDBMessage* pMsg);
@@ -67,7 +65,7 @@ public:
 	int OnChangeUserInfo(ReadWriteDBMessage* pMsg);
 	int OnReportPlayerOnline(ReadWriteDBMessage* pMsg);
 	int OnPlayerActionLog(ReadWriteDBMessage* pMsg);
-	int OnPlayerClientErr(ReadWriteDBMessage* pMsg);
+	int OnGameError(ReadWriteDBMessage* pMsg);
 	int OnChatLog(ReadWriteDBMessage* pMsg);
 	int OnUpdateWinType(ReadWriteDBMessage* pMsg);
 	int OnAddPlayerInfo(ReadWriteDBMessage* pMsg);
@@ -145,9 +143,6 @@ private:
 	UINT32                               m_NewDayTime;
 	UINT32                               m_LastCheckTime;
 
-	std::string                          m_strDBConfig;
-	otl_connect     					 m_DBConfigConnect;
-
 	std::string                          m_strDBUser;
 	otl_connect     					 m_DBUserConnect;
 
@@ -156,12 +151,6 @@ private:
 
 	std::string                          m_strDBLog;
 	otl_connect     					 m_DBLogConnect;
-
-	std::string                          m_strDBFriend;
-	otl_connect     					 m_DBFriendConnect;
-
-	std::string                          m_strDBProp;
-	otl_connect     					 m_DBPropConnect;
 
 	MapFaceInfo                          m_mapFaceInfo;
 	MapGiftInfo                          m_mapGiftInfo;

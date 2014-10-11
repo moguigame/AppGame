@@ -1092,9 +1092,8 @@ void CServer::DealCloseSocket( IConnect* connect )
 		{
 			DBServerXY::WDB_PlayerClientError msgPCE;
 			msgPCE.m_Flag      = pGameSocket->GetCloseFlag();
-			msgPCE.m_strIP     = pGameSocket->GetPeerStringIp();
-			if ( pPlayer )
-			{
+			msgPCE.m_strDes    = "IP=" + pGameSocket->GetPeerStringIp();
+			if ( pPlayer ){
 				msgPCE.m_AID   = pPlayer->GetAID();
 				msgPCE.m_PID   = pPlayer->GetPID();
 			}
@@ -1118,7 +1117,7 @@ void CServer::DealCloseSocket( IConnect* connect )
 			{
 				DBServerXY::WDB_PlayerClientError msgPCE;
 				msgPCE.m_Flag      = pGameSocket->GetCloseFlag();
-				msgPCE.m_strIP     = pGameSocket->GetPeerStringIp();
+				msgPCE.m_strDes    = "IP=" + pGameSocket->GetPeerStringIp();
 				SendMsgToDBServer(msgPCE);
 			}
 

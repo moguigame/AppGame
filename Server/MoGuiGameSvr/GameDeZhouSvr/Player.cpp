@@ -1000,7 +1000,6 @@ void CPlayer::SetPlayerDataEx(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerDataEx
 
 	m_FriendCount               = msgPDEx.m_FriendCount;
 
-	CheckInvite();
 	CheckMaxGameMoney();
 }
 void CPlayer::GetPlayerDataEx(GameXY::Game_PlayerDataEx& game_msgPDEx)
@@ -1970,26 +1969,7 @@ void CPlayer::CheckFriend()
 		}		
 	}
 }
- void CPlayer::CheckInvite()
- {
-	 int nInviteCount = m_TotalInvite;
-	 if ( nInviteCount >=1 )
-	 {
-		 FinishHonor(N_Honor::Frist_Invite1);
-		 if ( nInviteCount >= 10 )
-		 {
-			 FinishHonor(N_Honor::Second_Invite10);
-			 if ( nInviteCount >= 30 )
-			 {
-				  FinishHonor(N_Honor::Third_Invite30);
-				  if ( nInviteCount >= 100 )
-				  {
-					   FinishHonor(N_Honor::Fouth_Invite100);
-				  }
-			 }
-		 }
-	 }
- }
+
  void CPlayer::CheckWinMoney(INT64 nWinMoney)
  {
 	 if ( nWinMoney >= 5000)

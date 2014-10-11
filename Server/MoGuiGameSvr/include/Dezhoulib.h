@@ -34,6 +34,24 @@ namespace DezhouLib
 	const short    XIPAI_CARDS              = 52;
 	const short    XIPAI_POOLS              = 200;
 
+	enum
+	{
+		VALUE_2 = 2,
+		VALUE_3 = 3,
+		VALUE_4 = 4,
+		VALUE_5 = 5,
+		VALUE_6 = 6,
+		VALUE_7 = 7,
+		VALUE_8 = 8,
+		VALUE_9 = 9,
+		VALUE_S = 10,
+		VALUE_J = 11,
+		VALUE_Q = 12,
+		VALUE_K = 13,
+		VALUE_A = 14,
+		VALUE_MAX
+	};
+
 	class CPaiType
 	{
 	public:

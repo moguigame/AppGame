@@ -480,7 +480,7 @@ namespace DBS
 	{
 		INT16                       m_Forbid;
 		INT64                       m_BankMoney;
-		INT16                       m_OpenBank;
+		int                         m_OpenBank;
 		UINT32                      m_nMoGuiMoney;
 		INT64    					m_nGameMoney;
 		INT64                       m_nMatchJF;
