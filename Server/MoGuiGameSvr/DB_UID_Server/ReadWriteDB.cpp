@@ -2154,7 +2154,7 @@ int CDBOperator::ReadFaceInfo(VectorFaceInfo& vectorFI)
 		vectorFI.clear();
 
 		stFaceInfo stFI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select FaceID,Type,PriceFlag,Price,MinPrice,MaxPrice from dezhou_info_face ", m_DBGameConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select FaceID,Type,PriceFlag,Price,MinPrice,MaxPrice from config_face ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stFI.Init();
@@ -2200,7 +2200,7 @@ int CDBOperator::ReadHonorInfo(VectorHonorInfo& vectorHI)
 		vectorHI.clear();
 
 		stHonorInfo stHI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select ID,Type,Idx,Money from dezhou_info_honor ", m_DBGameConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select ID,Type,Idx,Money from config_honor ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stHI.Init();
@@ -2234,7 +2234,7 @@ int CDBOperator::ReadGameLevelInfo(VectorPTLevelInfo& vectorGLI)
 		vectorGLI.clear();
 
 		stPlayTimesInfo stGLI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select Level,TotalPlay,AddPlay,Money from dezhou_info_playtimes ", m_DBGameConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select Level,TotalPlay,AddPlay,Money from config_playtimes ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stGLI.Init();
@@ -2269,7 +2269,7 @@ int CDBOperator::ReadAreaInfo(VectorAreaInfo& vectorArea)
 
 		stAreaInfo stAI;
 		string strLandMoney,strJoinMoney;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select AID,JoinMoney,LandMoney from dezhou_info_area ", m_DBGameConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select AID,JoinMoney,LandMoney from config_area ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stAI.Init();
@@ -2306,7 +2306,7 @@ int CDBOperator::ReadProductInfo(VectorProductInfo& vectorPI)
 		vectorPI.clear();
 
 		ProductInfo stPI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select ProductID,Price,ProductType,ProductRule from dezhou_info_product ", m_DBGameConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select ProductID,Price,ProductType,ProductRule from config_product ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stPI.Init();
@@ -2456,7 +2456,7 @@ int CDBOperator::ReadGiftInfo(VectorGiftInfo& vectorGI)
 		vectorGI.clear();
 
 		stGiftInfo stGI;
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select GiftID,Type,PriceFlag,Price,MinPrice,MaxPrice,Rebate,CurLastTime,TotalLastTime from dezhou_info_gift ", m_DBGameConnect);
+		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, "select GiftID,Type,PriceFlag,Price,MinPrice,MaxPrice,Rebate,CurLastTime,TotalLastTime from config_gift ", m_DBGameConnect);
 		while ( !TempDBStream.eof() )
 		{
 			stGI.Init();
