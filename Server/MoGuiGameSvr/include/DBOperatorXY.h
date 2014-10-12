@@ -1463,7 +1463,7 @@ namespace RWDB_XY
 		short                     m_AID;
 		unsigned int              m_PID;
 
-		BYTE                      m_Sex;
+		int                       m_Sex;
 		short                     m_Year;
 		std::string               m_NickName;
 		std::string               m_HeadPicUrl;

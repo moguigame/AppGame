@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <stdint.h>
 
 #include "MoGuiGame.h"
 
@@ -536,7 +537,7 @@ namespace DeZhou
 
 		BYTE                       m_GameLevel;
 		BYTE                       m_VipLevel;
-		BYTE                       m_Sex;
+		unsigned char              m_Sex;
 
 		std::string                m_HomePageURL;
 	

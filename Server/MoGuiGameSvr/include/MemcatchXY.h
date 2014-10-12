@@ -112,11 +112,11 @@ namespace DeZhou
 		UINT32                                m_PID;
 
 		BYTE                                  m_HaveGameInfo;
-		BYTE                                  m_Sex;
+		int                                   m_Sex;
 		short                                 m_Year;
 		UINT32                                m_InvitePID;
 		UINT32                                m_JoinTime;
-		BYTE                                  m_ChangeName;
+		int                                   m_ChangeName;
 		BYTE                                  m_PlayerLevel;
 
 		std::string                           m_NickName;

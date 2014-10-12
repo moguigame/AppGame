@@ -130,25 +130,6 @@ namespace DezhouLib
 		PAI_TYPE_MAX
 	};
 
-	const int c_PaiValue[56] = 
-	{
-		0,
-		14,2,3,4,5,6,7,8,9,10,11,12,13,
-		14,2,3,4,5,6,7,8,9,10,11,12,13,
-		14,2,3,4,5,6,7,8,9,10,11,12,13,
-		14,2,3,4,5,6,7,8,9,10,11,12,13,
-		0,0,0
-	};
-	const int c_PaiHuaSe[56] = 
-	{
-		0,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,
-		2,2,2,2,2,2,2,2,2,2,2,2,2,
-		3,3,3,3,3,3,3,3,3,3,3,3,3,
-		4,4,4,4,4,4,4,4,4,4,4,4,4,
-		0,0,0
-	};
-
 	enum
 	{
 		HandPai_Level_1 = 1,
@@ -747,15 +728,12 @@ namespace DezhouLib
 		CAllPaiType retPaiType;
 
 		int nPaiCount = 0;
-		for ( int i=0;i<SELECT_CARDS;i++)
-		{
-			if ( GetPaiValue(pPai[i]) > 0 )
-			{
+		for ( int i=0;i<SELECT_CARDS;i++){
+			if ( pPai[i]>0 && pPai[i]<=52 ){
 				nPaiCount++;
 			}
 		}
-		if ( nPaiCount < 5 )
-		{
+		if ( nPaiCount < 5 ){
 			return CPaiType();
 		}
 

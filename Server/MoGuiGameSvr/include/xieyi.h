@@ -278,7 +278,7 @@ namespace GameXY
 
 		unsigned char       m_Sex;
 		unsigned char       m_PlayerType;
-		unsigned char       m_ChangeName;
+		int                 m_ChangeName;
 		short               m_Year;
 
 		SBigNumber          m_nBankMoney;
@@ -2217,7 +2217,7 @@ namespace GameXY
 
 		unsigned int    m_PID;
 		short           m_Year;
-		BYTE            m_Sex;
+		unsigned char   m_Sex;
 
 		std::string     m_NickName;
 		std::string     m_HeadPicUrl;
@@ -2279,7 +2279,7 @@ namespace GameXY
 		BYTE            m_Flag;
 		unsigned int    m_PID;
 
-		BYTE            m_Sex;
+		unsigned char   m_Sex;
 		short           m_Year;
 		std::string     m_NickName;
 		std::string     m_HeadPicUrl;

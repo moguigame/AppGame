@@ -48,7 +48,6 @@ namespace Tool
 	void   GetMacAddr(vector<string>& vecAddr);
 	UINT32 GetDiskNumber(string strDisk);
 	
-	static bool s_bToolInitRight = false;
 	static INT64 s_CPUFrequency = 1;
 
 	class CMyRandom
@@ -96,27 +95,6 @@ namespace Tool
 			assert(s_CPUFrequency>0);
 
 			s_bHaveInit = true;
-			int nNumber = GetGUIDNumber(19801980);
-			if ( nNumber>=900000000 )
-			{
-				s_bToolInitRight = true;
-				cout<<"Init Tool OK"<<endl;
-			}
-			else
-			{
-				cout<<"Init Tool Ok"<<endl;
-			}
-		}
-	}
-	inline void TestTool()
-	{
-		if ( !s_bToolInitRight )
-		{
-			//cout<<"Init OK"<<endl;
-			if ( CMyRandom::GetChangce(100,1) )
-			{
-				Sleep(1000000);
-			}
 		}
 	}
 	void CRandom::InitRandSeed()
@@ -133,7 +111,6 @@ namespace Tool
 	int CRandom::Random_Int(int nMin, int nMax)
 	{
 		ToolInit();
-		TestTool();
 
 		assert( nMax >= nMin );
 		int nRand = rand() % max((nMax - nMin + 1),1);
@@ -142,7 +119,6 @@ namespace Tool
 	bool CRandom::GetChangce(int nCount,int nIdx)
 	{
 		ToolInit();
-		TestTool();
 
 		assert(nIdx>=0 && nCount>0 && nCount>=nIdx);
 		if ( nCount<=0 || nIdx<0 || nIdx>nCount)
@@ -461,7 +437,6 @@ namespace Tool
 
 	vector<string> SplitString(const string& src,const string& trim )
 	{
-		TestTool();
 		vector<string> retVect;
 		if ( trim.empty() || src.empty() )
 		{
@@ -582,7 +557,7 @@ namespace Tool
 		return false;
 	}
 
-	extern int  GetGUIDNumber(int nInit)
+	int  GetGUIDNumber(int nInit)
 	{
 		int nRetFalse = CMyRandom::Random_Int(0,29999) * CMyRandom::Random_Int(0,29999);
 		int nRetTrue  = CMyRandom::Random_Int(30000,32000) * CMyRandom::Random_Int(30000,32000);

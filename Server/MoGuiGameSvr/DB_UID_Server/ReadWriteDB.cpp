@@ -1290,7 +1290,7 @@ int CDBOperator::OnTableInfo(ReadWriteDBMessage* pMsg)
 	CheckDBConnect(m_DBGameConnect, m_strDBGame);
 	try
 	{
-		string TableName = "dezhou_tableprivate_" + Tool::N2S(msgTI.m_ServerID);
+		string TableName = "config_tableprivate_" + Tool::N2S(msgTI.m_ServerID);
 		otl_datetime TempOTLTime = Tool::GetOTLTimeFromCurTime(msgTI.m_EndTime);
 		int Idx = msgTI.m_RoomID*10000+msgTI.m_TableID;
 
@@ -1312,7 +1312,7 @@ int CDBOperator::OnTableInfo(ReadWriteDBMessage* pMsg)
 
 		if ( DBStream.get_rpc() == 0 )
 		{
-			string TableName = "dezhou_tableprivate_" + Tool::N2S(msgTI.m_ServerID);
+			string TableName = "config_tableprivate_" + Tool::N2S(msgTI.m_ServerID);
 			strSQL = "insert into " + TableName + " (Idx,ServerID,RoomID,TableID,TableName,PassWord,TableRule,TableRuleEX,MatchRule,FoundByWho,EndTime) "
 				+ " values(:f1<int>,:f2<short>,:f3<short>,:f4<short>,:f5<char[50]>,:f6<char[10]>,:f7<char[255]>,:f8<char[255]>,:f28<char[255]>,:f9<unsigned int>,:f10<timestamp> ) ";
 			otl_stream tempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
@@ -2103,7 +2103,7 @@ int CDBOperator::WriteTableInfo(stTableInfo& stTI)
 		otl_stream TempDBStream;
 		int Idx = stTI.m_RoomID*10000 + stTI.m_TableID;
 
-		string strTableName = "dezhou_tableinfo_"+Tool::N2S(stTI.m_ServerID);
+		string strTableName = "config_tableinfo_"+Tool::N2S(stTI.m_ServerID);
 
 		strSQL = "update " + strTableName + " set TableName=:f21<char[50]>,PassWord=:f22<char[20]>,TableRule=:f6<char[255]>,\
 											TableRuleEX=:f7<char[255]>,MatchRule=:f8<char[255]> where Idx=:f1<int>";
@@ -2507,7 +2507,7 @@ int CDBOperator::ReadMatchInfo(INT16 ServerID,VectorDBMatchInfo& vectorMI)
 		string strBlind,strAward;
 		otl_datetime oltTime;
 
-		string strTableName = "dezhou_matchinfo_"+N2S(ServerID);
+		string strTableName = "config_matchinfo_"+N2S(ServerID);
 		string strSQL = "select MatchID,MatchType,Ticket,TakeMoney,StartMoney,Blind,Award,StrRule,StartTime,StartInterval from " + strTableName;
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
 
@@ -2590,7 +2590,7 @@ int CDBOperator::ReadRoomInfo(INT16 ServerID,VectorRoomInfo& vectorRI)
 	try
 	{
 		UINT32 curTime = UINT32(time(NULL));
-		string strTableName = "dezhou_roominfo_"+N2S(ServerID);
+		string strTableName = "config_roominfo_"+N2S(ServerID);
 		string strSQL = "select ServerID,RoomID,RoomName,Password,AreaRule,RoomRule,RoomRuleEX,MatchRule,EndTime from "
 			+ strTableName + " where ServerID=:f<short> ";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE, strSQL.c_str(), m_DBGameConnect);
@@ -2640,7 +2640,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 	try
 	{
 		UINT32 curTime = UINT32(time(NULL));
-		string strTableName = "dezhou_tableinfo_"+N2S(ServerID);
+		string strTableName = "config_tableinfo_"+N2S(ServerID);
 		string strSQL = "select RoomID,TableID,TableName,PassWord,TableRule,TableRuleEX,MatchRule,FoundByWho,EndTime from " + strTableName +
 			" where ServerID=:f<short>";
 
@@ -2684,7 +2684,7 @@ int CDBOperator::ReadTableInfo(INT16 ServerID,VectorTableInfo& vectorTI)
 	try
 	{
 		UINT32 curTime = UINT32(time(NULL));
-		string strTableName = "dezhou_tableprivate_"+N2S(ServerID);
+		string strTableName = "config_tableprivate_"+N2S(ServerID);
 		string strSQL = "select RoomID,TableID,TableName,PassWord,TableRule,TableRuleEX,MatchRule,FoundByWho,EndTime from " + strTableName +
 			" where ServerID=:f<short>";
 

@@ -562,9 +562,9 @@ namespace DBS
 		INT16                                   m_InviteAID;
 		UINT32                                  m_InvitePID;
 		UINT32                                  m_JoinTime;
-		INT16                                   m_Sex;
+		int                                     m_Sex;
 		INT16                                   m_Year;
-		INT16                                   m_ChangeName;
+		int                                     m_ChangeName;
 		INT16                                   m_HaveGameInfo;
 		INT16                                   m_PlayerLevel;
 

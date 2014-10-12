@@ -72,8 +72,8 @@ namespace DeZhou
 		INT16                                 m_AID;
 		UINT32                                m_PID;
 
-		INT16                                 m_Sex;
-		INT16                                 m_ChangeName;
+		int                                   m_Sex;
+		int                                   m_ChangeName;
 
 		std::string                           m_NickName;
 		std::string                           m_HeadPicURL;
@@ -445,13 +445,13 @@ namespace DeZhou
 		UINT32                      m_PID;
 		INT16                       m_AID;
 
-		short                       m_ChangeName;
+		int                         m_ChangeName;
 		std::string                 m_NickName;
 		std::string                 m_HeadPicURL;
 		std::string                 m_HomePageURL;
 		std::string                 m_City;
 
-		INT16                       m_Sex;
+		int                         m_Sex;
 
 		UINT32                      m_JoinTime;                 //加入游戏的时间
 		UINT32                      m_InvitePID;                //被哪个玩家邀请进来，0为系统
@@ -563,7 +563,7 @@ namespace DeZhou
 		std::string                 m_HomePageURL;
 		std::string                 m_City;
 
-		INT16                       m_Sex;
+		int                         m_Sex;
 
 		UINT32                      m_JoinTime;                 //加入游戏的时间
 		UINT32                      m_InvitePID;                //被哪个玩家邀请进来，0为系统

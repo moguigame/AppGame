@@ -138,9 +138,9 @@ public:
 	BYTE                          GetPlace(void)const{ return m_PlayerPlace; }
 
 public:
-	BYTE                          m_ChangeName;
+	int                           m_ChangeName;
 	std::string                   m_NickName;
-	BYTE                          m_Sex;
+	int                           m_Sex;
 	BYTE                          m_Age;
 	short                         m_Year;
 

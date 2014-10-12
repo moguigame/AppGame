@@ -401,7 +401,7 @@ namespace DBServerXY
 		unsigned char                 m_Sex;
 
 		unsigned char                 m_PlayerType;
-		unsigned char                 m_ChangeName;
+		int                           m_ChangeName;
 
 		std::string                   m_NickName;
 		std::string					  m_HeadPicURL;
@@ -2414,7 +2414,7 @@ namespace DBServerXY
 		short                     m_AID;
 		unsigned int              m_PID;
 		
-		BYTE                      m_Sex;
+		unsigned char             m_Sex;
 		short                     m_Year;
 
 		std::string               m_NickName;

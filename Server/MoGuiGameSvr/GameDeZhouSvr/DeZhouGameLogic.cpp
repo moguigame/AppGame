@@ -5349,6 +5349,8 @@ void CDeZhouGameLogic::EndGame()
 					if ( EndPlayer > 1 )
 					{
 						stHandPai& rTempHP = m_GP[Sit].m_HandPai;
+						assert(rTempHP.m_Pai[0]>0 && rTempHP.m_Pai[0]<=52);
+						assert(rTempHP.m_Pai[1]>0 && rTempHP.m_Pai[1]<=52);
 						if ( (DezhouLib::GetPaiValue(rTempHP.m_Pai[0])==DezhouLib::VALUE_A) && (DezhouLib::GetPaiValue(rTempHP.m_Pai[1])==DezhouLib::VALUE_A) )
 						{
 							pPlayer->FinishHonor(N_Honor::First_AAWin);
