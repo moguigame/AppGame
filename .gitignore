@@ -65,3 +65,4 @@ agbase/BaseSource/socket_windows/AGBase/BaseSource.sdf
 *.lib
 *.opensdf
 >>>>>>> origin/master
+*.unsuccessfulbuild
