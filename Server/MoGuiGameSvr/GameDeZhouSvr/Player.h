@@ -141,8 +141,6 @@ public:
 	int                           m_ChangeName;
 	std::string                   m_NickName;
 	int                           m_Sex;
-	BYTE                          m_Age;
-	short                         m_Year;
 
 private:
 	///////////////////////基本属性///////////////////////////////////
@@ -314,21 +312,6 @@ public:
 	UINT32                        m_ReqMatchRankTime;                       //指玩家请求比赛排行榜
 	bool                          CanReqMatchRank(UINT32 curTime);
 
-	INT32                         m_TaoJinTimes;
-	INT64                         m_TaoJinWinMoney;
-	INT32                         m_TaoJinBest;
-	UINT32                        m_TaoJinBestTime;
-
-	INT32                         m_JingBiaoTimes;
-	INT64                         m_JingBiaoWinMoney;
-	INT32                         m_JingBiaoBest;
-	UINT32                        m_JingBiaoBestTime;
-
-	INT32                         m_GuanJunTimes;
-	INT64                         m_GuanJunWinMoney;
-	INT32                         m_GuanJunBest;
-	UINT32                        m_GuanJunBestTime;
-
 	//记录玩家行为的数据
 	UINT32                        m_PlayerCreateTime;                        //记录游戏服务器创建玩家的时间
 	UINT32                        m_PlayerSitTime;                           //玩家坐在位置上的时间
@@ -362,11 +345,10 @@ public:
 	void     SetPlayerData(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerData& msgPD);
 	void     SetPlayerDataEx(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerDataEx& msgPDEx);
 	void     SetBotPlayerData(const MoGui::MoGuiXY::DBServerXY::DBS_BotPlayerData& bpd);
-	void     SetPlayerMatchData(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerMatchData& msgPMD);
+	//void     SetPlayerMatchData(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerMatchData& msgPMD);
 
 	void     GetPlayerData(GameXY::Game_PlayerData& game_msgPD);
 	void     GetPlayerDataEx(GameXY::Game_PlayerDataEx& game_msgPDEx);
-	void     GetPlayerMatchData(GameXY::Game_PlayerMatchData& msgPMD);
 	void     GetPlayerTailInfo(GameXY::PlayerTailInfo& msgPTI);
 
 	bool     IsSendSameTablePlayer();
@@ -379,7 +361,6 @@ public:
 	void     SendMaxMoney();
 	void     SendPlayerData();
 	void     SendPlayerDataEx();
-	void     SendPlayerMatchData();
 	void     SendPlayerHonor();
 	void     SendHonorToPlayer(PlayerPtr pPlayer);
 

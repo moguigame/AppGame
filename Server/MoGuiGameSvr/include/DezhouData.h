@@ -104,8 +104,8 @@ namespace DBS
 		INT16                       m_AID;
 
 		INT64                       m_nMoney;
-		INT16                       m_MoneyFlag;
-		INT16                       m_PayMode;
+		int                         m_MoneyFlag;
+		int                         m_PayMode;
 		UINT32                      m_EndTime;
 
 		stDBUserAward(){ Init(); }
@@ -120,7 +120,7 @@ namespace DBS
 		INT16                       m_AID;
 
 		int                         m_Times;
-		short                       m_Level;
+		int                         m_Level;
 		UINT32                      m_EndTime;
 
 		stDBGameRight(){ Init(); }
@@ -282,11 +282,11 @@ namespace DBS
 	{
 		int                m_ProductID;
 
-		BYTE               m_VipLevel;
+		int                m_VipLevel;
 		INT64              m_SendOneceMoney;
 		INT32              m_GivenDaysMoney;
-		BYTE               m_BankBox;
-		BYTE               m_FreeFace;
+		int                m_BankBox;
+		int                m_FreeFace;
 		UINT32             m_DuringTime;
 
 		stHuiYuanInfo(){Init();}
@@ -478,7 +478,7 @@ namespace DBS
 
 	struct stDBGameInfo
 	{
-		INT16                       m_Forbid;
+		int                         m_Forbid;
 		INT64                       m_BankMoney;
 		int                         m_OpenBank;
 		UINT32                      m_nMoGuiMoney;
@@ -517,33 +517,10 @@ namespace DBS
 		int                         m_ShowFace;
 
 		UINT32                      m_FreeFaceTime;
-		short                       m_VipLevel;
+		int                         m_VipLevel;
 		UINT32                      m_VipEndTime;
 
 		stDBGameInfoEx(){Init();}
-		void Init(){ memset(this,0,sizeof(*this)); }
-	};
-	struct stDBGameMatchInfo
-	{
-		UINT32                      m_PID;
-		INT16                       m_AID;
-
-		INT32                       m_TaoJinTimes;
-		INT64                       m_TaoJinWinMoney;
-		INT32                       m_TaoJinBest;
-		UINT32                      m_TaoJinBestTime;		
-
-		INT32                       m_JingBiaoTimes;
-		INT64                       m_JingBiaoWinMoney;
-		INT32                       m_JingBiaoBest;
-		UINT32                      m_JingBiaoBestTime;
-
-		INT32                       m_GuanJunTimes;
-		INT64                       m_GuanJunWinMoney;
-		INT32                       m_GuanJunBest;
-		UINT32                      m_GuanJunBestTime;
-
-		stDBGameMatchInfo(){ Init(); }
 		void Init(){ memset(this,0,sizeof(*this)); }
 	};
 
@@ -563,10 +540,9 @@ namespace DBS
 		UINT32                                  m_InvitePID;
 		UINT32                                  m_JoinTime;
 		int                                     m_Sex;
-		INT16                                   m_Year;
 		int                                     m_ChangeName;
-		INT16                                   m_HaveGameInfo;
-		INT16                                   m_PlayerLevel;
+		int                                     m_HaveGameInfo;
+		int                                     m_PlayerLevel;
 
 		std::string                             m_NickName;
 		std::string                             m_HeadPicURL;
@@ -577,7 +553,6 @@ namespace DBS
 		void Init()
 		{
 			m_Sex = 0;
-			m_Year = 1980;
 			m_InviteAID = 0;
 			m_InvitePID = 0;
 			m_JoinTime = 0;
@@ -599,7 +574,6 @@ namespace DBS
 
 		stDBGameInfo                            m_stGameInfo;
 		stDBGameInfoEx                          m_stGameInfoEX;
-		stDBGameMatchInfo                       m_stGameMatchInfo;
 
 		stUserGameInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
@@ -617,7 +591,6 @@ namespace DBS
 		stUserDataInfo              m_stUserDataInfo;
 		stDBGameInfo                m_stGameInfo;
 		stDBGameInfoEx              m_stGameInfoEX;
-		stDBGameMatchInfo           m_stGameMatchInfo;
 
 		stBotPlayerData(){ Init(); }
 		void Init()
@@ -630,7 +603,6 @@ namespace DBS
 			m_stUserDataInfo.Init();
 			m_stGameInfo.Init();
 			m_stGameInfoEX.Init();
-			m_stGameMatchInfo.Init();
 		}
 	};
 	typedef std::vector<stBotPlayerData>     VectorBotPlayerData;
@@ -654,7 +626,6 @@ namespace DBS
 		stUserDataInfo                           m_stUserDataInfo;
 		stDBGameInfo                             m_stGameInfo;
 		stDBGameInfoEx                           m_stGameInfoEX;
-		stDBGameMatchInfo                        m_stGameMatchInfo;
 
 		INT16                                    m_FriendCount;
 		VectorFriendFlag                         m_vectorFriend;            //所有好友的数字ID和FLAG
@@ -687,8 +658,7 @@ namespace DBS
 			m_stLoginInfo.Init();
 			m_stUserDataInfo.Init();
 			m_stGameInfo.Init();
-			m_stGameInfoEX.Init();
-			m_stGameMatchInfo.Init();
+			m_stGameInfoEX.Init();			
 
 			m_FriendCount = 0;
 			m_vectorFriend.clear();

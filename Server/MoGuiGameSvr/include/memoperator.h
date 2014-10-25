@@ -57,10 +57,6 @@ public:
 	bool memSetUserInfo(const MemcatchXY::DeZhou::memUserInfo& memUI,time_t keeptime=N_Time::Month_1);
 	bool memDelUserInfo(INT16 AID,UINT32 PID);
 
-	bool memGetUserMatchInfo(INT16 AID,UINT32 PID,MemcatchXY::DeZhou::memUserMatchInfo& memUMI);
-	bool memSetUserMatchInfo(const MemcatchXY::DeZhou::memUserMatchInfo& memUMI,time_t keeptime=N_Time::DAY_2);
-	bool memDelUserMatchInfo(INT16 AID,UINT32 PID);
-
 	bool memGetUserGameInfo(INT16 AID,UINT32 PID,MemcatchXY::DeZhou::memUserGameInfo& memUGI);
 	bool memSetUserGameInfo(MemcatchXY::DeZhou::memUserGameInfo& memUGIE,time_t keeptime=N_Time::DAY_2);
 	bool memDelUserGameInfo(INT16 AID,UINT32 PID);

@@ -43,7 +43,6 @@ public:
 	int OnGameRight(ReadWriteDBMessage* pMsg);
 	int OnUpdateHuiYuan(ReadWriteDBMessage* pMsg);
 	int OnAddPlayerAward(ReadWriteDBMessage* pMsg);
-	int OnMatchInfo(ReadWriteDBMessage* pMsg);
 	int OnWinLossInfo(ReadWriteDBMessage* pMsg);
 	int OnMakeFriend(ReadWriteDBMessage* pMsg);
 	int OnUpdateGiftInfo(ReadWriteDBMessage* pMsg);

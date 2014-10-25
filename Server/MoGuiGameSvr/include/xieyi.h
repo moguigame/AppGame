@@ -279,7 +279,6 @@ namespace GameXY
 		unsigned char       m_Sex;
 		unsigned char       m_PlayerType;
 		int                 m_ChangeName;
-		short               m_Year;
 
 		SBigNumber          m_nBankMoney;
 		unsigned char       m_OpenBank;
@@ -317,7 +316,6 @@ namespace GameXY
 			m_Sex = 0;
 			m_PlayerType = 0;
 			m_ChangeName = 0;
-			m_Year = 1980;
 
 			m_nBankMoney = 0;
 			m_OpenBank = 0;
@@ -355,7 +353,6 @@ namespace GameXY
 
 			bos << src.m_PlayerType;
 			bos << src.m_ChangeName;
-			bos << src.m_Year;
 
 			bos << src.m_nBankMoney;
 			bos << src.m_OpenBank;
@@ -397,7 +394,6 @@ namespace GameXY
 
 			bis >> src.m_PlayerType;
 			bis >> src.m_ChangeName;
-			bis >> src.m_Year;
 
 			bis >> src.m_nBankMoney;
 			bis >> src.m_OpenBank;
@@ -445,7 +441,7 @@ namespace GameXY
 		INT64                         m_MaxWin;
 		UINT32                        m_MaxWinTime;
 
-		BYTE                          m_VipLevel;
+		unsigned char                 m_VipLevel;
 		short                         m_FriendCount;
 
 		Game_PlayerDataEx() { ReSet(); }
@@ -485,81 +481,6 @@ namespace GameXY
 
 			bis >> src.m_VipLevel;
 			bis >> src.m_FriendCount;
-
-			return bis;
-		}
-	};
-
-	struct Game_PlayerMatchData
-	{
-		enum { XY_ID = MoGuiXYID_PlayerMatchData };
-		enum { WinTypeNum = 10 };
-
-		short                m_AID;
-		unsigned int         m_PID;
-
-		INT32                m_TaoJinTimes;
-		INT64                m_TaoJinWinMoney;
-		INT32                m_TaoJinBest;
-		UINT32               m_TaoJinBestTime;
-
-		INT32                m_JingBiaoTimes;
-		INT64                m_JingBiaoWinMoney;
-		INT32                m_JingBiaoBest;
-		UINT32               m_JingBiaoBestTime;
-
-		INT32                m_GuanJunTimes;
-		INT64                m_GuanJunWinMoney;
-		INT32                m_GuanJunBest;
-		UINT32               m_GuanJunBestTime;
-
-		Game_PlayerMatchData() { ReSet(); }
-		void ReSet() { memset(this,0,sizeof(*this)); }
-
-		friend bostream& operator<<( bostream& bos, const Game_PlayerMatchData& src )
-		{
-			bos << src.m_AID;
-			bos << src.m_PID;
-
-			bos << src.m_TaoJinTimes;
-			bos << src.m_TaoJinWinMoney;
-			bos << src.m_TaoJinBest;
-			bos << src.m_TaoJinBestTime;
-
-			bos << src.m_JingBiaoTimes;
-			bos << src.m_JingBiaoWinMoney;
-			bos << src.m_JingBiaoBest;
-			bos << src.m_JingBiaoBestTime;
-
-			bos << src.m_GuanJunTimes;
-			bos << src.m_GuanJunWinMoney;
-			bos << src.m_GuanJunBest;
-			bos << src.m_GuanJunBestTime;
-
-			return bos;
-		}
-
-		friend bistream& operator>>( bistream& bis, Game_PlayerMatchData& src )
-		{
-			src.ReSet();
-
-			bis >> src.m_AID;
-			bis >> src.m_PID;
-
-			bis >> src.m_TaoJinTimes;
-			bis >> src.m_TaoJinWinMoney;
-			bis >> src.m_TaoJinBest;
-			bis >> src.m_TaoJinBestTime;
-
-			bis >> src.m_JingBiaoTimes;
-			bis >> src.m_JingBiaoWinMoney;
-			bis >> src.m_JingBiaoBest;
-			bis >> src.m_JingBiaoBestTime;
-
-			bis >> src.m_GuanJunTimes;
-			bis >> src.m_GuanJunWinMoney;
-			bis >> src.m_GuanJunBest;
-			bis >> src.m_GuanJunBestTime;
 
 			return bis;
 		}
@@ -2216,7 +2137,6 @@ namespace GameXY
 		enum { XY_ID = GameLobbyXYID_ChangeUserInfo };
 
 		unsigned int    m_PID;
-		short           m_Year;
 		unsigned char   m_Sex;
 
 		std::string     m_NickName;
@@ -2227,7 +2147,6 @@ namespace GameXY
 		void ReSet()
 		{
 			m_PID = 0;
-			m_Year = 0;
 			m_Sex = 0;
 
 			m_NickName = "";
@@ -2238,7 +2157,6 @@ namespace GameXY
 		friend bostream& operator<<(bostream& bos,const ChangeUserInfo& src)
 		{
 			bos << src.m_PID;
-			bos << src.m_Year;
 			bos << src.m_Sex;
 
 			InString(bos,src.m_NickName,MAX_NICKNAME_SIZE);
@@ -2252,7 +2170,6 @@ namespace GameXY
 			src.ReSet();
 
 			bis >> src.m_PID;
-			bis >> src.m_Year;
 			bis >> src.m_Sex;
 
 			OutString(bis,src.m_NickName,MAX_NICKNAME_SIZE);
@@ -2280,7 +2197,6 @@ namespace GameXY
 		unsigned int    m_PID;
 
 		unsigned char   m_Sex;
-		short           m_Year;
 		std::string     m_NickName;
 		std::string     m_HeadPicUrl;
 		std::string     m_City;
@@ -2292,7 +2208,6 @@ namespace GameXY
 			m_PID = 0;
 
 			m_Sex = 0;
-			m_Year = 0;
 			m_NickName = "";
 			m_HeadPicUrl = "";
 			m_City = "";
@@ -2306,7 +2221,6 @@ namespace GameXY
 			if ( src.m_Flag == src.SUCCESS )
 			{
 				bos << src.m_Sex;
-				bos << src.m_Year;
 				InString(bos,src.m_NickName,MAX_NICKNAME_SIZE);
 				InString(bos,src.m_HeadPicUrl,MAX_URL_SIZE);
 				InString(bos,src.m_City,MAX_CITYNAME_SIZE);
@@ -2324,7 +2238,6 @@ namespace GameXY
 			if ( src.m_Flag == src.SUCCESS )
 			{
 				bis >> src.m_Sex;
-				bis >> src.m_Year;
 				OutString(bis,src.m_NickName,MAX_NICKNAME_SIZE);
 				OutString(bis,src.m_HeadPicUrl,MAX_URL_SIZE);
 				OutString(bis,src.m_City,MAX_CITYNAME_SIZE);

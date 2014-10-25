@@ -867,7 +867,7 @@ void CServer::GetHuiYuanInfo(stHuiYuanInfo& stHY,const string& strRule)
 	itorKey = mapRule.find("viplevel");
 	if ( itorKey != mapRule.end())
 	{
-		stHY.m_VipLevel = BYTE(itorKey->second);
+		stHY.m_VipLevel = int(itorKey->second);
 	}
 
 	itorKey = mapRule.find("gamemoney");
@@ -885,13 +885,13 @@ void CServer::GetHuiYuanInfo(stHuiYuanInfo& stHY,const string& strRule)
 	itorKey = mapRule.find("bankbox");
 	if ( itorKey != mapRule.end())
 	{
-		stHY.m_BankBox = BYTE(itorKey->second);
+		stHY.m_BankBox = int(itorKey->second);
 	}
 
 	itorKey = mapRule.find("freeface");
 	if ( itorKey != mapRule.end())
 	{
-		stHY.m_FreeFace = BYTE(itorKey->second);
+		stHY.m_FreeFace = int(itorKey->second);
 	}
 
 	itorKey = mapRule.find("duringtime");
@@ -1446,22 +1446,7 @@ int CServer::OnReqBotPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPac
 			memcpy(BotPlayerData.m_Achieve,itorPlayerData->m_stGameInfoEX.m_Achieve,sizeof(BotPlayerData.m_Achieve));
 
 			BotPlayerData.m_VipLevel              = BYTE(itorPlayerData->m_stGameInfoEX.m_VipLevel);
-			BotPlayerData.m_FriendCount           = Tool::CRandom::Random_Int(10,60);
-
-			BotPlayerData.m_TaoJinTimes           = itorPlayerData->m_stGameMatchInfo.m_TaoJinTimes;
-			BotPlayerData.m_TaoJinWinMoney        = itorPlayerData->m_stGameMatchInfo.m_TaoJinWinMoney;
-			BotPlayerData.m_TaoJinBest            = itorPlayerData->m_stGameMatchInfo.m_TaoJinBest;
-			BotPlayerData.m_TaoJinBestTime        = itorPlayerData->m_stGameMatchInfo.m_TaoJinBestTime;			
-
-			BotPlayerData.m_JingBiaoTimes         = itorPlayerData->m_stGameMatchInfo.m_JingBiaoTimes;
-			BotPlayerData.m_JingBiaoWinMoney      = itorPlayerData->m_stGameMatchInfo.m_JingBiaoWinMoney;
-			BotPlayerData.m_JingBiaoBest          = itorPlayerData->m_stGameMatchInfo.m_JingBiaoBest;
-			BotPlayerData.m_JingBiaoBestTime      = itorPlayerData->m_stGameMatchInfo.m_JingBiaoBestTime;		
-
-			BotPlayerData.m_GuanJunTimes          = itorPlayerData->m_stGameMatchInfo.m_GuanJunTimes;
-			BotPlayerData.m_GuanJunWinMoney       = itorPlayerData->m_stGameMatchInfo.m_GuanJunWinMoney;
-			BotPlayerData.m_GuanJunBest           = itorPlayerData->m_stGameMatchInfo.m_GuanJunBest;
-			BotPlayerData.m_GuanJunBestTime       = itorPlayerData->m_stGameMatchInfo.m_GuanJunBestTime;		
+			BotPlayerData.m_FriendCount           = Tool::CRandom::Random_Int(10,60);	
 
 			pSocket->SendMsg(BotPlayerData);
 
@@ -1482,8 +1467,7 @@ int CServer::OnReqBotPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPac
 
 			pPlayerInfo->m_stUserDataInfo = itorPlayerData->m_stUserDataInfo;
 			pPlayerInfo->m_stGameInfo     = itorPlayerData->m_stGameInfo;
-			pPlayerInfo->m_stGameInfoEX   = itorPlayerData->m_stGameInfoEX;
-			pPlayerInfo->m_stGameMatchInfo= itorPlayerData->m_stGameMatchInfo;
+			pPlayerInfo->m_stGameInfoEX   = itorPlayerData->m_stGameInfoEX;			
 			pPlayerInfo->m_RightInfo.InitRight(itorPlayerData->m_stGameInfo.m_Right);
 			pPlayerInfo->m_RightInfo.AddRight(PLAYER_RIGHT_COMMON,255);
 
@@ -1549,13 +1533,12 @@ void CServer::UpdatePlayerDataToMemcach(DBServerPlayerInfo* pPlayerInfo)
 		MemcatchXY::DeZhou::memUserDataInfo memUDI;
 		memUDI.m_AID                = pPlayerInfo->m_AID;
 		memUDI.m_PID                = pPlayerInfo->m_PID;
-		memUDI.m_ChangeName         = BYTE(pPlayerInfo->m_stUserDataInfo.m_ChangeName);
-		memUDI.m_HaveGameInfo       = BYTE(pPlayerInfo->m_stUserDataInfo.m_HaveGameInfo);
-		memUDI.m_Sex                = BYTE(pPlayerInfo->m_stUserDataInfo.m_Sex);
-		memUDI.m_Year               = pPlayerInfo->m_stUserDataInfo.m_Year;
+		memUDI.m_ChangeName         = pPlayerInfo->m_stUserDataInfo.m_ChangeName;
+		memUDI.m_HaveGameInfo       = pPlayerInfo->m_stUserDataInfo.m_HaveGameInfo;
+		memUDI.m_Sex                = pPlayerInfo->m_stUserDataInfo.m_Sex;
 		memUDI.m_InvitePID          = pPlayerInfo->m_stUserDataInfo.m_InvitePID;
 		memUDI.m_JoinTime           = pPlayerInfo->m_stUserDataInfo.m_JoinTime;
-		memUDI.m_PlayerLevel        = BYTE(pPlayerInfo->m_stUserDataInfo.m_PlayerLevel);
+		memUDI.m_PlayerLevel        = pPlayerInfo->m_stUserDataInfo.m_PlayerLevel;
 		memUDI.m_NickName           = pPlayerInfo->m_stUserDataInfo.m_NickName;
 		memUDI.m_HeadPicURL         = pPlayerInfo->m_stUserDataInfo.m_HeadPicURL;
 		memUDI.m_HomePageURL        = pPlayerInfo->m_stUserDataInfo.m_HomePageURL;
@@ -2045,7 +2028,6 @@ int CServer::OnReqPlayerLogin(CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 				pPlayerInfo->m_stUserDataInfo.m_InvitePID       = memUDI.m_InvitePID;
 				pPlayerInfo->m_stUserDataInfo.m_JoinTime        = memUDI.m_JoinTime;
 				pPlayerInfo->m_stUserDataInfo.m_Sex             = memUDI.m_Sex;
-				pPlayerInfo->m_stUserDataInfo.m_Year            = memUDI.m_Year;
 				pPlayerInfo->m_stUserDataInfo.m_ChangeName      = memUDI.m_ChangeName;
 				pPlayerInfo->m_stUserDataInfo.m_PlayerLevel     = memUDI.m_PlayerLevel;
 
@@ -2099,7 +2081,7 @@ int CServer::OnReqPlayerLogin(CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 			if ( msgBackData.m_Flag == msgBackData.SUCCESS )
 			{
 				memUDI.m_HaveGameInfo = 1;
-				pPlayerInfo->m_stUserDataInfo.m_HaveGameInfo = 1;				
+				pPlayerInfo->m_stUserDataInfo.m_HaveGameInfo = 1;
 
 				pPlayerInfo->m_stGameInfo.m_nUpperLimite = stCPGI.m_nUpperLimite;
 				pPlayerInfo->m_stGameInfo.m_nLowerLimite = stCPGI.m_nLowerLimite;
@@ -2169,8 +2151,7 @@ int CServer::OnReqPlayerLogin(CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 			else
 			{
 				pPlayerInfo->m_stGameInfo      = stUGI.m_stGameInfo;
-				pPlayerInfo->m_stGameInfoEX    = stUGI.m_stGameInfoEX;
-				pPlayerInfo->m_stGameMatchInfo = stUGI.m_stGameMatchInfo;
+				pPlayerInfo->m_stGameInfoEX    = stUGI.m_stGameInfoEX;				
 				pPlayerInfo->m_RightInfo.InitRight(stUGI.m_stGameInfo.m_Right);
 			}
 		}
@@ -2740,24 +2721,6 @@ void CServer::SendPlayerGameData(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 		msgPDEx.m_TotalInvite    = pPlayerInfo->m_stGameInfoEX.m_TotalInvite;
 		msgPDEx.m_FriendCount    = pPlayerInfo->m_FriendCount;
 		pSocket->SendMsg(msgPDEx);
-
-
-		DBServerXY::DBS_PlayerMatchData msgPMD;
-		msgPMD.m_AID                = AID;
-		msgPMD.m_PID                = PID;
-		msgPMD.m_TaoJinTimes        = pPlayerInfo->m_stGameMatchInfo.m_TaoJinTimes;
-		msgPMD.m_TaoJinWinMoney     = pPlayerInfo->m_stGameMatchInfo.m_TaoJinWinMoney;
-		msgPMD.m_TaoJinBest         = pPlayerInfo->m_stGameMatchInfo.m_TaoJinBest;
-		msgPMD.m_TaoJinBestTime     = pPlayerInfo->m_stGameMatchInfo.m_TaoJinBestTime;
-		msgPMD.m_JingBiaoTimes      = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoTimes;
-		msgPMD.m_JingBiaoWinMoney   = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoWinMoney;
-		msgPMD.m_JingBiaoBest       = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoBest;
-		msgPMD.m_JingBiaoBestTime   = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoBestTime;
-		msgPMD.m_GuanJunTimes       = pPlayerInfo->m_stGameMatchInfo.m_GuanJunTimes;
-		msgPMD.m_GuanJunWinMoney    = pPlayerInfo->m_stGameMatchInfo.m_GuanJunWinMoney;
-		msgPMD.m_GuanJunBest        = pPlayerInfo->m_stGameMatchInfo.m_GuanJunBest;
-		msgPMD.m_GuanJunBestTime    = pPlayerInfo->m_stGameMatchInfo.m_GuanJunBestTime;
-		pSocket->SendMsg(msgPMD);
 	}
 	DebugInfo("SendPlayerGameData End");
 }
@@ -2849,27 +2812,6 @@ int CServer::OnReqPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 	if ( (msgPI.m_DataFlag & UINT16(msgPI.PlayerMatchData)) && msgRespPI.m_DataFlag == 0 )
 	{
-		DBServerXY::DBS_PlayerMatchData msgPMD;
-
-		msgPMD.m_AID                = msgPI.m_AID;
-		msgPMD.m_PID                = msgPI.m_PID;
-
-		msgPMD.m_TaoJinTimes        = pPlayerInfo->m_stGameMatchInfo.m_TaoJinTimes;
-		msgPMD.m_TaoJinWinMoney     = pPlayerInfo->m_stGameMatchInfo.m_TaoJinWinMoney;
-		msgPMD.m_TaoJinBest         = pPlayerInfo->m_stGameMatchInfo.m_TaoJinBest;
-		msgPMD.m_TaoJinBestTime     = pPlayerInfo->m_stGameMatchInfo.m_TaoJinBestTime;
-
-		msgPMD.m_JingBiaoTimes      = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoTimes;
-		msgPMD.m_JingBiaoWinMoney   = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoWinMoney;
-		msgPMD.m_JingBiaoBest       = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoBest;
-		msgPMD.m_JingBiaoBestTime   = pPlayerInfo->m_stGameMatchInfo.m_JingBiaoBestTime;
-
-		msgPMD.m_GuanJunTimes       = pPlayerInfo->m_stGameMatchInfo.m_GuanJunTimes;
-		msgPMD.m_GuanJunWinMoney    = pPlayerInfo->m_stGameMatchInfo.m_GuanJunWinMoney;
-		msgPMD.m_GuanJunBest        = pPlayerInfo->m_stGameMatchInfo.m_GuanJunBest;
-		msgPMD.m_GuanJunBestTime    = pPlayerInfo->m_stGameMatchInfo.m_GuanJunBestTime;		
-	
-		pSocket->SendMsg(msgPMD);
 	}
 
 	if ( (msgPI.m_DataFlag & UINT16(msgPI.Friend)) && msgRespPI.m_DataFlag == 0 )
@@ -3615,59 +3557,6 @@ int CServer::OnWDBMatchResult( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 			pPlayerInfo->m_stGameInfo.m_nJF                += msgMR.m_JF;
 			pPlayerInfo->m_stGameInfo.m_nUpperLimite       += nUpLimite;
 			pPlayerInfo->m_stGameInfo.m_nLowerLimite       += nLowLimite;
-
-			stDBGameMatchInfo& stDBGMI = pPlayerInfo->m_stGameMatchInfo;
-			if ( msgMR.m_MatchType == Match_Type_TaoJin )
-			{
-				stDBGMI.m_TaoJinTimes++;
-				stDBGMI.m_TaoJinWinMoney += msgMR.m_AwardMoney;
-				if ( stDBGMI.m_TaoJinBest==0 || msgMR.m_Position<stDBGMI.m_TaoJinBest )
-				{
-					stDBGMI.m_TaoJinBest      = msgMR.m_Position;
-					stDBGMI.m_TaoJinBestTime  = m_CurTime;
-				}
-			}
-			else if ( msgMR.m_MatchType == Match_Type_JingBiao )
-			{
-				stDBGMI.m_JingBiaoTimes++;
-				stDBGMI.m_JingBiaoWinMoney += msgMR.m_AwardMoney;
-				if ( stDBGMI.m_JingBiaoBest==0 || msgMR.m_Position<stDBGMI.m_JingBiaoBest )
-				{
-					stDBGMI.m_JingBiaoBest      = msgMR.m_Position;
-					stDBGMI.m_JingBiaoBestTime  = m_CurTime;
-				}
-			}
-			else if ( msgMR.m_MatchType == Match_Type_GuanJun )
-			{
-				stDBGMI.m_GuanJunTimes++;
-				stDBGMI.m_GuanJunWinMoney += msgMR.m_AwardMoney;
-				if ( stDBGMI.m_GuanJunBest==0 || msgMR.m_Position<stDBGMI.m_GuanJunBest )
-				{
-					stDBGMI.m_GuanJunBest       = msgMR.m_Position;
-					stDBGMI.m_GuanJunBestTime   = m_CurTime;
-				}
-			}
-
-			RWDB_MatchInfo rwdbMsgMI;
-			rwdbMsgMI.m_AID              = pPlayerInfo->m_AID;
-			rwdbMsgMI.m_PID              = pPlayerInfo->m_PID;
-
-			rwdbMsgMI.m_TaoJinTimes      = stDBGMI.m_TaoJinTimes;
-			rwdbMsgMI.m_TaoJinWinMoney   = stDBGMI.m_TaoJinWinMoney;
-			rwdbMsgMI.m_TaoJinBest       = stDBGMI.m_TaoJinBest;
-			rwdbMsgMI.m_TaoJinBestTime   = stDBGMI.m_TaoJinBestTime;
-
-			rwdbMsgMI.m_JingBiaoTimes    = stDBGMI.m_JingBiaoTimes;
-			rwdbMsgMI.m_JingBiaoWinMoney = stDBGMI.m_JingBiaoWinMoney;
-			rwdbMsgMI.m_JingBiaoBest     = stDBGMI.m_JingBiaoBest;
-			rwdbMsgMI.m_JingBiaoBestTime = stDBGMI.m_JingBiaoBestTime;
-
-			rwdbMsgMI.m_GuanJunTimes     = stDBGMI.m_GuanJunTimes;
-			rwdbMsgMI.m_GuanJunWinMoney  = stDBGMI.m_GuanJunWinMoney;
-			rwdbMsgMI.m_GuanJunBest      = stDBGMI.m_GuanJunBest;
-			rwdbMsgMI.m_GuanJunBestTime  = stDBGMI.m_GuanJunBestTime;
-
-			m_RWDBMsgManager.PushRWDBMsg(rwdbMsgMI);
 		}
 	}
 	DebugInfo("CServer::OnWDBMatchResult End");
@@ -4044,8 +3933,8 @@ int CServer::OnWDBChangeName( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 	DBServerXY::WDB_ChangeUserInfo msgCN;
 	TransplainMsg(msgPack,msgCN);
 
-	DebugInfo("CServer::OnWDBChangeName Start ServerID=%d AID=%d PID=%d Sex=%d Year=%d Name=%s HeadURL=%s City=%s",
-		pSocket->GetServerID(),msgCN.m_AID,msgCN.m_PID,msgCN.m_Sex,msgCN.m_Year,
+	DebugInfo("CServer::OnWDBChangeName Start ServerID=%d AID=%d PID=%d Sex=%d Name=%s HeadURL=%s City=%s",
+		pSocket->GetServerID(),msgCN.m_AID,msgCN.m_PID,msgCN.m_Sex,
 		msgCN.m_NickName.c_str(),msgCN.m_HeadPicUrl.c_str(),msgCN.m_City.c_str() );
 
 	DBServerPlayerInfo* pPlayerInfo = GetDBPlayerInfo(msgCN.m_PID);
@@ -4053,8 +3942,7 @@ int CServer::OnWDBChangeName( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 	{
 		pPlayerInfo->m_stUserDataInfo.m_ChangeName    = 0;
 
-		pPlayerInfo->m_stUserDataInfo.m_Sex           = msgCN.m_Sex;
-		pPlayerInfo->m_stUserDataInfo.m_Year          = msgCN.m_Year;
+		pPlayerInfo->m_stUserDataInfo.m_Sex           = msgCN.m_Sex;		
 		pPlayerInfo->m_stUserDataInfo.m_NickName      = msgCN.m_NickName;
 		pPlayerInfo->m_stUserDataInfo.m_HeadPicURL    = msgCN.m_HeadPicUrl;
 		pPlayerInfo->m_stUserDataInfo.m_City          = msgCN.m_City;
@@ -4064,8 +3952,7 @@ int CServer::OnWDBChangeName( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 		{
 			memUDI.m_ChangeName        = 0;
 
-			memUDI.m_Sex               = msgCN.m_Sex;
-			memUDI.m_Year              = msgCN.m_Year;
+			memUDI.m_Sex               = msgCN.m_Sex;			
 			memUDI.m_NickName          = msgCN.m_NickName;
 			memUDI.m_HeadPicURL        = msgCN.m_HeadPicUrl;
 			memUDI.m_City              = msgCN.m_City;
@@ -4077,7 +3964,6 @@ int CServer::OnWDBChangeName( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 		msgrwdbCN.m_AID = msgCN.m_AID;
 		msgrwdbCN.m_PID = msgCN.m_PID;
 		msgrwdbCN.m_Sex = msgCN.m_Sex;
-		msgrwdbCN.m_Year= msgCN.m_Year;
 		msgrwdbCN.m_NickName = msgCN.m_NickName;
 		msgrwdbCN.m_HeadPicUrl = msgCN.m_HeadPicUrl;
 		msgrwdbCN.m_City = msgCN.m_City;

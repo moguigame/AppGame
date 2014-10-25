@@ -378,9 +378,9 @@ namespace RWDB_XY
 		unsigned int             m_PID;
 
 		INT64                    m_Money;
-		short                    m_nFlag;
-		short                    m_PayMode;
-		short                    m_CanUse;
+		int                      m_nFlag;
+		int                      m_PayMode;
+		int                      m_CanUse;
 		unsigned int             m_EndTime;
 		std::string              m_strLog;
 
@@ -437,7 +437,7 @@ namespace RWDB_XY
 		unsigned int             m_PID;
 
 		UINT32                   m_FreeFaceTime;
-		short                    m_VipLevel;
+		int                      m_VipLevel;
 		UINT32                   m_VipEndTime;
 
 		RWDB_UpdateHuiYuan() { ReSet(); }
@@ -726,79 +726,6 @@ namespace RWDB_XY
 			bis >> src.m_PID;
 			bis >> src.m_HonorID;
 			bis >> src.m_Money;
-			return bis;
-		}
-	};
-
-	struct RWDB_MatchInfo
-	{
-		enum { XY_ID = RWDB_XYID_MatchInfo };
-
-		short                       m_AID;
-		unsigned int                m_PID;
-
-		INT32                       m_TaoJinTimes;
-		INT64                       m_TaoJinWinMoney;
-		INT32                       m_TaoJinBest;
-		UINT32                      m_TaoJinBestTime;		
-
-		INT32                       m_JingBiaoTimes;
-		INT64                       m_JingBiaoWinMoney;
-		INT32                       m_JingBiaoBest;
-		UINT32                      m_JingBiaoBestTime;	
-
-		INT32                       m_GuanJunTimes;
-		INT64                       m_GuanJunWinMoney;
-		INT32                       m_GuanJunBest;
-		UINT32                      m_GuanJunBestTime;
-
-		RWDB_MatchInfo() { ReSet(); }
-		void ReSet(){ memset(this,0,sizeof(*this));}
-
-		friend bostream& operator<<( bostream& bos, const RWDB_MatchInfo& src )
-		{
-			bos << src.m_AID;
-			bos << src.m_PID;
-
-			bos << src.m_TaoJinTimes;
-			bos << src.m_TaoJinWinMoney;
-			bos << src.m_TaoJinBest;
-			bos << src.m_TaoJinBestTime;
-
-			bos << src.m_JingBiaoTimes;
-			bos << src.m_JingBiaoWinMoney;
-			bos << src.m_JingBiaoBest;
-			bos << src.m_JingBiaoBestTime;
-
-			bos << src.m_GuanJunTimes;
-			bos << src.m_GuanJunWinMoney;
-			bos << src.m_GuanJunBest;
-			bos << src.m_GuanJunBestTime;
-
-			return bos;
-		}
-		friend bistream& operator>>( bistream& bis, RWDB_MatchInfo& src )
-		{
-			src.ReSet();
-
-			bis >> src.m_AID;
-			bis >> src.m_PID;
-
-			bis >> src.m_TaoJinTimes;
-			bis >> src.m_TaoJinWinMoney;
-			bis >> src.m_TaoJinBest;
-			bis >> src.m_TaoJinBestTime;
-
-			bis >> src.m_JingBiaoTimes;
-			bis >> src.m_JingBiaoWinMoney;
-			bis >> src.m_JingBiaoBest;
-			bis >> src.m_JingBiaoBestTime;
-
-			bis >> src.m_GuanJunTimes;
-			bis >> src.m_GuanJunWinMoney;
-			bis >> src.m_GuanJunBest;
-			bis >> src.m_GuanJunBestTime;
-
 			return bis;
 		}
 	};
@@ -1329,7 +1256,7 @@ namespace RWDB_XY
 		enum { XY_ID = RWDB_XYID_UpdateAwardInfo };
 
 		int                       m_AwardIdx;
-		short                     m_Flag;
+		int                       m_Flag;
 
 		RWDB_UpdateAwardInfo() { ReSet(); }
 		void ReSet(){ memset(this,0,sizeof(*this));}
@@ -1387,9 +1314,9 @@ namespace RWDB_XY
 		short                     m_AID;
 		unsigned int              m_PID;
 
-		int                       m_Right;
-		short                     m_Times;
-		short                     m_CanUse;
+		int                       m_Level;
+		int                       m_Times;
+		int                       m_CanUse;
 		UINT32                    m_EndTime;
 
 		RWDB_WriteRightInfo() { ReSet(); }
@@ -1399,7 +1326,7 @@ namespace RWDB_XY
 		{
 			bos << src.m_AID;
 			bos << src.m_PID;
-			bos << src.m_Right;
+			bos << src.m_Level;
 			bos << src.m_Times;
 			bos << src.m_CanUse;
 			bos << src.m_EndTime;
@@ -1412,7 +1339,7 @@ namespace RWDB_XY
 
 			bis >> src.m_AID;
 			bis >> src.m_PID;
-			bis >> src.m_Right;
+			bis >> src.m_Level;
 			bis >> src.m_Times;
 			bis >> src.m_CanUse;
 			bis >> src.m_EndTime;
@@ -1463,8 +1390,7 @@ namespace RWDB_XY
 		short                     m_AID;
 		unsigned int              m_PID;
 
-		int                       m_Sex;
-		short                     m_Year;
+		int                       m_Sex;		
 		std::string               m_NickName;
 		std::string               m_HeadPicUrl;
 		std::string               m_City;
@@ -1476,7 +1402,6 @@ namespace RWDB_XY
 			m_PID = 0;
 
 			m_Sex = 0;
-			m_Year = 0;
 
 			m_NickName = "";
 			m_HeadPicUrl = "";
@@ -1488,8 +1413,7 @@ namespace RWDB_XY
 			bos << src.m_AID;
 			bos << src.m_PID;
 
-			bos << src.m_Sex;
-			bos << src.m_Year;
+			bos << src.m_Sex;			
 
 			InString(bos,src.m_NickName,MAX_NICKNAME_SIZE);
 			InString(bos,src.m_HeadPicUrl,MAX_URL_SIZE);
@@ -1504,8 +1428,7 @@ namespace RWDB_XY
 			bis >> src.m_AID;
 			bis >> src.m_PID;
 
-			bis >> src.m_Sex;
-			bis >> src.m_Year;
+			bis >> src.m_Sex;			
 
 			OutString(bis,src.m_NickName,MAX_NICKNAME_SIZE);
 			OutString(bis,src.m_HeadPicUrl,MAX_URL_SIZE);

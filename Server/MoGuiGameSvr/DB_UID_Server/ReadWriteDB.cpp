@@ -339,11 +339,6 @@ int CDBOperator::OnRWDBMsg(ReadWriteDBMessage* pMsg)
 			ret = OnAddPlayerAward(pMsg);
 		}
 		break;
-	case RWDB_MatchInfo::XY_ID:
-		{
-			ret = OnMatchInfo(pMsg);
-		}
-		break;
 	case RWDB_WinLossInfo::XY_ID:
 		{
 			ret = OnWinLossInfo(pMsg);
@@ -803,7 +798,7 @@ int CDBOperator::OnAddPlayerAward(ReadWriteDBMessage* pMsg)
 	{			
 		otl_datetime OriginOTLTime = Tool::GetOTLTimeFromCurTime(msgAPA.m_EndTime);
 		string strOriginAward     = "insert into dezhou_award (PID,AID,Money,MoneyFlag,PayMode,CanUse,EndTime,Log) \
-									values(:f1<unsigned int>,:f2<short>,:f3<bigint>,:f4<short>,:f5<short>,:f6<short>,:f7<timestamp>,:f8<char[250]> )";
+									values(:f1<unsigned int>,:f2<short>,:f3<bigint>,:f4<int>,:f5<int>,:f6<int>,:f7<timestamp>,:f8<char[250]> )";
 		otl_stream AwardOriginStream( OTL_STREAMBUF_SIZE,strOriginAward.c_str(),m_DBGameConnect );
 		AwardOriginStream<<msgAPA.m_PID<<msgAPA.m_AID<<msgAPA.m_Money<<msgAPA.m_nFlag<<msgAPA.m_PayMode<<msgAPA.m_CanUse<<OriginOTLTime<<msgAPA.m_strLog;
 		AwardOriginStream.close();
@@ -828,7 +823,7 @@ int CDBOperator::OnUpdateHuiYuan(ReadWriteDBMessage* pMsg)
 	CheckDBConnect(m_DBGameConnect,m_strDBGame);
 	try
 	{
-		string strSQL = "update dezhou_gameinfoex set FreeFaceTime=:f1<unsinged int>,VipLevel=:f2<short>,\
+		string strSQL = "update dezhou_gameinfoex set FreeFaceTime=:f1<unsinged int>,VipLevel=:f2<int>,\
 						VipEndTime=:f3<unsigned int> where PID=:f101<unsigned int> ";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBGameConnect);
 		TempDBStream<<msgUHY.m_FreeFaceTime<<msgUHY.m_VipLevel<<msgUHY.m_VipEndTime<<msgUHY.m_PID;
@@ -910,47 +905,6 @@ int CDBOperator::OnGameRight(ReadWriteDBMessage* pMsg)
 		string strSQL = "update dezhou_gameinfo set GameRight = :f1<bigint> where PID=:f99<unsigned int> ";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBGameConnect);
 		TempDBStream<<msgGR.m_Right<<msgGR.m_PID;
-		TempDBStream.close();
-	}
-	catch(otl_exception &p)
-	{
-		CatchDBException(p);
-		CheckOTLException(p,m_DBGameConnect,m_strDBGame);
-		nRet = DB_RESULT_DBERROR;
-	}
-
-	return nRet;
-}
-int CDBOperator::OnMatchInfo(ReadWriteDBMessage* pMsg)
-{
-	CLogFuncTime lft(m_FuncTime,"OnMatchInfo");
-
-	RWDB_MatchInfo msgMI;
-	ExplainRWDBMsg(*pMsg,msgMI);
-
-	int nRet = DB_RESULT_SUCCESS;
-	CheckDBConnect(m_DBGameConnect,m_strDBGame);
-	try
-	{
-		string strSQL = "update dezhou_matchinfo set \
-						TJTimes    = :f1<int>,\
-						TJWin      = :f2<bigint>,\
-						TJBest     = :f3<int>,\
-						TJBestTime = :f4<unsigned int>,\
-						JBTimes    = :f5<int>,\
-						JBWin      = :f6<bigint>,\
-						JBBest     = :f7<int>,\
-						JBBestTime = :f8<unsigned int>,\
-						GJTimes    = :f9<int>,\
-						GJWin      = :f10<bigint>,\
-						GJBest     = :f11<int>,\
-						GJBestTime = :f12<unsigned int> \
-						where PID=:f99<unsigned int> ";
-		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBGameConnect);
-		TempDBStream<<msgMI.m_TaoJinTimes   <<msgMI.m_TaoJinWinMoney   <<msgMI.m_TaoJinBest   <<msgMI.m_TaoJinBestTime
-			        <<msgMI.m_JingBiaoTimes <<msgMI.m_JingBiaoWinMoney <<msgMI.m_JingBiaoBest <<msgMI.m_JingBiaoBestTime
-					<<msgMI.m_GuanJunTimes  <<msgMI.m_GuanJunWinMoney  <<msgMI.m_GuanJunBest  <<msgMI.m_GuanJunBestTime
-					<<msgMI.m_PID;
 		TempDBStream.close();
 	}
 	catch(otl_exception &p)
@@ -1429,7 +1383,7 @@ int CDBOperator::OnUpdateAwardInfo(ReadWriteDBMessage* pMsg)
 	CheckDBConnect(m_DBGameConnect,m_strDBGame);
 	try
 	{
-		std::string strSQL = "update dezhou_award set CanUse=:f1<short> where Idx=:f2<int>";
+		std::string strSQL = "update dezhou_award set CanUse=:f1<int> where Idx=:f2<int>";
 		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBGameConnect );
 		TempDBStream<<msgUAI.m_Flag<<msgUAI.m_AwardIdx;
 
@@ -1484,10 +1438,10 @@ int CDBOperator::OnWriteRightInfo(ReadWriteDBMessage* pMsg)
 	try
 	{
 		otl_datetime TempOTLTime = Tool::GetOTLTimeFromCurTime(msgWRI.m_EndTime);
-		std::string strSQL = "insert into dezhou_right (AID,PID,GameRight,Flag,CanUse,EndTime) \
-							 values(:f1<short>,:f2<unsigned int>,:f3<int>,:f4<short>,:f5<short>,:f6<timestamp>) ";
+		std::string strSQL = "insert into dezhou_right (AID,PID,Times,Level,CanUse,EndTime) \
+							 values(:f1<short>,:f2<unsigned int>,:f3<int>,:f4<int>,:f5<int>,:f6<timestamp>) ";
 		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBGameConnect );
-		TempDBStream<<msgWRI.m_AID<<msgWRI.m_PID<<msgWRI.m_Right<<msgWRI.m_Times<<msgWRI.m_CanUse<<TempOTLTime;
+		TempDBStream << msgWRI.m_AID << msgWRI.m_PID << msgWRI.m_Times << msgWRI.m_Level << msgWRI.m_CanUse << TempOTLTime;
 
 		TempDBStream.close();
 	}
@@ -1548,17 +1502,24 @@ int CDBOperator::OnChangeUserInfo(ReadWriteDBMessage* pMsg)
 			TempDBStream<<msgCN.m_NickName<<msgCN.m_PID;
 			TempDBStream.flush();
 
-			if ( TempDBStream.get_rpc() == 0 )
-			{
+			RWDB_GameError rwdbGE;
+			rwdbGE.m_AID = msgCN.m_AID;
+			rwdbGE.m_PID = msgCN.m_PID;
+			rwdbGE.m_Flag = GameError_ChangeUserInfo;
+			rwdbGE.m_Des = "";
+			rwdbGE.m_Key = "ChangeUserInfo";
+
+
+			if ( TempDBStream.get_rpc() == 0 ){
 				DebugError("OnChangeUserInfo PID=%d NickName=%s",msgCN.m_PID,msgCN.m_NickName.c_str());
 			}
 			TempDBStream.close();
 		}
 
 		{
-			std::string strSQL = "update user_root_ex set Sex=:f1<short>,HeadPicURL=:f3<char[255]>,City=:f4<char[255]> where PID=:f21<unsigned int>";
+			std::string strSQL = "update user_root set Sex=:f1<short>,HeadPicURL=:f3<char[255]>,City=:f4<char[255]> where PID=:f21<unsigned int>";
 			otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBUserConnect );
-			TempDBStream<<short(msgCN.m_Sex)<<msgCN.m_HeadPicUrl<<msgCN.m_City<<msgCN.m_PID;
+			TempDBStream<<msgCN.m_Sex<<msgCN.m_HeadPicUrl<<msgCN.m_City<<msgCN.m_PID;
 			TempDBStream.close();
 		}		
 	}
@@ -1940,9 +1901,6 @@ int CDBOperator::ReadUserGameInfo(INT16 AID,UINT32 PID,stUserGameInfo& stUGI)
 	{
 		string strSQL =
 		"select Forbid,BankMoney,OpenBank,MoGuiMoney,GameMoney,HongBao,JF,EP,WinTimes,LossTimes,GameTime,TopLimite,LowLimite,GameRight, \
-		TJTimes,TJWin,TJBest,TJBestTime, \
-		JBTimes,JBWin,JBBest,JBBestTime, \
-		GJTimes,GJWin,GJBest,GJBestTime, \
 		MaxMoney,MaxMoneyTime,MaxPai,MaxPaiTime,MaxWin,MaxWinTime, \
 		One,Two,TwoTwo,Three,Str,Hua,ThreeTwo,Four,HuaStr,King, \
 		Achieve_1,Achieve_2,Achieve_3,Achieve_4,\
@@ -1971,21 +1929,6 @@ int CDBOperator::ReadUserGameInfo(INT16 AID,UINT32 PID,stUserGameInfo& stUGI)
 			TempDBStream >> stUGI.m_stGameInfo.m_nUpperLimite;
 			TempDBStream >> stUGI.m_stGameInfo.m_nLowerLimite;
 			TempDBStream >> stUGI.m_stGameInfo.m_Right;
-
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_TaoJinTimes;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_TaoJinWinMoney;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_TaoJinBest;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_TaoJinBestTime;
-
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_JingBiaoTimes;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_JingBiaoWinMoney;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_JingBiaoBest;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_JingBiaoBestTime;
-
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_GuanJunTimes;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_GuanJunWinMoney;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_GuanJunBest;
-			TempDBStream >> stUGI.m_stGameMatchInfo.m_GuanJunBestTime;
 
 			TempDBStream >> stUGI.m_stGameInfoEX.m_MaxMoney;
 			TempDBStream >> stUGI.m_stGameInfoEX.m_MaxMoneyTime;
@@ -2916,13 +2859,6 @@ int CDBOperator::CreatePlayerGameInfo(DezhouLib::stCreatePlayerGameInfo& stCPGI)
 			otl_stream GameInfoExStream( OTL_STREAMBUF_SIZE,strGameInfoEx.c_str(),m_DBGameConnect );
 			GameInfoExStream<<stCPGI.m_PID<<stCPGI.m_AID<<stCPGI.m_PID;
 		}
-		{
-			string strMatchInfo = "insert into dezhou_matchinfo (PID,AID) select :f1<unsigned int>,:f2<short> \
-								  from dual where not exists \
-								  (select * from dezhou_matchinfo where dezhou_matchinfo.PID = :f11<unsigned int>)";
-			otl_stream MatchInfoStream( OTL_STREAMBUF_SIZE,strMatchInfo.c_str(),m_DBGameConnect );
-			MatchInfoStream<<stCPGI.m_PID<<stCPGI.m_AID<<stCPGI.m_PID;
-		}
 	}
 	catch(otl_exception &p)
 	{
@@ -3027,9 +2963,6 @@ int CDBOperator::ReadBotPlayerData(INT16 AID,UINT32 StartPID,UINT32 EndPID,Vecto
 			MaxMoney,MaxMoneyTime,MaxPai,MaxPaiTime,MaxWin,MaxWinTime,\
 			One,Two,TwoTwo,Three,Str,Hua,ThreeTwo,Four,HuaStr,King,Achieve_1,Achieve_2,Achieve_3,Achieve_4,\
 			VipLevel,\
-			TJTimes,TJWin,TJBest,TJBestTime, \
-			JBTimes,JBWin,JBBest,JBBestTime, \
-			GJTimes,GJWin,GJBest,GJBestTime \
 			from v_dezhou_botplayerdata where AID=:f3<short> and PID>=:f1<unsigned int> and PID<=:f2<unsigned int> ",
 			m_DBGameConnect );
 
@@ -3040,7 +2973,7 @@ int CDBOperator::ReadBotPlayerData(INT16 AID,UINT32 StartPID,UINT32 EndPID,Vecto
 			string strRule;
 			otl_datetime TempOTLTime;
 			stBotPlayerData stPD;
-			short TempBotLevel;
+			int TempBotLevel;
 
 			stPD.m_AID = AID;
 			TempDBStream >> stPD.m_PID;
@@ -3090,21 +3023,6 @@ int CDBOperator::ReadBotPlayerData(INT16 AID,UINT32 StartPID,UINT32 EndPID,Vecto
 			TempDBStream >> stPD.m_stGameInfoEX.m_Achieve[3];
 
 			TempDBStream >> stPD.m_stGameInfoEX.m_VipLevel;
-
-			TempDBStream >> stPD.m_stGameMatchInfo.m_TaoJinTimes;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_TaoJinWinMoney;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_TaoJinBest;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_TaoJinBestTime;	
-
-			TempDBStream >> stPD.m_stGameMatchInfo.m_JingBiaoTimes;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_JingBiaoWinMoney;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_JingBiaoBest;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_JingBiaoBestTime;	
-
-			TempDBStream >> stPD.m_stGameMatchInfo.m_GuanJunTimes;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_GuanJunWinMoney;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_GuanJunBest;
-			TempDBStream >> stPD.m_stGameMatchInfo.m_GuanJunBestTime;
 
 			stPD.m_stUserDataInfo.m_JoinTime = UINT32(Tool::GetTimeFromOTLTime(TempOTLTime));
 			stPD.m_BotLevel = UINT8(TempBotLevel);

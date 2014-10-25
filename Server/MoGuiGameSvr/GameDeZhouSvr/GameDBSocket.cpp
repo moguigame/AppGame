@@ -150,7 +150,7 @@ int  CGameDBSocket::TransMsg(CRecvMsgPacket& recv_packet)
 	case DBServerXY::DBS_RespServerPlayerLoginData::XY_ID:
 	case DBServerXY::DBS_PlayerData::XY_ID:
 	case DBServerXY::DBS_PlayerDataEx::XY_ID:
-	case DBServerXY::DBS_PlayerMatchData::XY_ID:
+	//case DBServerXY::DBS_PlayerMatchData::XY_ID:
 	case DBServerXY::DBS_PlayerLimite::XY_ID:
 	case DBServerXY::DBS_PlayerRight::XY_ID:
 	case DBServerXY::DBS_ReqPlayerOnLine::XY_ID:

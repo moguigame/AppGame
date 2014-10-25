@@ -111,7 +111,6 @@ void CPlayer::Init()
 	m_AID = 0;
 	m_PID = 0;
 	m_Sex = Sex_None;
-	m_Year = 1980;
 
 	m_ChangeName = 0;
 	m_NickName = "";
@@ -194,21 +193,6 @@ void CPlayer::Init()
 	m_ReqMatchRankTime = 0;
 
 	m_nMatchJF = 0;
-
-	m_TaoJinTimes = 0;
-	m_TaoJinWinMoney = 0;
-	m_TaoJinBest = 0;
-	m_TaoJinBestTime = 0;
-
-	m_JingBiaoTimes = 0;
-	m_JingBiaoWinMoney = 0;
-	m_JingBiaoBest = 0;
-	m_JingBiaoBestTime = 0;
-
-	m_GuanJunTimes = 0;
-	m_GuanJunWinMoney = 0;
-	m_GuanJunBest = 0;
-	m_GuanJunBestTime = 0;
 
 	m_PlayerCreateTime = 0;
 	m_PlayerSitTime = 0;
@@ -1020,44 +1004,6 @@ void CPlayer::GetPlayerDataEx(GameXY::Game_PlayerDataEx& game_msgPDEx)
 	game_msgPDEx.m_VipLevel     = m_VipLevel;
 	game_msgPDEx.m_FriendCount  = m_FriendCount;
 }
-
-void CPlayer::SetPlayerMatchData(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerMatchData& msgPMD)
-{
-	m_TaoJinTimes               = INT32(msgPMD.m_TaoJinTimes);
-	m_TaoJinWinMoney            = msgPMD.m_TaoJinWinMoney;
-	m_TaoJinBest                = INT32(msgPMD.m_TaoJinBest);
-	m_TaoJinBestTime            = UINT32(msgPMD.m_TaoJinBestTime);
-
-	m_JingBiaoTimes             = INT32(msgPMD.m_JingBiaoTimes);
-	m_JingBiaoWinMoney          = msgPMD.m_JingBiaoWinMoney;
-	m_JingBiaoBest              = INT32(msgPMD.m_JingBiaoBest);
-	m_JingBiaoBestTime          = UINT32(msgPMD.m_JingBiaoBestTime);
-
-	m_GuanJunTimes              = INT32(msgPMD.m_GuanJunTimes);
-	m_GuanJunWinMoney           = msgPMD.m_GuanJunWinMoney;
-	m_GuanJunBest               = INT32(msgPMD.m_GuanJunBest);
-	m_GuanJunBestTime           = UINT32(msgPMD.m_GuanJunBestTime);
-}
-void CPlayer::GetPlayerMatchData(GameXY::Game_PlayerMatchData& msgPMD)
-{
-	msgPMD.m_AID                = m_AID;
-	msgPMD.m_PID                = m_PID;
-
-	msgPMD.m_TaoJinTimes        = m_TaoJinTimes;
-	msgPMD.m_TaoJinWinMoney     = m_TaoJinWinMoney;
-	msgPMD.m_TaoJinBest         = m_TaoJinBest;         
-	msgPMD.m_TaoJinBestTime     = m_TaoJinBestTime;
-
-	msgPMD.m_JingBiaoTimes      = m_JingBiaoTimes;
-	msgPMD.m_JingBiaoWinMoney   = m_JingBiaoWinMoney;
-	msgPMD.m_JingBiaoBest       = m_JingBiaoBest;
-	msgPMD.m_JingBiaoBestTime   = m_JingBiaoBestTime;
-
-	msgPMD.m_GuanJunTimes       = m_GuanJunTimes;
-	msgPMD.m_GuanJunWinMoney    = m_GuanJunWinMoney;
-	msgPMD.m_GuanJunBest        = m_GuanJunBest;
-	msgPMD.m_GuanJunBestTime    = m_GuanJunBestTime;
-}
 void CPlayer::GetPlayerTailInfo(GameXY::PlayerTailInfo& msgPTI)
 {
 	msgPTI.m_PID                = m_PID;
@@ -1119,21 +1065,6 @@ void CPlayer::SetBotPlayerData(const MoGui::MoGuiXY::DBServerXY::DBS_BotPlayerDa
 	m_JoinTime       = bpd.m_JoinTime;
 	m_LandTime       = UINT32(time(NULL));
 	m_InvitePID      = bpd.m_InvitePID;
-
-	m_TaoJinTimes    = INT32(bpd.m_TaoJinTimes);
-	m_TaoJinWinMoney = bpd.m_TaoJinWinMoney;
-	m_TaoJinBest     = INT32(bpd.m_TaoJinBest);
-	m_TaoJinBestTime = bpd.m_TaoJinBestTime;
-
-	m_JingBiaoTimes    = INT32(bpd.m_JingBiaoTimes);
-	m_JingBiaoWinMoney = bpd.m_JingBiaoWinMoney;
-	m_JingBiaoBest     = INT32(bpd.m_JingBiaoBest);
-	m_JingBiaoBestTime = bpd.m_JingBiaoBestTime;
-
-	m_GuanJunTimes     = INT32(bpd.m_GuanJunTimes);
-	m_GuanJunWinMoney  = bpd.m_GuanJunWinMoney;
-	m_GuanJunBest      = INT32(bpd.m_GuanJunBest);
-	m_GuanJunBestTime  = bpd.m_GuanJunBestTime;
 
 	ClearMoneyLog();
 	AddMoneyLog(bpd.m_nGameMoney,"SetBotPlayerData");
@@ -1270,15 +1201,6 @@ void CPlayer::SendPlayerDataEx()
 		GetPlayerDataEx(game_msgPDEx);
 		SendMsg(game_msgPDEx);
 	}
-}
-void CPlayer::SendPlayerMatchData()
-{
-	if ( IsNeedSendMsg() )
-	{
-		GameXY::Game_PlayerMatchData game_msgPMD;
-		GetPlayerMatchData(game_msgPMD);
-		SendMsg(game_msgPMD);
-	}	
 }
 void CPlayer::GetHonorList(VectorHonorID& listHI)
 {

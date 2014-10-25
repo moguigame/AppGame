@@ -131,7 +131,7 @@ namespace DeZhou
 		UINT32                      m_PID;
 		INT64                       m_nAddMoney;
 		INT64                       m_nCurGameMoney;
-		string                      m_strLogMsg;
+		std::string                 m_strLogMsg;
 
 		stDBGameMoneyError(){ ReSet();}
 		void ReSet()
@@ -150,7 +150,7 @@ namespace DeZhou
 		UINT32                                m_PID;
 		int                                   m_AddMoney;
 		int                                   m_CurMoGuiMoney;
-		string                                m_strLog;
+		std::string                           m_strLog;
 
 		stDBMoGuiMoneyError(){ ReSet();}
 		void ReSet()
@@ -187,7 +187,7 @@ namespace DeZhou
 		stDBUserAward(){ Init(); }
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stDBUserAward>   VectorAward;
+	typedef std::vector<stDBUserAward>   VectorAward;
 
 	struct stDBGameRight 
 	{
@@ -202,7 +202,7 @@ namespace DeZhou
 		stDBGameRight(){ Init(); }
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stDBGameRight>  VectorRight;
+	typedef std::vector<stDBGameRight>  VectorRight;
 
 	struct stUserGameInfo
 	{
@@ -279,7 +279,7 @@ namespace DeZhou
 			m_EndTime = 0;
 		}
 	};
-	typedef vector<stRoomInfo> VectorRoomInfo;
+	typedef std::vector<stRoomInfo> VectorRoomInfo;
 
 	struct stTableInfo
 	{
@@ -313,7 +313,7 @@ namespace DeZhou
 			m_TableEndTime = 0;
 		}
 	};
-	typedef vector<stTableInfo>     VectorTableInfo;
+	typedef std::vector<stTableInfo>     VectorTableInfo;
 
 	struct stFaceInfo
 	{
@@ -327,8 +327,8 @@ namespace DeZhou
 		stFaceInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef vector<stFaceInfo>             VectorFaceInfo;
-	typedef map<INT16,stFaceInfo>          MapFaceInfo;
+	typedef std::vector<stFaceInfo>             VectorFaceInfo;
+	typedef std::map<INT16,stFaceInfo>          MapFaceInfo;
 
 	struct stGiftInfo
 	{
@@ -345,9 +345,9 @@ namespace DeZhou
 		stGiftInfo(){Init();}
 		void Init(){ memset(this,0,sizeof(*this));}
 	};
-	typedef list<stGiftInfo>           ListGiftInfo;
-	typedef vector<stGiftInfo>         VectorGiftInfo;
-	typedef map<INT16,stGiftInfo>      MapGiftInfo;
+	typedef std::list<stGiftInfo>           ListGiftInfo;
+	typedef std::vector<stGiftInfo>         VectorGiftInfo;
+	typedef std::map<INT16, stGiftInfo>      MapGiftInfo;
 
 	struct stDBMatchInfo
 	{
@@ -594,21 +594,6 @@ namespace DeZhou
 		int                         m_Achieve3;
 		int                         m_Achieve4;
 
-		INT32                       m_TaoJinTimes;
-		INT64                       m_TaoJinWinMoney;
-		INT32                       m_TaoJinBest;
-		UINT32                      m_TaoJinBestTime;		
-
-		INT32                       m_JingBiaoTimes;
-		INT64                       m_JingBiaoWinMoney;
-		INT32                       m_JingBiaoBest;
-		UINT32                      m_JingBiaoBestTime;
-
-		INT32                       m_GuanJunTimes;
-		INT64                       m_GuanJunWinMoney;
-		INT32                       m_GuanJunBest;
-		UINT32                      m_GuanJunBestTime;
-
 		stBotPlayerData(){Init();}
 		~stBotPlayerData(){}
 
@@ -651,50 +636,9 @@ namespace DeZhou
 			m_Achieve2 = 0;
 			m_Achieve3 = 0;
 			m_Achieve4 = 0;		
-
-			m_TaoJinTimes = 0;
-			m_TaoJinWinMoney = 0;
-			m_TaoJinBest = 0;
-			m_TaoJinBestTime = 0;
-
-			m_JingBiaoTimes = 0;
-			m_JingBiaoWinMoney = 0;
-			m_JingBiaoBest = 0;
-			m_JingBiaoBestTime = 0;
-
-			m_GuanJunTimes = 0;
-			m_GuanJunWinMoney = 0;
-			m_GuanJunBest = 0;
-			m_GuanJunBestTime = 0;
 		}
 	};
-	typedef vector<stBotPlayerData>     VectorBotPlayerData;
-
-	struct stPlayerMatchData
-	{
-		UINT32                      m_PID;
-		INT16                       m_AID;
-
-		INT32                       m_TaoJinTimes;
-		INT64                       m_TaoJinWinMoney;
-		INT32                       m_TaoJinBest;
-		UINT32                      m_TaoJinBestTime;		
-
-		INT32                       m_JingBiaoTimes;
-		INT64                       m_JingBiaoWinMoney;
-		INT32                       m_JingBiaoBest;
-		UINT32                      m_JingBiaoBestTime;	
-
-		INT32                       m_GuanJunTimes;
-		INT64                       m_GuanJunWinMoney;
-		INT32                       m_GuanJunBest;
-		UINT32                      m_GuanJunBestTime;
-
-		stPlayerMatchData(){Init();}
-		~stPlayerMatchData(){}
-
-		void Init(){ memset(this,0,sizeof(*this)); }
-	};
+	typedef std::vector<stBotPlayerData>     VectorBotPlayerData;
 
 	class DBServerPlayerInfo : public CMemoryPool_Public<DBServerPlayerInfo, 100>
 	{

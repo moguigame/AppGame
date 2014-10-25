@@ -267,37 +267,6 @@ bool CMemOperator::memDelUserInfo(INT16 AID,UINT32 PID)
 	}
 	return false;
 }
-
-bool CMemOperator::memGetUserMatchInfo(INT16 AID,UINT32 PID,MemcatchXY::DeZhou::memUserMatchInfo& memUMI)
-{
-	assert( AID>0 && PID>0 );
-	if ( PID>0 && AID>0 && m_bCanUse)
-	{
-		memUMI.m_AID   = AID;
-		memUMI.m_PID   = PID;
-		return m_MemCached.Get_Data(GetKey("umi",AID,PID),memUMI);
-	}
-	return false;
-}
-bool CMemOperator::memSetUserMatchInfo(const MemcatchXY::DeZhou::memUserMatchInfo& memUMI,time_t keeptime)
-{
-	assert( memUMI.m_AID>0 && memUMI.m_PID>0 );
-	if ( memUMI.m_PID>0 && memUMI.m_AID>0 && m_bCanUse)
-	{
-		return m_MemCached.Set_Data(GetKey("umi",memUMI.m_AID,memUMI.m_PID),memUMI,keeptime);
-	}
-	return false;
-}
-bool CMemOperator::memDelUserMatchInfo(INT16 AID,UINT32 PID)
-{
-	assert( AID>0 && PID>0 );
-	if ( PID>0 && AID>0 && m_bCanUse)
-	{
-		return m_MemCached.Del(GetKey("umi",AID,PID));
-	}
-	return false;
-}
-
 bool CMemOperator::memGetGift(UINT32 PID,int GiftIdx,MemcatchXY::DeZhou::memGiftInfo& memGI)
 {
 	assert( GiftIdx>0 );

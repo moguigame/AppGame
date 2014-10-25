@@ -19,7 +19,6 @@ namespace DeZhou
 	//struct memUserGameInfo
 	//struct memUserGameInfoEx             //用于存放玩家游戏相关信息，但是不经常更新的内容
 	//struct memUserGameWinRecord          //用于存放玩家以何种方式赢的数据，经常更新，但在cach也备一份
-	//struct memUserMatchInfo              //用于存放玩家的比赛信息
 
 	//struct memGiftInfo                   //用于存放礼物的信息，同时供网页接口调用
 
@@ -111,13 +110,12 @@ namespace DeZhou
 		INT16                                 m_AID;
 		UINT32                                m_PID;
 
-		BYTE                                  m_HaveGameInfo;
+		int                                   m_HaveGameInfo;
 		int                                   m_Sex;
-		short                                 m_Year;
 		UINT32                                m_InvitePID;
 		UINT32                                m_JoinTime;
 		int                                   m_ChangeName;
-		BYTE                                  m_PlayerLevel;
+		int                                   m_PlayerLevel;
 
 		std::string                           m_NickName;
 		std::string                           m_HeadPicURL;
@@ -132,7 +130,6 @@ namespace DeZhou
 
 			m_HaveGameInfo = 0;
 			m_Sex = 0;
-			m_Year = 1980;
 			m_InvitePID = 0;
 			m_JoinTime = 0;
 			m_ChangeName = 0;
@@ -485,77 +482,6 @@ namespace DeZhou
 			bis >> src.m_ActionTime;
 			bis >> src.m_CurEndTime;
 			bis >> src.m_LastEndTime;
-
-			return bis;
-		}
-	};
-
-	struct memUserMatchInfo
-	{
-		short                m_AID;
-		unsigned int         m_PID;
-
-		INT32                m_TaoJinTimes;
-		INT64                m_TaoJinWinMoney;
-		INT32                m_TaoJinBest;
-		UINT32               m_TaoJinBestTime;
-
-		INT32                m_JingBiaoTimes;
-		INT64                m_JingBiaoWinMoney;
-		INT32                m_JingBiaoBest;
-		UINT32               m_JingBiaoBestTime;
-
-		INT32                m_GuanJunTimes;
-		INT64                m_GuanJunWinMoney;
-		INT32                m_GuanJunBest;
-		UINT32               m_GuanJunBestTime;
-
-		memUserMatchInfo(){Init();}
-		~memUserMatchInfo(){}
-
-		void Init(){ memset(this,0,sizeof(*this)); }
-
-		friend bostream& operator<<(bostream& bos, const memUserMatchInfo& src)
-		{
-			bos << src.m_AID;
-			bos << src.m_PID;
-
-			bos << src.m_TaoJinTimes;
-			bos << src.m_TaoJinWinMoney;
-			bos << src.m_TaoJinBest;
-			bos << src.m_TaoJinBestTime;
-
-			bos << src.m_JingBiaoTimes;
-			bos << src.m_JingBiaoWinMoney;
-			bos << src.m_JingBiaoBest;
-			bos << src.m_JingBiaoBestTime;
-
-			bos << src.m_GuanJunTimes;
-			bos << src.m_GuanJunWinMoney;
-			bos << src.m_GuanJunBest;
-			bos << src.m_GuanJunBestTime;
-
-			return bos;
-		}
-		friend bistream& operator>>(bistream& bis, memUserMatchInfo& src)
-		{
-			bis >> src.m_AID;
-			bis >> src.m_PID;
-
-			bis >> src.m_TaoJinTimes;
-			bis >> src.m_TaoJinWinMoney;
-			bis >> src.m_TaoJinBest;
-			bis >> src.m_TaoJinBestTime;
-
-			bis >> src.m_JingBiaoTimes;
-			bis >> src.m_JingBiaoWinMoney;
-			bis >> src.m_JingBiaoBest;
-			bis >> src.m_JingBiaoBestTime;
-
-			bis >> src.m_GuanJunTimes;
-			bis >> src.m_GuanJunWinMoney;
-			bis >> src.m_GuanJunBest;
-			bis >> src.m_GuanJunBestTime;
 
 			return bis;
 		}

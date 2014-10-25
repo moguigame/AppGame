@@ -582,7 +582,7 @@ namespace DBServerXY
 
 		INT16                         m_FriendCount;
 		UINT32                        m_FreeFaceTime;
-		short                         m_VipLevel;
+		unsigned char                 m_VipLevel;
 
 		DBS_PlayerDataEx() { ReSet(); }
 		void ReSet() { memset(this,0,sizeof(*this)); }
@@ -651,80 +651,6 @@ namespace DBServerXY
 			bis >> src.m_FriendCount;
 			bis >> src.m_FreeFaceTime;
 			bis >> src.m_VipLevel;
-
-			return bis;
-		}
-	};
-
-	struct DBS_PlayerMatchData
-	{
-		enum { XY_ID = DBServerXYID_PlayerMatchData };
-
-		short                m_AID;
-		unsigned int         m_PID;
-
-		SBigNumber           m_TaoJinTimes;
-		SBigNumber           m_TaoJinWinMoney;
-		SBigNumber           m_TaoJinBest;
-		UINT32               m_TaoJinBestTime;
-
-		SBigNumber           m_JingBiaoTimes;
-		SBigNumber           m_JingBiaoWinMoney;
-		SBigNumber           m_JingBiaoBest;
-		UINT32               m_JingBiaoBestTime;
-
-		SBigNumber           m_GuanJunTimes;
-		SBigNumber           m_GuanJunWinMoney;
-		SBigNumber           m_GuanJunBest;
-		UINT32               m_GuanJunBestTime;
-
-		DBS_PlayerMatchData() { ReSet(); }
-		void ReSet() { memset(this,0,sizeof(*this)); }
-
-		friend bostream& operator<<( bostream& bos, const DBS_PlayerMatchData& src )
-		{
-			bos << src.m_AID;
-			bos << src.m_PID;
-
-			bos << src.m_TaoJinTimes;
-			bos << src.m_TaoJinWinMoney;
-			bos << src.m_TaoJinBest;
-			bos << src.m_TaoJinBestTime;
-
-			bos << src.m_JingBiaoTimes;
-			bos << src.m_JingBiaoWinMoney;
-			bos << src.m_JingBiaoBest;
-			bos << src.m_JingBiaoBestTime;
-
-			bos << src.m_GuanJunTimes;
-			bos << src.m_GuanJunWinMoney;
-			bos << src.m_GuanJunBest;
-			bos << src.m_GuanJunBestTime;
-		
-			return bos;
-		}
-
-		friend bistream& operator>>( bistream& bis, DBS_PlayerMatchData& src )
-		{
-			src.ReSet();
-
-			bis >> src.m_AID;
-			bis >> src.m_PID;
-
-			bis >> src.m_TaoJinTimes;
-			bis >> src.m_TaoJinWinMoney;
-			bis >> src.m_TaoJinBest;
-			bis >> src.m_TaoJinBestTime;
-
-			bis >> src.m_JingBiaoTimes;
-			bis >> src.m_JingBiaoWinMoney;
-			bis >> src.m_JingBiaoBest;
-			bis >> src.m_JingBiaoBestTime;
-
-			bis >> src.m_GuanJunTimes;
-			bis >> src.m_GuanJunWinMoney;
-			bis >> src.m_GuanJunBest;
-			bis >> src.m_GuanJunBestTime;
 
 			return bis;
 		}
@@ -1347,23 +1273,8 @@ namespace DBServerXY
 		int                           m_WinRecord[WinTypeNum];
 		int                           m_Achieve[4];
 
-		BYTE                          m_VipLevel;
+		unsigned char                 m_VipLevel;
 		INT16                         m_FriendCount;
-
-		SBigNumber                    m_TaoJinTimes;
-		SBigNumber                    m_TaoJinWinMoney;
-		SBigNumber                    m_TaoJinBest;
-		UINT32                        m_TaoJinBestTime;
-
-		SBigNumber                    m_JingBiaoTimes;
-		SBigNumber                    m_JingBiaoWinMoney;
-		SBigNumber                    m_JingBiaoBest;
-		UINT32                        m_JingBiaoBestTime;
-
-		SBigNumber                    m_GuanJunTimes;
-		SBigNumber                    m_GuanJunWinMoney;
-		SBigNumber                    m_GuanJunBest;
-		UINT32                        m_GuanJunBestTime;
 
 		DBS_BotPlayerData() { ReSet(); }
 		void ReSet()
@@ -1410,21 +1321,6 @@ namespace DBServerXY
 
 			m_VipLevel = 0;
 			m_FriendCount = 0;
-
-			m_TaoJinTimes = 0;
-			m_TaoJinWinMoney = 0;
-			m_TaoJinBest = 0;
-			m_TaoJinBestTime = 0;
-
-			m_JingBiaoTimes = 0;
-			m_JingBiaoWinMoney = 0;
-			m_JingBiaoBest = 0;
-			m_JingBiaoBestTime = 0;
-
-			m_GuanJunTimes = 0;
-			m_GuanJunWinMoney = 0;
-			m_GuanJunBest = 0;
-			m_GuanJunBestTime = 0;
 		}
 
 		friend bostream& operator<<( bostream& bos, const DBS_BotPlayerData& bpd )
@@ -1475,21 +1371,6 @@ namespace DBServerXY
 
 			bos << bpd.m_VipLevel;
 			bos << bpd.m_FriendCount;
-
-			bos << bpd.m_TaoJinTimes;
-			bos << bpd.m_TaoJinWinMoney;
-			bos << bpd.m_TaoJinBest;
-			bos << bpd.m_TaoJinBestTime;
-
-			bos << bpd.m_JingBiaoTimes;
-			bos << bpd.m_JingBiaoWinMoney;
-			bos << bpd.m_JingBiaoBest;
-			bos << bpd.m_JingBiaoBestTime;
-
-			bos << bpd.m_GuanJunTimes;
-			bos << bpd.m_GuanJunWinMoney;
-			bos << bpd.m_GuanJunBest;
-			bos << bpd.m_GuanJunBestTime;
 
 			return bos;
 		}
@@ -1543,21 +1424,6 @@ namespace DBServerXY
 			}
 			bis >> bpd.m_VipLevel;
 			bis >> bpd.m_FriendCount;
-
-			bis >> bpd.m_TaoJinTimes;
-			bis >> bpd.m_TaoJinWinMoney;
-			bis >> bpd.m_TaoJinBest;
-			bis >> bpd.m_TaoJinBestTime;
-
-			bis >> bpd.m_JingBiaoTimes;
-			bis >> bpd.m_JingBiaoWinMoney;
-			bis >> bpd.m_JingBiaoBest;
-			bis >> bpd.m_JingBiaoBestTime;
-
-			bis >> bpd.m_GuanJunTimes;
-			bis >> bpd.m_GuanJunWinMoney;
-			bis >> bpd.m_GuanJunBest;
-			bis >> bpd.m_GuanJunBestTime;
 
 			return bis;
 		}
@@ -2415,8 +2281,6 @@ namespace DBServerXY
 		unsigned int              m_PID;
 		
 		unsigned char             m_Sex;
-		short                     m_Year;
-
 		std::string               m_NickName;
 		std::string               m_HeadPicUrl;
 		std::string               m_City;
@@ -2427,8 +2291,7 @@ namespace DBServerXY
 			m_AID = 0;
 			m_PID = 0;
 
-			m_Sex = 0;
-			m_Year = 0;
+			m_Sex = 0;		
 
 			m_NickName = "";
 			m_HeadPicUrl = "";
@@ -2441,7 +2304,6 @@ namespace DBServerXY
 			bos << src.m_PID;
 
 			bos << src.m_Sex;
-			bos << src.m_Year;
 
 			InString(bos,src.m_NickName,MAX_NICKNAME_SIZE);
 			InString(bos,src.m_HeadPicUrl,MAX_URL_SIZE);
@@ -2457,7 +2319,6 @@ namespace DBServerXY
 			bis >> src.m_PID;
 
 			bis >> src.m_Sex;
-			bis >> src.m_Year;
 
 			OutString(bis,src.m_NickName,MAX_NICKNAME_SIZE);
 			OutString(bis,src.m_HeadPicUrl,MAX_URL_SIZE);

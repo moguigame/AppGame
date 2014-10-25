@@ -2168,7 +2168,6 @@ int CServer::OnPlayerConnect( GameServerSocket* pclient,CRecvMsgPacket& msgPack 
 
 						pPlayer->SendPlayerData();
 						pPlayer->SendPlayerDataEx();
-						pPlayer->SendPlayerMatchData();
 						pPlayer->SendPlayerHonor();
 
 						//SendRoomInfoListToPlayer( pPlayer );
@@ -2300,11 +2299,6 @@ int CServer::OnDBServerMsg(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack)
 	case DBServerXY::DBS_PlayerDataEx::XY_ID:
 		{
 			ret = OnDBPlayerDataEx(pDBSocket,msgPack);
-		}
-		break;
-	case DBServerXY::DBS_PlayerMatchData::XY_ID:
-		{
-			ret = OnDBPlayerMatchData(pDBSocket,msgPack);
 		}
 		break;
 	case DBServerXY::DBS_PlayerLimite::XY_ID:
@@ -3159,7 +3153,6 @@ int CServer::OnDBPlayerLoginData(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPac
 
 			pPlayer->SendPlayerData();
 			pPlayer->SendPlayerDataEx();
-			pPlayer->SendPlayerMatchData();
 			pPlayer->SendPlayerHonor();
 
 			SendPlayerFollow(pPlayer);
@@ -3313,27 +3306,6 @@ int CServer::OnDBPlayerDataEx(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack)
 	else
 	{
 		DebugError("OnDBPlayerDataEx AID=%d PID=%d",msgPDEx.m_AID,msgPDEx.m_PID);
-	}
-	return 0;
-}
-
-int CServer::OnDBPlayerMatchData(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack)
-{
-	TraceStackPath logTP("CServer::OnDBPlayerMatchData");
-	CLogFuncTime lft(m_FuncTime,"OnDBPlayerMatchData");
-	DBServerXY::DBS_PlayerMatchData msgPMD;
-	TransplainMsg(msgPack,msgPMD);
-
-	MapPlayer::iterator itorPlayer = m_Players.find( msgPMD.m_PID );
-	if ( itorPlayer != m_Players.end() )
-	{
-		PlayerPtr pPlayer = itorPlayer->second;
-		pPlayer->SetPlayerMatchData(msgPMD);
-		pPlayer->SendPlayerMatchData();
-	}
-	else
-	{
-		DebugError("OnDBPlayerMatchData AID=%d PID=%d",msgPMD.m_AID,msgPMD.m_PID);
 	}
 	return 0;
 }
@@ -5102,14 +5074,12 @@ int CServer::OnChangeUserInfo( PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 				DBServerXY::WDB_ChangeUserInfo dbmsgCN;
 				dbmsgCN.m_AID            = pPlayer->GetAID();
 				dbmsgCN.m_PID            = pPlayer->GetPID();
-				dbmsgCN.m_Sex            = pPlayer->m_Sex;
-				dbmsgCN.m_Year           = pPlayer->m_Year;
+				dbmsgCN.m_Sex            = pPlayer->m_Sex;				
 				dbmsgCN.m_NickName       = pPlayer->m_NickName;
 				dbmsgCN.m_HeadPicUrl     = pPlayer->GetHeadPicURL();
 				dbmsgCN.m_City           = pPlayer->GetCity();
 
 				msgRespCUI.m_Sex         = pPlayer->m_Sex;
-				msgRespCUI.m_Year        = pPlayer->m_Year;
 				msgRespCUI.m_NickName    = pPlayer->m_NickName;
 				msgRespCUI.m_HeadPicUrl  = pPlayer->GetHeadPicURL();
 				msgRespCUI.m_City        = pPlayer->GetCity();				
@@ -5119,16 +5089,6 @@ int CServer::OnChangeUserInfo( PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 					pPlayer->m_NickName   = msgCN.m_NickName;
 					msgRespCUI.m_NickName = msgCN.m_NickName;
 					dbmsgCN.m_NickName    = msgCN.m_NickName;
-				}
-
-				if ( (pPlayer->m_ChangeName&ChangeInfo_Year) == ChangeInfo_Year )
-				{
-					msgCN.m_Year = max(msgCN.m_Year,1880);
-					msgCN.m_Year = min(msgCN.m_Year,2013);
-
-					pPlayer->m_Year     = msgCN.m_Year;
-					msgRespCUI.m_Year   = msgCN.m_Year;
-					dbmsgCN.m_Year      = msgCN.m_Year;					
 				}
 
 				if ( (pPlayer->m_ChangeName&ChangeInfo_Sex) == ChangeInfo_Sex )

@@ -186,7 +186,6 @@ private:
 	int OnDBPlayerLoginData(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);
 	int OnDBPlayerData(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);
 	int OnDBPlayerDataEx(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);
-	int OnDBPlayerMatchData(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);
 	int OnDBPlayerLimite(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);
 	int OnDBPlayerRight(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);
 	int OnDBRespPlayerInfo(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack);

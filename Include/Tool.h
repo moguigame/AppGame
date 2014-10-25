@@ -12,8 +12,6 @@ class otl_datetime;
 
 namespace Tool
 {
-
-
 	#define safe_delete(p) { if(p) { delete p; p = NULL; } }
 	#define safe_delete_arr(p) { if(p) { delete[] p; p = NULL; } }
 
@@ -59,21 +57,6 @@ namespace Tool
 	template<class T>
 	  inline std::string N2S(T nNumber,int nWidth=0)
 	{
-		//stringstream ssIn;
-		//if ( nWidth )
-		//{
-		//	ssIn.width(nWidth);
-		//}
-		//if ( nNumber<=255 && nNumber>=-128 )
-		//{
-		//	ssIn<<int(nNumber);
-		//}
-		//else
-		//{
-		//	ssIn<<nNumber;
-		//}
-		//return ssIn.str();
-
 		static char retBuf[32];
 		static char digits[19] =  
 		{ '9', '8', '7', '6', '5', '4', '3', '2', '1', 
@@ -110,39 +93,6 @@ namespace Tool
 		std::stringstream ssIn;
 		ssIn<<strData;
 		ssIn>>Number;
-	};
-
-	template<class T>
-	inline std::string ZN2S(T nNumber, int nWidth = 0)
-	{
-		static char retBuf[32];
-		static char digits[19] =  
-		{ '9', '8', '7', '6', '5', '4', '3', '2', '1', 
-		'0', 
-		'1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		static const char* zero = digits + 9;
-
-		T nShang = nNumber;
-		T nYuSu = 0;
-		char* p = retBuf;
-		do {
-			nYuSu = nShang % 10;
-			nShang /= 10;
-			*p++ = zero[nYuSu];
-		} while (nShang != 0);
-		if (nNumber < 0)
-			*p++ = '-';
-
-		int nLen = p - retBuf;
-		while( nLen < nWidth )
-		{
-			*p++ = 32;
-			nLen++;
-		}
-		
-		*p = 0;
-		std::reverse(retBuf, p);
-		return std::string(retBuf);
 	};
 
 	template<typename T>

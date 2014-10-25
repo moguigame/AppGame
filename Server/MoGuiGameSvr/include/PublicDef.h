@@ -124,7 +124,7 @@ namespace MoGui
 	enum ChangeInfo
 	{
 		ChangeInfo_NickName = 1,
-		ChangeInfo_Year     = 2,
+		//ChangeInfo_Year     = 2,
 		ChangeInfo_Sex      = 4,
 		ChangeInfo_HeadPic  = 8,
 		ChangeInfo_City     = 16,
@@ -180,6 +180,7 @@ namespace MoGui
 	const int GameError_PlayerClientError                 = 1;
 	const int GameError_AddMoney                          = 101;
 	const int GameError_AddMoguiMoney                     = 201;
+	const int GameError_ChangeUserInfo                    = 301;
 
 	namespace N_IncomeAndPay
 	{

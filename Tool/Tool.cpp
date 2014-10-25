@@ -792,7 +792,7 @@ namespace Tool
 		GetMD5(strKey.c_str(),strKey.size(),DataBuf);
 		for ( int i=0;i<16;++i)
 		{
-			s_IVKey[i] = DataBuf[i];			
+			s_IVKey[i] = DataBuf[i];
 		}
 
 		string strTemp = MemoryToString(DataBuf,16);
