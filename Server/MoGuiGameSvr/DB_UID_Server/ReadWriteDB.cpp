@@ -497,7 +497,7 @@ int CDBOperator::OnMatchResult(ReadWriteDBMessage* pMsg)
 	try
 	{
 		string strSQL = "insert into " + m_strTableNameMatchResult + " (MatchGUID,AID,PID,RoomID,TableID,MatchID,Position,AwardMoney,AwardJF,Ticket,TakeMoney,DateTime) \
-				values(:f1<bigint>,:f9<short>,:f2<unsigned int>,:f7<short>,:f8<short>,:f21<int>,:f22<int>,:f23<bigint>,:f34<bigint>,:f24<int>,:f25<int>,now())";
+				values(:f1<bigint>,:f9<short>,:f2<unsigned int>,:f7<int>,:f8<int>,:f21<int>,:f22<int>,:f23<bigint>,:f34<bigint>,:f24<int>,:f25<int>,now())";
 		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect );
 		TempDBStream<<msgMRL.m_MatchGUID
 			<<msgMRL.m_AID
@@ -1160,7 +1160,7 @@ int CDBOperator::OnChangeBankLog(ReadWriteDBMessage* pMsg)
 	try
 	{
 		string strSQL = "insert into dezhou_bank_log (PID,AID,Money,Flag,LogTime) \
-						values(:f1<unsigned int>,:f11<short>,:f2<bigint>,:f3<short>,now())";
+						values(:f1<unsigned int>,:f11<short>,:f2<bigint>,:f3<int>,now())";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect);
 		TempDBStream<<msgCBL.m_PID<<msgCBL.m_AID<<msgCBL.m_Money<<msgCBL.m_Flag;
 		TempDBStream.close();
@@ -1628,7 +1628,7 @@ int CDBOperator::OnChatLog(ReadWriteDBMessage* pMsg)
 	try
 	{
 		std::string strSQL = "insert into " + m_strTableNameChat + " (ServerID,RoomID,TableID,SitID,ChatPID,ToPID,Msg,ActionTime) \
-							 values(:f1<short>,:f2<short>,:f3<short>,:f4<short>,:f5<unsigned int>,:f6<unsigned int>,:f7<char[255]>,now())";
+							 values(:f1<int>,:f2<int>,:f3<int>,:f4<int>,:f5<unsigned int>,:f6<unsigned int>,:f7<char[255]>,now())";
 		otl_stream TempDBStream( OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect );
 		TempDBStream<<msgCL.m_ServerID<<msgCL.m_RoomID<<msgCL.m_TableID<<short(msgCL.m_SitID)<<msgCL.m_PID<<msgCL.m_ToPID<<msgCL.m_ChatMsg;
 		TempDBStream.close();
@@ -2962,7 +2962,7 @@ int CDBOperator::ReadBotPlayerData(INT16 AID,UINT32 StartPID,UINT32 EndPID,Vecto
 			MoGuiMoney,GameMoney,HongBao,JF,EP,WinTimes,LossTimes,GameTime,TopLimite,LowLimite,GameRight,BotLevel,\
 			MaxMoney,MaxMoneyTime,MaxPai,MaxPaiTime,MaxWin,MaxWinTime,\
 			One,Two,TwoTwo,Three,Str,Hua,ThreeTwo,Four,HuaStr,King,Achieve_1,Achieve_2,Achieve_3,Achieve_4,\
-			VipLevel,\
+			VipLevel \
 			from v_dezhou_botplayerdata where AID=:f3<short> and PID>=:f1<unsigned int> and PID<=:f2<unsigned int> ",
 			m_DBGameConnect );
 

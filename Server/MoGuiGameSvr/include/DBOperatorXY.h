@@ -471,7 +471,7 @@ namespace RWDB_XY
 		short                    m_AID;
 		unsigned int             m_PID;
 
-		short                    m_Flag;
+		int                      m_Flag;
 		INT64                    m_Money;
 
 		RWDB_ChangeBankLog() { ReSet(); }
@@ -737,8 +737,8 @@ namespace RWDB_XY
 		long long                 m_MatchGUID;
 		short                     m_AID;
 		unsigned int              m_PID;
-		short                     m_RoomID;
-		short                     m_TableID;
+		int                       m_RoomID;
+		int                       m_TableID;
 		int                       m_MatchID;
 		int                       m_Ticket;
 		int                       m_TakeMoney;
@@ -1097,10 +1097,10 @@ namespace RWDB_XY
 		unsigned int             m_PID;
 		unsigned int             m_ToPID;
 
-		short                    m_ServerID;
-		short                    m_RoomID;
-		short                    m_TableID;
-		BYTE                     m_SitID;
+		int                      m_ServerID;
+		int                      m_RoomID;
+		int                      m_TableID;
+		int                      m_SitID;
 
 		std::string              m_ChatMsg;
 
