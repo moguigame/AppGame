@@ -1357,7 +1357,7 @@ int CDBOperator::OnMoGuiMoneyLog(ReadWriteDBMessage* pMsg)
 	try
 	{
 		string strSQL = "insert into dezhou_mogui_log (PID,AID,Money,Flag,Log,ActionTime) \
-						values(:f1<unsigned int>,:f2<short>,:f4<int>,:f5<short>,:f6<char[255]>,now())";
+						values(:f1<unsigned int>,:f2<short>,:f4<int>,:f5<int>,:f6<char[255]>,now())";
 		otl_stream TempDBStream(OTL_STREAMBUF_SIZE,strSQL.c_str(),m_DBLogConnect);
 		TempDBStream<<msgMML.m_PID<<msgMML.m_AID<<msgMML.m_Money<<msgMML.m_Flag<<msgMML.m_strLog;
 		TempDBStream.close();

@@ -1544,7 +1544,7 @@ namespace RWDB_XY
 		UINT32                                m_PID;
 		INT16                                 m_AID;
 		int                                   m_Money;
-		INT16                                 m_Flag;
+		int                                   m_Flag;
 		std::string                           m_strLog;
 
 		RWDB_MoGuiMoneyLog(){ReSet();}
