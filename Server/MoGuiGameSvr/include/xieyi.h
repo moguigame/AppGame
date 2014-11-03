@@ -3004,12 +3004,15 @@ namespace GameXY
 		UINT32          m_JoinTime;
 		UINT32          m_LandTime;
 
+		int             m_MaxMoneyTime;
 		SBigNumber      m_maxOwnMoney;
+		int             m_MaxWinTime;
 		SBigNumber      m_maxWinMoney;
 
 		short           m_FriendCount;
 		int             m_nWinTimes;
 		int             m_nLossTimes;
+		int             m_MaxPaiTime;
 		INT64           m_MaxPai;
 
 		BYTE            m_HonorCount;
@@ -3023,11 +3026,14 @@ namespace GameXY
 
 			bos << src.m_JoinTime;
 			bos << src.m_LandTime;
+			bos << src.m_MaxMoneyTime;
 			bos << src.m_maxOwnMoney;
+			bos << src.m_MaxWinTime;
 			bos << src.m_maxWinMoney;
 			bos << src.m_FriendCount;
 			bos << src.m_nWinTimes;
 			bos << src.m_nLossTimes;
+			bos << src.m_MaxPaiTime;
 			bos << src.m_MaxPai;
 			bos << src.m_HonorCount;
 
@@ -3041,11 +3047,14 @@ namespace GameXY
 
 			bis >> src.m_JoinTime;
 			bis >> src.m_LandTime;
+			bis >> src.m_MaxMoneyTime;
 			bis >> src.m_maxOwnMoney;
+			bis >> src.m_MaxWinTime;
 			bis >> src.m_maxWinMoney;
 			bis >> src.m_FriendCount;
 			bis >> src.m_nWinTimes;
 			bis >> src.m_nLossTimes;
+			bis >> src.m_MaxPaiTime;
 			bis >> src.m_MaxPai;
 			bis >> src.m_HonorCount;
 

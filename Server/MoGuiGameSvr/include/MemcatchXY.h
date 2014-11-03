@@ -116,6 +116,7 @@ namespace DeZhou
 		UINT32                                m_JoinTime;
 		int                                   m_ChangeName;
 		int                                   m_PlayerLevel;
+		int                                   m_GiftIdx;
 
 		std::string                           m_NickName;
 		std::string                           m_HeadPicURL;
@@ -134,6 +135,7 @@ namespace DeZhou
 			m_JoinTime = 0;
 			m_ChangeName = 0;
 			m_PlayerLevel = 1;
+			m_GiftIdx = 0;
 
 			m_NickName = "";
 			m_HeadPicURL = "";
@@ -148,6 +150,7 @@ namespace DeZhou
 			bos << src.m_JoinTime;
 			bos << src.m_ChangeName;
 			bos << src.m_PlayerLevel;
+			bos << src.m_GiftIdx;
 
 			InString(bos,src.m_NickName,MAX_NICKNAME_SIZE);
 			InString(bos,src.m_HeadPicURL,MAX_URL_SIZE);
@@ -164,6 +167,7 @@ namespace DeZhou
 			bis >> src.m_JoinTime;
 			bis >> src.m_ChangeName;
 			bis >> src.m_PlayerLevel;
+			bis >> src.m_GiftIdx;
 
 			OutString(bis,src.m_NickName,MAX_NICKNAME_SIZE);
 			OutString(bis,src.m_HeadPicURL,MAX_URL_SIZE);

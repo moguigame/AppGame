@@ -2438,9 +2438,9 @@ namespace DBServerXY
 		enum { XY_ID = DBServerXYID_GS_DBS_Flag };
 		enum
 		{
-			AddContinuPlay=1,
-			CheckClientExist=3,
-			AwardPlayerInvite=4,
+			AddContinuPlay       = 1,
+			CheckClientExist     = 3,
+			AwardPlayerInvite    = 4,
 		};
 
 		short                     m_AID;

@@ -4852,32 +4852,30 @@ int CServer::OnPlayerSoldGift(PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 	GameXY::PlayerRespSoldGift msgRespPSG;
 	msgRespPSG.m_PID = pPlayer->GetPID();
 
+	DBServerXY::WDB_SoldGift msgDBSG;
+	msgDBSG.m_AID = pPlayer->GetAID();
+	msgDBSG.m_PID = pPlayer->GetPID();
 	if ( pPlayer && pPlayer->GetPID()==msgPSG.m_PID && msgPSG.m_vecGiftIdx.size() )
 	{
 		msgRespPSG.m_vecGiftIdx = msgPSG.m_vecGiftIdx;
-		for ( int Idx=0;Idx<int(msgPSG.m_vecGiftIdx.size());Idx++)
-		{
+		for ( int Idx=0;Idx<int(msgPSG.m_vecGiftIdx.size());Idx++){
 			int GiftIdx = msgPSG.m_vecGiftIdx[Idx];
-
-			if ( GiftIdx == pPlayer->m_CurGiftIdx )
-			{
+			if ( GiftIdx == pPlayer->m_CurGiftIdx ){
 				pPlayer->m_CurGiftIdx = 0;
 			}
-
 			DBServerXY::DBS_msgUserGiftInfo msgUGI;
-			if ( pPlayer->GetOutUserGift(msgUGI,GiftIdx) )
-			{
+			if (pPlayer->GetUserGift(msgUGI, GiftIdx)){
 				msgRespPSG.m_nMoney += msgUGI.m_Price;
 				pPlayer->DeleteGift(GiftIdx);
+
+				msgDBSG.m_vecGiftIdx.push_back(GiftIdx);
 			}
 		}
 
-		DBServerXY::WDB_SoldGift msgDBSG;
-		msgDBSG.m_AID = pPlayer->GetAID();
-		msgDBSG.m_PID = pPlayer->GetPID();
-		msgDBSG.m_nMoney = msgRespPSG.m_nMoney;
-		msgDBSG.m_vecGiftIdx = msgRespPSG.m_vecGiftIdx;
-		SendMsgToDBServer(msgDBSG);
+		if (msgRespPSG.m_nMoney>0 && msgDBSG.m_vecGiftIdx.size()){
+			msgDBSG.m_nMoney = msgRespPSG.m_nMoney;			
+			SendMsgToDBServer(msgDBSG);
+		}		
 	}
 	else
 	{
@@ -4980,7 +4978,7 @@ int CServer::OnReqChangeGift( PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 	{
 		DBServerXY::DBS_msgUserGiftInfo msgUGI;
 		if ( pPlayer->GetCurUserGift(msgUGI,msgCG.m_GiftIdx) )
-		{			
+		{
 			pPlayer->m_CurGiftIdx = msgCG.m_GiftIdx;
 
 			msgRespCG.m_GiftID = msgUGI.m_GiftID;
@@ -4990,8 +4988,9 @@ int CServer::OnReqChangeGift( PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 		{
 			if ( msgCG.m_GiftIdx == 0 )
 			{
-				msgRespCG.m_Flag = msgRespCG.SUCCESS;
-				pPlayer->m_CurGiftIdx = msgCG.m_GiftIdx;
+				msgRespCG.m_Flag   = msgRespCG.SUCCESS;
+				msgRespCG.m_GiftID = 0;
+				pPlayer->m_CurGiftIdx = 0;
 			}
 			else
 			{

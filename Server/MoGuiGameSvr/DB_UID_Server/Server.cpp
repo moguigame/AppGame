@@ -1539,6 +1539,7 @@ void CServer::UpdatePlayerDataToMemcach(DBServerPlayerInfo* pPlayerInfo)
 		memUDI.m_InvitePID          = pPlayerInfo->m_stUserDataInfo.m_InvitePID;
 		memUDI.m_JoinTime           = pPlayerInfo->m_stUserDataInfo.m_JoinTime;
 		memUDI.m_PlayerLevel        = pPlayerInfo->m_stUserDataInfo.m_PlayerLevel;
+		memUDI.m_GiftIdx            = pPlayerInfo->m_stUserDataInfo.m_GiftIdx;		
 		memUDI.m_NickName           = pPlayerInfo->m_stUserDataInfo.m_NickName;
 		memUDI.m_HeadPicURL         = pPlayerInfo->m_stUserDataInfo.m_HeadPicURL;
 		memUDI.m_HomePageURL        = pPlayerInfo->m_stUserDataInfo.m_HomePageURL;
@@ -2030,6 +2031,7 @@ int CServer::OnReqPlayerLogin(CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 				pPlayerInfo->m_stUserDataInfo.m_Sex             = memUDI.m_Sex;
 				pPlayerInfo->m_stUserDataInfo.m_ChangeName      = memUDI.m_ChangeName;
 				pPlayerInfo->m_stUserDataInfo.m_PlayerLevel     = memUDI.m_PlayerLevel;
+				pPlayerInfo->m_stUserDataInfo.m_GiftIdx         = memUDI.m_GiftIdx;
 
 				pPlayerInfo->m_stUserDataInfo.m_NickName        = memUDI.m_NickName;
 				pPlayerInfo->m_stUserDataInfo.m_HeadPicURL      = memUDI.m_HeadPicURL;

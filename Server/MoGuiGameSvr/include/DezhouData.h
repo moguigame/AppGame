@@ -543,6 +543,7 @@ namespace DBS
 		int                                     m_ChangeName;
 		int                                     m_HaveGameInfo;
 		int                                     m_PlayerLevel;
+		int                                     m_GiftIdx;
 
 		std::string                             m_NickName;
 		std::string                             m_HeadPicURL;
@@ -559,6 +560,7 @@ namespace DBS
 			m_ChangeName = 0;
 			m_HaveGameInfo = 0;
 			m_PlayerLevel = 0;
+			m_GiftIdx = 0;
 
 			m_NickName = "";
 			m_HeadPicURL = "";

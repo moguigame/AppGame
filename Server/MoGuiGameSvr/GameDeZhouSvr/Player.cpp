@@ -628,15 +628,22 @@ bool CPlayer::GetCurUserGift(DBServerXY::DBS_msgUserGiftInfo& stDBUgi,int GiftId
 	}
 	return false;
 }
-bool CPlayer::GetOutUserGift(DBServerXY::DBS_msgUserGiftInfo& stDBUgi,int GiftIdx)
+bool CPlayer::GetUserGift(DBServerXY::DBS_msgUserGiftInfo& stDBUgi, int GiftIdx)
 {
+	bool bRet = false;
 	MapUserGiftInfo::iterator itorGI = m_outMapUserGiftInfo.find(GiftIdx);
-	if ( itorGI != m_outMapUserGiftInfo.end() )
-	{
+	if ( itorGI != m_outMapUserGiftInfo.end() ){
 		stDBUgi = itorGI->second;
-		return true;
+		bRet = true;
 	}
-	return false;
+	if ( bRet == false ){
+		itorGI = m_curMapUserGiftInfo.find(GiftIdx);
+		if (itorGI != m_curMapUserGiftInfo.end()){
+			stDBUgi = itorGI->second;
+			bRet = true;
+		}
+	}
+	return bRet;
 }
 void CPlayer::CheckMaxGameMoney()
 {
@@ -1010,12 +1017,15 @@ void CPlayer::GetPlayerTailInfo(GameXY::PlayerTailInfo& msgPTI)
 
 	msgPTI.m_JoinTime           = m_JoinTime;
 	msgPTI.m_LandTime           = m_LandTime;
+	msgPTI.m_MaxMoneyTime       = m_MaxMoneyTime;
 	msgPTI.m_maxOwnMoney        = m_MaxMoney;
+	msgPTI.m_MaxWinTime         = m_MaxWinTime;
 	msgPTI.m_maxWinMoney        = m_MaxWin;
 
 	msgPTI.m_FriendCount        = m_FriendCount;
 	msgPTI.m_nWinTimes          = m_nWinTimes;
 	msgPTI.m_nLossTimes         = m_nLossTimes;
+	msgPTI.m_MaxPaiTime         = m_MaxPaiTime;
 	msgPTI.m_MaxPai             = m_MaxPai;
 
 	msgPTI.m_HonorCount         = BYTE(m_listHonor.size());

@@ -5842,30 +5842,31 @@ bool CDeZhouGameLogic::GetSitPlayerInfo(PlayerPtr pPlayer,GameDeZhou_SitPlayerIn
 				DBServerXY::DBS_msgUserGiftInfo msgUGI;
 				if ( pPlayer->GetCurUserGift(msgUGI,pPlayer->m_CurGiftIdx) )
 				{
-					DBServerXY::DBS_msgGiftInfo msgGI;
-					if ( GetGiftInfo(msgUGI.m_GiftID,msgGI) )
-					{
-						bool bCanUse = false;
-						if ( msgGI.m_PriceFlag==N_Gift::PriceFlag_MoGui || msgGI.m_PriceFlag==N_Gift::PriceFlag_Fixed )
-						{
-							bCanUse = true;
-						}
-						else if ( msgGI.m_PriceFlag == N_Gift::PriceFlag_Chang )
-						{
-							int GiftPrice = int((INT64(msgGI.m_Price)*m_GiftBase)/100);
-							GiftPrice = max(GiftPrice,msgGI.m_MinPrice);
-							GiftPrice = min(GiftPrice,msgGI.m_MaxPrice);
+					spi.m_GiftID = msgUGI.m_GiftID;
+					//DBServerXY::DBS_msgGiftInfo msgGI;
+					//if ( GetGiftInfo(msgUGI.m_GiftID,msgGI) )
+					//{
+					//	bool bCanUse = false;
+					//	if ( msgGI.m_PriceFlag==N_Gift::PriceFlag_MoGui || msgGI.m_PriceFlag==N_Gift::PriceFlag_Fixed )
+					//	{
+					//		bCanUse = true;
+					//	}
+					//	else if ( msgGI.m_PriceFlag == N_Gift::PriceFlag_Chang )
+					//	{
+					//		int GiftPrice = int((INT64(msgGI.m_Price)*m_GiftBase)/100);
+					//		GiftPrice = max(GiftPrice,msgGI.m_MinPrice);
+					//		GiftPrice = min(GiftPrice,msgGI.m_MaxPrice);
 
-							if ( msgUGI.m_Price >= GiftPrice )
-							{
-								bCanUse = true;
-							}
-						}
-						if ( bCanUse )
-						{
-							spi.m_GiftID = msgUGI.m_GiftID;
-						}
-					}
+					//		if ( msgUGI.m_Price >= GiftPrice )
+					//		{
+					//			bCanUse = true;
+					//		}
+					//	}
+					//	if ( bCanUse )
+					//	{
+					//		spi.m_GiftID = msgUGI.m_GiftID;
+					//	}
+					//}
 				}
 			}
 		}
