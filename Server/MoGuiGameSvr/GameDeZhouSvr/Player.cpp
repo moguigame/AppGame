@@ -2027,7 +2027,7 @@ void CPlayer::CheckFriend()
 				  FinishHonor(N_Honor::Third_Land15);
 				  if ( nContinuPlay >= 30 )
 				  {
-					  FinishHonor(N_Honor::Fouth_Land30);					  
+					  FinishHonor(N_Honor::Fouth_Land30);
 				  }				  
 			  }			 
 		 }
