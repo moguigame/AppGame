@@ -296,6 +296,7 @@ public:
 	bool                          GetCurUserGift(DBServerXY::DBS_msgUserGiftInfo& stDBUgi,int GiftIdx);
 	bool                          GetUserGift(DBServerXY::DBS_msgUserGiftInfo& stDBUgi,int GiftIdx);
 
+
 public:
 	//以下是各类有关玩家游戏任务以及功能的限定设置
 

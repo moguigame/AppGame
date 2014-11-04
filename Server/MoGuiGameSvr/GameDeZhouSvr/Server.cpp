@@ -1202,6 +1202,7 @@ void CServer::KillPlayer( PlayerPtr pPlayer )
 	msgPQ.m_AID = pPlayer->GetAID();
 	msgPQ.m_PID = pPlayer->GetPID();
 	msgPQ.m_ServerID = this->GetServerID();
+	msgPQ.m_GiftIdx = pPlayer->m_CurGiftIdx;
 	SendMsgToDBServer(msgPQ);
 
 	DebugInfo("CServer::KillPlayer end");
@@ -3463,6 +3464,7 @@ int CServer::OnDBUserGiftInfo(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPack)
 	{
 		pPlayer->AddGift(msgUGI.m_GiftInfo,N_Gift::GiftTime_Cur);
 		pPlayer->m_CurGiftIdx = msgUGI.m_GiftInfo.m_GiftIdx;
+		pPlayer->m_GiftID     = msgUGI.m_GiftInfo.m_GiftID;
 		pPlayer->m_RecvGiftTimes++;
 		pPlayer->CheckRecvGift();
 
@@ -3490,12 +3492,24 @@ int CServer::OnDBUserGiftInfoList(CGameDBSocket* pDBSocket,CRecvMsgPacket& msgPa
 	TransplainMsg(msgPack,msgUGIL);
 
 	MapPlayer::iterator itorPlayer = m_Players.find(msgUGIL.m_PID);
-	if ( itorPlayer != m_Players.end() )
-	{
+	if ( itorPlayer != m_Players.end() ){
 		PlayerPtr pPlayer = itorPlayer->second;
-		for (UINT32 i=0;i<msgUGIL.m_listGiftInfo.size();++i)
-		{
+		for (UINT32 i=0;i<msgUGIL.m_listGiftInfo.size();++i){
 			pPlayer->AddGift(msgUGIL.m_listGiftInfo[i],msgUGIL.m_Flag);
+		}
+
+		if (pPlayer->m_CurGiftIdx > 0){
+			DBServerXY::DBS_msgUserGiftInfo stDBUgi;
+			if ( pPlayer->GetCurUserGift(stDBUgi, pPlayer->m_CurGiftIdx) ){
+				if (pPlayer->m_GiftID != stDBUgi.m_GiftID){
+					GameXY::RespChangeGift msgCG;
+					msgCG.m_Flag = 0;
+					msgCG.m_PID = pPlayer->GetPID();
+					msgCG.m_GiftID = stDBUgi.m_GiftID;
+					pPlayer->SendMsg(msgCG);
+				}
+				pPlayer->m_GiftID = stDBUgi.m_GiftID;
+			}
 		}
 	}
 
@@ -4862,7 +4876,15 @@ int CServer::OnPlayerSoldGift(PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 			int GiftIdx = msgPSG.m_vecGiftIdx[Idx];
 			if ( GiftIdx == pPlayer->m_CurGiftIdx ){
 				pPlayer->m_CurGiftIdx = 0;
+				pPlayer->m_GiftID = 0;
+
+				GameXY::RespChangeGift msgCG;
+				msgCG.m_Flag = 0;
+				msgCG.m_PID = pPlayer->GetPID();
+				msgCG.m_GiftID = 0;
+				pPlayer->SendMsg(msgCG);
 			}
+
 			DBServerXY::DBS_msgUserGiftInfo msgUGI;
 			if (pPlayer->GetUserGift(msgUGI, GiftIdx)){
 				msgRespPSG.m_nMoney += msgUGI.m_Price;
@@ -4974,32 +4996,29 @@ int CServer::OnReqChangeGift( PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 	msgRespCG.m_PID = msgCG.m_PID;
 	msgRespCG.m_Flag = msgRespCG.UNSUCCESS;
 
-	if ( pPlayer && pPlayer->GetPID() == msgCG.m_PID )
-	{
+	if ( pPlayer && pPlayer->GetPID() == msgCG.m_PID ){
 		DBServerXY::DBS_msgUserGiftInfo msgUGI;
-		if ( pPlayer->GetCurUserGift(msgUGI,msgCG.m_GiftIdx) )
-		{
-			pPlayer->m_CurGiftIdx = msgCG.m_GiftIdx;
+		if ( pPlayer->GetCurUserGift(msgUGI,msgCG.m_GiftIdx) ){
+			pPlayer->m_CurGiftIdx = msgUGI.m_GiftIdx;
+			pPlayer->m_GiftID     = msgUGI.m_GiftID;
 
 			msgRespCG.m_GiftID = msgUGI.m_GiftID;
 			msgRespCG.m_Flag = msgRespCG.SUCCESS;
 		}
-		else
-		{
-			if ( msgCG.m_GiftIdx == 0 )
-			{
-				msgRespCG.m_Flag   = msgRespCG.SUCCESS;
+		else {
+			if ( msgCG.m_GiftIdx == 0 ){
+				msgRespCG.m_Flag = msgRespCG.SUCCESS;
 				msgRespCG.m_GiftID = 0;
+
 				pPlayer->m_CurGiftIdx = 0;
-			}
-			else
-			{
-				msgRespCG.m_Flag = msgRespCG.NOGIFT;
-			}			
+				pPlayer->m_GiftID = 0;
+			}		
 		}
 	}
 
-	pPlayer->SendMsg(msgRespCG);
+	if (msgRespCG.m_Flag == msgRespCG.SUCCESS){
+		pPlayer->SendMsg(msgRespCG);
+	}
 
 	DebugInfo("CServer::OnReqChangeGift End");
 

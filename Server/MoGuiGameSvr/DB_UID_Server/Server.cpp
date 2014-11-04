@@ -1626,6 +1626,7 @@ int CServer::OnPlayerQuit( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 		if ( pPlayerInfo )
 		{
 			pPlayerInfo->m_bOnLine = false;
+			pPlayerInfo->m_stUserDataInfo.m_GiftIdx = msgPQ.m_GiftIdx;
 
 			UpdatePlayerDataToMemcach(pPlayerInfo);
 			UpdatePlayerDataToDB(pPlayerInfo);
@@ -2683,7 +2684,7 @@ void CServer::SendPlayerGameData(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 		msgPD.m_nUpperLimite     = pPlayerInfo->m_stGameInfo.m_nUpperLimite;
 		msgPD.m_nLowerLimite     = pPlayerInfo->m_stGameInfo.m_nLowerLimite;
 		msgPD.m_RightLevel       = pPlayerInfo->m_RightInfo.GetRightLevel();
-		msgPD.m_RightTimes       = pPlayerInfo->m_RightInfo.GetRightTimes();
+		msgPD.m_RightTimes       = pPlayerInfo->m_RightInfo.GetRightTimes();		
 
 		pPlayerInfo->ClearMoneyLog();
 		pPlayerInfo->AddMoneyLog(msgPD.m_nGameMoney,"SendPlayerGameData");
@@ -2696,6 +2697,7 @@ void CServer::SendPlayerGameData(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 		msgPD.m_City              = pPlayerInfo->m_stUserDataInfo.m_City;
 		msgPD.m_InvitePID         = pPlayerInfo->m_stUserDataInfo.m_InvitePID;
 		msgPD.m_JoinTime          = pPlayerInfo->m_stUserDataInfo.m_JoinTime;
+		msgPD.m_GiftIdx           = pPlayerInfo->m_stUserDataInfo.m_GiftIdx;
 
 		msgPD.m_ContinuLogin      = pPlayerInfo->m_stLoginInfo.m_ContinueLogin;
 		msgPD.m_ContinuPlay       = pPlayerInfo->m_stLoginInfo.m_ContinuePlay;
@@ -2781,6 +2783,8 @@ int CServer::OnReqPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 		msgPD.m_InvitePID        = pPlayerInfo->m_stUserDataInfo.m_InvitePID;
 		msgPD.m_JoinTime         = pPlayerInfo->m_stUserDataInfo.m_JoinTime;
+
+		msgPD.m_GiftIdx          = pPlayerInfo->m_stUserDataInfo.m_GiftIdx;
 
 		msgPD.m_ContinuLogin     = pPlayerInfo->m_stLoginInfo.m_ContinueLogin;
 		msgPD.m_ContinuPlay      = pPlayerInfo->m_stLoginInfo.m_ContinuePlay;
@@ -3036,56 +3040,38 @@ int CServer::UserGiftToDBSGiftInfo(const stUserGiftInfo& stUGI,DBServerXY::DBS_m
 		msgGI.m_ActionTime   = stUGI.m_ActionTime;
 		msgGI.m_NickName     = stUGI.m_NickName;
 
-		if ( curTime < stUGI.m_ActionTime + r_stGI.m_CurLastTime )
-		{
+		nRet = 3;
+		if ( curTime < stUGI.m_ActionTime + r_stGI.m_CurLastTime ){
 			nRet = 1;
 		}
-		else if ( curTime < stUGI.m_ActionTime + r_stGI.m_TotalLastTime )
-		{
+		else if ( curTime < stUGI.m_ActionTime + r_stGI.m_TotalLastTime ){
 			nRet = 2;
 		}
-		else 
-		{
-			nRet = 3;
-		}
 
-		if ( nRet==1 || nRet==2 )
-		{
-			
+		if ( nRet==1 || nRet==2 ){			
 			int GiftRealPrice = 0;
-			if ( r_stGI.m_PriceFlag == N_Gift::PriceFlag_MoGui )
-			{
+			if ( r_stGI.m_PriceFlag == N_Gift::PriceFlag_MoGui ){
 				GiftRealPrice = r_stGI.m_Price*N_Gift::M2G_Rate;
 			}
-			else
-			{
+			else {
 				GiftRealPrice = stUGI.m_Price;
 			}
 
-			int nPrice = 0;
-			double FirstRate = 0;
-			double SecondRate = 0;
-			if ( nRet == 1 )
-			{
-				FirstRate = double(r_stGI.m_Rebate)/100.0;
+			int nPrice = 0;		
+			if ( nRet == 1 ){
+				double FirstRate = double(r_stGI.m_Rebate) / 100.0;
 				nPrice = int( GiftRealPrice*FirstRate );
 			}
-			else if ( nRet == 2 )
-			{
-				UINT32 nEndTime = stUGI.m_ActionTime + r_stGI.m_TotalLastTime;
-				FirstRate    = double(r_stGI.m_Rebate)/100.0;
-				SecondRate   = double(nEndTime-curTime)/(r_stGI.m_TotalLastTime*1.0);
+			else if ( nRet == 2 ){
+				UINT32 nEndTime   = stUGI.m_ActionTime + r_stGI.m_TotalLastTime;
+				double FirstRate  = double(r_stGI.m_Rebate) / 100.0;
+				double SecondRate = double(nEndTime - curTime) / (r_stGI.m_TotalLastTime*1.0);
 				SecondRate   = min(1.0,SecondRate);
 				nPrice       = int(GiftRealPrice*FirstRate*SecondRate);
 			}
 
-			if ( nPrice <= 0 )
-			{
-				//DebugError("UserGiftToDBSGiftInfo nRet=%d GiftIdx=%d RealPrice=%d Price=%d EndTime=%s ",
-				//	nRet,stUGI.m_GiftIdx,GiftRealPrice,nPrice,Tool::GetTimeString(stUGI.m_ActionTime+r_stGI.m_TotalLastTime).c_str() );
-			}
-
 			nPrice        = max(nPrice,1);
+			nPrice        = min(nPrice, GiftRealPrice);
 			msgGI.m_Price = max(nPrice,GiftRealPrice/5);
 		}
 	}

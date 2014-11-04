@@ -306,6 +306,7 @@ namespace GameXY
 		unsigned char       m_PlayerState;
 
 		BYTE                m_GameLevel;
+		int                 m_GiftID;
 
 		Game_PlayerData() { ReSet(); }
 		void ReSet()
@@ -343,6 +344,7 @@ namespace GameXY
 			m_PlayerState = 0;
 
 			m_GameLevel = 0;
+			m_GiftID = 0;
 		}
 
 		friend bostream& operator<<( bostream& bos, const Game_PlayerData& src )
@@ -380,6 +382,7 @@ namespace GameXY
 			bos << src.m_PlayerState;
 
 			bos << src.m_GameLevel;
+			bos << src.m_GiftID;
 
 			return bos;
 		}
@@ -421,6 +424,7 @@ namespace GameXY
 			bis >> src.m_PlayerState;
 
 			bis >> src.m_GameLevel;
+			bis >> src.m_GiftID;
 
 			return bis;
 		}
@@ -491,10 +495,10 @@ namespace GameXY
 		enum { XY_ID = MoGui_GAME_FLAG };
 		enum FLAGVALUE
 		{
-			SUCCESS           = 0,
-			LAND_OTHER_PLACE  = 1,
-			CheckClientExist  = 2,
-			LobbyReady        = 3,
+			SUCCESS = 0,
+			LAND_OTHER_PLACE = 1,
+			CheckClientExist = 2,
+			LobbyReady = 3,
 
 			QuickStartGame    = 101,
 		};

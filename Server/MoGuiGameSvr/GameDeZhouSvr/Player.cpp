@@ -645,6 +645,7 @@ bool CPlayer::GetUserGift(DBServerXY::DBS_msgUserGiftInfo& stDBUgi, int GiftIdx)
 	}
 	return bRet;
 }
+
 void CPlayer::CheckMaxGameMoney()
 {
 	if ( m_nGameMoney > m_MaxMoney )
@@ -923,6 +924,8 @@ void CPlayer::SetPlayerData(const DBServerXY::DBS_PlayerData& msgPD)
 	m_LandTime       = UINT32(time(NULL));
 	m_InvitePID      = msgPD.m_InvitePID;
 
+	m_CurGiftIdx     = msgPD.m_GiftIdx;
+
 	m_ContinuLogin   = msgPD.m_ContinuLogin;
 	m_ContinuPlay    = msgPD.m_ContinuPlay;
 
@@ -967,6 +970,7 @@ void CPlayer::GetPlayerData(GameXY::Game_PlayerData& game_msgPD)
 	game_msgPD.m_PlayerState    = m_PlayerState;
 
 	game_msgPD.m_GameLevel      = m_GameLevel;
+	game_msgPD.m_GiftID         = m_GiftID;
 }
 
 void CPlayer::SetPlayerDataEx(const MoGui::MoGuiXY::DBServerXY::DBS_PlayerDataEx& msgPDEx)

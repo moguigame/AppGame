@@ -426,6 +426,8 @@ namespace DBServerXY
 		UINT8                         m_RightLevel;
 		UINT8                         m_RightTimes;
 
+		int                           m_GiftIdx;
+
 		UINT32                        m_JoinTime;                 //加入游戏的时间
 		UINT32                        m_InvitePID;                //被哪个玩家邀请进来，0为系统
 
@@ -465,6 +467,8 @@ namespace DBServerXY
 			m_RightLevel = 0;
 			m_RightTimes = 0;
 
+			m_GiftIdx = 0;
+
 			m_JoinTime = 0;
 			m_InvitePID = 0;
 
@@ -503,6 +507,8 @@ namespace DBServerXY
 
 			bos << src.m_RightLevel;
 			bos << src.m_RightTimes;
+
+			bos << src.m_GiftIdx;
 
 			bos << src.m_JoinTime;
 			bos << src.m_InvitePID;
@@ -546,6 +552,8 @@ namespace DBServerXY
 
 			bis >> src.m_RightLevel;
 			bis >> src.m_RightTimes;
+
+			bis >> src.m_GiftIdx;
 
 			bis >> src.m_JoinTime;
 			bis >> src.m_InvitePID;
@@ -761,6 +769,8 @@ namespace DBServerXY
 		unsigned int           m_PID;
 		short				   m_ServerID;
 
+		int                    m_GiftIdx;
+
 		DBS_PlayerQuite() { ReSet(); }
 		void ReSet() { memset(this,0,sizeof(*this)); }
 
@@ -770,6 +780,7 @@ namespace DBServerXY
 			bos << pq.m_PID;
 			bos << pq.m_ServerID;
 
+			bos << pq.m_GiftIdx;
 			return bos;
 		}
 
@@ -781,6 +792,7 @@ namespace DBServerXY
 			bis >> pq.m_PID;
 			bis >> pq.m_ServerID;
 
+			bis >> pq.m_GiftIdx;
 			return bis;
 		}
 	};

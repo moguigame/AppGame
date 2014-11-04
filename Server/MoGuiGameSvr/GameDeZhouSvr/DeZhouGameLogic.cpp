@@ -2073,11 +2073,11 @@ int CDeZhouGameLogic::OnGameMsg(PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 			ret = OnReqPromoteTime(pPlayer,CTSMsg);
 		}
 		break;
-	case GameDeZhou_ReqChangGift::XY_ID:
-		{
-			ret = OnReqChangeGift(pPlayer,CTSMsg);
-		}
-		break;
+	//case GameDeZhou_ReqChangGift::XY_ID:
+	//	{
+	//		ret = OnReqChangeGift(pPlayer,CTSMsg);
+	//	}
+	//	break;
 	case GameDeZhou_ReqAddTableTime::XY_ID:
 		{
 			ret = OnReqAddTableTime(pPlayer,CTSMsg);
@@ -2831,86 +2831,44 @@ int CDeZhouGameLogic::OnLogicReqTailInfo(PlayerPtr pPlayer,GameXY::ClientToServe
 
 	return 0;
 }
-int CDeZhouGameLogic::OnReqChangeGift(PlayerPtr pPlayer,GameXY::ClientToServerMessage& CTSMsg)
-{
-	TraceStackPath logTP("CDeZhouGameLogic::OnReqChangeGift");
-	CLogFuncTime lft(s_LogicFuncTime,"OnReqChangeGift");
-
-	GameDeZhou_ReqChangGift msgCG;
-	TransplainMsgCTS(CTSMsg,msgCG);
-
-	GameDeZhou_RespChangGift msgRespCG;
-	msgRespCG.m_PID = msgCG.m_PID;
-	msgRespCG.m_Flag = msgRespCG.UNSUCCESS;
-
-	if ( pPlayer && pPlayer->GetPID()==msgCG.m_PID )
-	{
-		DBServerXY::DBS_msgUserGiftInfo msgUGI;
-		if ( pPlayer->GetCurUserGift(msgUGI,msgCG.m_GiftIdx) )
-		{
-			
-			DBServerXY::DBS_msgGiftInfo msgGI;
-			if ( GetGiftInfo(msgUGI.m_GiftID,msgGI) )
-			{
-				bool bCanUse = false;
-				if ( msgGI.m_PriceFlag==N_Gift::PriceFlag_MoGui || msgGI.m_PriceFlag==N_Gift::PriceFlag_Fixed )
-				{
-					bCanUse = true;
-				}
-				else if ( msgGI.m_PriceFlag == N_Gift::PriceFlag_Chang )
-				{
-					int GiftPrice = int((INT64(msgGI.m_Price)*m_GiftBase)/100);
-					GiftPrice = max(GiftPrice,msgGI.m_MinPrice);
-					GiftPrice = min(GiftPrice,msgGI.m_MaxPrice);
-
-					if ( msgUGI.m_Price >= GiftPrice )
-					{
-						bCanUse = true;
-					}
-				}
-				if ( bCanUse )
-				{
-					pPlayer->m_CurGiftIdx = msgCG.m_GiftIdx;
-					msgRespCG.m_Flag = msgRespCG.SUCCESS;
-					msgRespCG.m_GiftID = msgUGI.m_GiftID;
-				}
-				else
-				{
-					msgRespCG.m_Flag = msgRespCG.CHEAP;
-				}
-			}
-			else
-			{
-				msgRespCG.m_Flag = msgRespCG.NOGIFTID;
-			}
-		}
-		else
-		{
-			if ( msgCG.m_GiftIdx == 0 )
-			{
-				pPlayer->m_CurGiftIdx = msgCG.m_GiftIdx;
-				msgRespCG.m_Flag = msgRespCG.SUCCESS;
-				msgRespCG.m_PID = msgUGI.m_GiftID;
-				
-			}
-			else
-			{
-				msgRespCG.m_Flag = msgRespCG.NOGIFT;
-			}			
-		}
-	}
-
-	if ( msgRespCG.m_Flag == msgRespCG.SUCCESS )
-	{
-		SendLogicMsgToAllPlayer(msgRespCG);
-	}
-	else
-	{
-		SendLogicMsgToOnePlayer(msgRespCG,pPlayer);
-	}
-
-	return 0;
-}
+//int CDeZhouGameLogic::OnReqChangeGift(PlayerPtr pPlayer,GameXY::ClientToServerMessage& CTSMsg)
+//{
+//	TraceStackPath logTP("CDeZhouGameLogic::OnReqChangeGift");
+//	CLogFuncTime lft(s_LogicFuncTime,"OnReqChangeGift");
+//
+//	GameDeZhou_ReqChangGift msgCG;
+//	TransplainMsgCTS(CTSMsg,msgCG);
+//
+//	GameDeZhou_RespChangGift msgRespCG;
+//	msgRespCG.m_PID = msgCG.m_PID;
+//	msgRespCG.m_Flag = msgRespCG.UNSUCCESS;
+//
+//	if ( pPlayer && pPlayer->GetPID()==msgCG.m_PID ){
+//		DBServerXY::DBS_msgUserGiftInfo msgUGI;
+//		if ( pPlayer->GetCurUserGift(msgUGI,msgCG.m_GiftIdx) ){
+//			pPlayer->m_CurGiftIdx = msgUGI.m_GiftIdx;
+//			pPlayer->m_GiftID = msgUGI.m_GiftID;
+//
+//			msgRespCG.m_Flag = msgRespCG.SUCCESS;
+//			msgRespCG.m_GiftID = msgUGI.m_GiftID;
+//		}
+//		else{
+//			if ( msgCG.m_GiftIdx == 0 ){
+//				pPlayer->m_CurGiftIdx = 0;
+//				pPlayer->m_GiftID = 0;
+//
+//				msgRespCG.m_Flag = msgRespCG.SUCCESS;
+//				msgRespCG.m_GiftID = 0;	
+//			}
+//		}
+//	}
+//
+//	if ( msgRespCG.m_Flag == msgRespCG.SUCCESS ){
+//		SendLogicMsgToAllPlayer(msgRespCG);
+//	}
+//
+//	return 0;
+//}
 void CDeZhouGameLogic::DoJuBaoPengMsg()
 {
 	if ( m_listLogicMsg.size() )
@@ -5838,36 +5796,7 @@ bool CDeZhouGameLogic::GetSitPlayerInfo(PlayerPtr pPlayer,GameDeZhou_SitPlayerIn
 				spi.m_VipLevel           = pPlayer->m_VipLevel;
 				spi.m_Sex                = pPlayer->m_Sex;
 				spi.m_HomePageURL        = pPlayer->GetHomePageURL();
-
-				DBServerXY::DBS_msgUserGiftInfo msgUGI;
-				if ( pPlayer->GetCurUserGift(msgUGI,pPlayer->m_CurGiftIdx) )
-				{
-					spi.m_GiftID = msgUGI.m_GiftID;
-					//DBServerXY::DBS_msgGiftInfo msgGI;
-					//if ( GetGiftInfo(msgUGI.m_GiftID,msgGI) )
-					//{
-					//	bool bCanUse = false;
-					//	if ( msgGI.m_PriceFlag==N_Gift::PriceFlag_MoGui || msgGI.m_PriceFlag==N_Gift::PriceFlag_Fixed )
-					//	{
-					//		bCanUse = true;
-					//	}
-					//	else if ( msgGI.m_PriceFlag == N_Gift::PriceFlag_Chang )
-					//	{
-					//		int GiftPrice = int((INT64(msgGI.m_Price)*m_GiftBase)/100);
-					//		GiftPrice = max(GiftPrice,msgGI.m_MinPrice);
-					//		GiftPrice = min(GiftPrice,msgGI.m_MaxPrice);
-
-					//		if ( msgUGI.m_Price >= GiftPrice )
-					//		{
-					//			bCanUse = true;
-					//		}
-					//	}
-					//	if ( bCanUse )
-					//	{
-					//		spi.m_GiftID = msgUGI.m_GiftID;
-					//	}
-					//}
-				}
+				spi.m_GiftID             = pPlayer->m_GiftID;
 			}
 		}
 	}
