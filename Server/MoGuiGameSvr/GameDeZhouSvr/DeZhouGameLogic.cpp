@@ -2395,6 +2395,15 @@ int CDeZhouGameLogic::OnSendGift(PlayerPtr pPlayer,GameXY::ClientToServerMessage
 	GameDeZhou_SendGift msgSG;
 	TransplainMsgCTS(CTSMsg,msgSG);
 
+	if ( msgSG.m_vecToPID.size()==1 && msgSG.m_vecToPID[0]==-1 ){
+		msgSG.m_vecToPID.clear();
+		for (int Sit = 0; Sit < m_MaxSitPlayerNumber; Sit++){
+			if ( m_GP[Sit].IsHavePlayer() && m_GP[Sit].GetPID()!=msgSG.m_SendPID){
+				msgSG.m_vecToPID.push_back(m_GP[Sit].GetPID());
+			}
+		}
+	}
+
 	m_pTable->DebugInfo("OnSendGift SendPID=%d GiftID=%d Count=%d",msgSG.m_SendPID,msgSG.m_GiftID,msgSG.m_vecToPID.size());
 
 	GameDeZhou_RespSendGift msgRespSG;
