@@ -106,7 +106,7 @@ namespace DBServerXY
 	const short  DBServerXYID_WDB_MaxMoney                         = MoGui_SERVER_DB_FRIST+42;
 
 	const short  DBServerXYID_WDB_PlayerAction                     = MoGui_SERVER_DB_FRIST+46;
-	const short  DBServerXYID_WDB_PlayerClientError                = MoGui_SERVER_DB_FRIST + 47;
+	const short  DBServerXYID_WDB_PlayerClientError                = MoGui_SERVER_DB_FRIST+47;
 
 	const short  DBServerXYID_WDB_PlayerAward                      = MoGui_SERVER_DB_FRIST+51;
 
@@ -3499,7 +3499,12 @@ namespace DBServerXY
 		std::string              m_strDes;
 
 		WDB_PlayerClientError() { ReSet(); }
-		void ReSet(){ memset(this,0,sizeof(*this));}
+		void ReSet(){
+			m_AID = 0;
+			m_PID = 0;
+			m_Flag = 0;
+			m_strDes = "";
+		}
 
 		friend bostream& operator<<( bostream& bos, const WDB_PlayerClientError& src )
 		{

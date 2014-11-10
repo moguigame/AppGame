@@ -1,5 +1,5 @@
 #include "publicdata.h"
-
+#include <cassert>
 namespace MoGui
 {
 	using namespace std;
@@ -65,32 +65,50 @@ namespace MoGui
 
 	VectorString TraceStackPath::s_vectorPath;
 	bool TraceStackPath::s_bUseTrace = true;
-
-	void TraceStackPath::PrintPath()
-	{
-		if ( s_bUseTrace )
-		{
-			for ( size_t nSize=0;nSize<s_vectorPath.size();++nSize )
-			{
+	void TraceStackPath::PrintPath(){
+		if ( s_bUseTrace ){
+			for ( size_t nSize=0;nSize<s_vectorPath.size();++nSize ){
 				fprintf_s(stderr,"%s \n",s_vectorPath[nSize].c_str() );
 			}
 		}
 	}
-
-	TraceStackPath::TraceStackPath(const std::string& strEnter)
-	{
-		if ( s_bUseTrace )
-		{
+	TraceStackPath::TraceStackPath(const std::string& strEnter){
+		if ( s_bUseTrace ){
 			m_FuncName = strEnter;
 			s_vectorPath.push_back(strEnter);
+			assert(s_vectorPath.size()<100);
 		}
 	}
-	TraceStackPath::~TraceStackPath()
-	{
-		if ( s_bUseTrace && s_vectorPath.size() )
-		{
-			if ( s_vectorPath.back() != m_FuncName )
-			{
+	TraceStackPath::~TraceStackPath(){
+		if ( s_bUseTrace && s_vectorPath.size() ){
+			if ( s_vectorPath.back() != m_FuncName ){
+				PrintPath();
+			}
+			s_vectorPath.pop_back();
+		}
+	}
+
+
+	
+	VectorString DBSTracePath::s_vectorPath;
+	bool DBSTracePath::s_bUseTrace = true;
+	void DBSTracePath::PrintPath(){
+		if (s_bUseTrace){
+			for (size_t nSize = 0; nSize<s_vectorPath.size(); ++nSize){
+				fprintf_s(stderr, "%s \n", s_vectorPath[nSize].c_str());
+			}
+		}
+	}
+	DBSTracePath::DBSTracePath(const std::string& strEnter){
+		if (s_bUseTrace){
+			m_FuncName = strEnter;
+			s_vectorPath.push_back(strEnter);
+			assert(s_vectorPath.size()<100);
+		}
+	}
+	DBSTracePath::~DBSTracePath(){
+		if (s_bUseTrace && s_vectorPath.size()){
+			if (s_vectorPath.back() != m_FuncName){
 				PrintPath();
 			}
 			s_vectorPath.pop_back();

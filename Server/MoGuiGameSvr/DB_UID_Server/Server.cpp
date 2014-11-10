@@ -206,12 +206,14 @@ bool CServer::OnPriorityEvent( void )
 }
 void CServer::OnOneMinite(UINT32 curTime)
 {
+	DBSTracePath logTP("CServer::OnOneMinite");
 	CLogFuncTime lft(m_DBSFuncTime,"OnOneMinite");
 	DebugInfo("OnOneMinite Start...");
 	m_OneMinuteTime += 60;
 }
 void CServer::OnTenMinite(UINT32 curTime)
 {
+	DBSTracePath logTP("CServer::OnTenMinite");
 	CLogFuncTime lft(m_DBSFuncTime,"OnTenMinite");
 	DebugInfo("OnTenMinite Start...");
 
@@ -297,6 +299,7 @@ void CServer::OnNewDay(UINT32 curTime)
 
 void CServer::CheckClientSocketActive(UINT32 curTime)
 {
+	DBSTracePath logTP("CServer::CheckClientSocketActive");
 	CLogFuncTime lft(m_DBSFuncTime,"CheckClientSocketActive");
 	DebugInfo("CheckClientSocketActive Start...");
 
@@ -331,6 +334,7 @@ void CServer::CheckClientSocketActive(UINT32 curTime)
 
 void CServer::CheckPlayerOnLine(UINT32 curTime)
 {
+	DBSTracePath logTP("CServer::CheckPlayerOnLine");
 	CLogFuncTime lft(m_DBSFuncTime,"CheckPlayerOnLine");
 	DebugLog("CheckPlayerOnLine Start");
 
@@ -446,6 +450,7 @@ void CServer::CheckBotPlayerCached(UINT32 curTime)
 	int nMod = 20;
 	if ( m_CurTime - m_CheckBotPlayerCached >= nIntervalTime )
 	{
+		DBSTracePath logTP("CServer::CheckBotPlayerCached");
 		CLogFuncTime lft(m_DBSFuncTime,"CheckBotPlayerCached");
 		DebugInfo("CheckBotPlayerCached Start...");
 
@@ -545,111 +550,123 @@ void CServer::DoUserGift()
 
 void CServer::OnTimer( void )
 {
-	if ( !m_bInitComplete )
-	{
+	if ( !m_bInitComplete ){
 		return ;
 	}
-	if ( !m_bStartDBThread )
-	{
+	if ( !m_bStartDBThread ){
 		m_bStartDBThread = true;
-		for (size_t Pos=0;Pos<m_vecDBMsgThread.size();++Pos)
-		{
+		for (size_t Pos=0;Pos<m_vecDBMsgThread.size();++Pos){
 			m_vecDBMsgThread[Pos]->Start();
 		}
 		DebugLogOut("StartDBThread = true");
 		return ;
 	}
 
-	CLogFuncTime lft(m_DBSFuncTime,"OnTimer");
+	try{
+		DBSTracePath logTP("CServer::OnTimer");
+		CLogFuncTime lft(m_DBSFuncTime, "OnTimer");
 
-	static INT64 s_nStartTime=0,s_nTimeEnd=0,s_nTotalUseTime=0,s_nOnTimeCount=0;
-	static INT32 s_nUseTime=0,s_nMaxUseTime=0;
+		static INT64 s_nStartTime = 0, s_nTimeEnd = 0, s_nTotalUseTime = 0, s_nOnTimeCount = 0;
+		static INT32 s_nUseTime = 0, s_nMaxUseTime = 0;
 
-	m_CurTime = static_cast<UINT32>(time( NULL ));
+		m_CurTime = static_cast<UINT32>(time(NULL));
 
-	s_nOnTimeCount++;
-	s_nStartTime = Tool::GetMilliSecond();
-	CeShiInfo("DBserver OnTime Start");
+		s_nOnTimeCount++;
+		s_nStartTime = Tool::GetMilliSecond();
+		CeShiInfo("DBserver OnTime Start");
 
-	m_memOperator.TestConnect();
-	
-	if ( m_CurTime >= m_NewDayTime )
-	{
-		OnNewDay(m_CurTime);
-		m_NewDayTime = UINT32(Tool::GetNewDayTime(m_CurTime));
-	}
+		m_memOperator.TestConnect();
 
-	if ( m_CurTime - m_CheckGSActiveTime >= TIME_CHECK_SERVERACTIVE )
-	{
-		m_CheckGSActiveTime = m_CurTime;
-		CheckClientSocketActive(m_CurTime);
+		if (m_CurTime >= m_NewDayTime)
+		{
+			OnNewDay(m_CurTime);
+			m_NewDayTime = UINT32(Tool::GetNewDayTime(m_CurTime));
+		}
 
-		//隔一段时间主动连接一下数据库连接
-		m_pDBOperator->OnActiveDBConnect();
-	}
+		if (m_CurTime - m_CheckGSActiveTime >= TIME_CHECK_SERVERACTIVE)
+		{
+			m_CheckGSActiveTime = m_CurTime;
+			CheckClientSocketActive(m_CurTime);
 
-	UINT32 MaxCheckTime = max(600,UINT32(INT64(600)*m_PlayerInfos.size()/Max_PlayerData_In_DBS));
-	MaxCheckTime = min(1800,MaxCheckTime);
+			//隔一段时间主动连接一下数据库连接
+			m_pDBOperator->OnActiveDBConnect();
+		}
 
-	if ( m_CurTime-m_CheckPlayerOnlineTime >= MaxCheckTime )
-	{
-		m_CheckPlayerOnlineTime = m_CurTime;
-		CheckPlayerOnLine(m_CurTime);
-	}
+		UINT32 MaxCheckTime = max(600, UINT32(INT64(600)*m_PlayerInfos.size() / Max_PlayerData_In_DBS));
+		MaxCheckTime = min(1800, MaxCheckTime);
 
-	CheckBotPlayerCached(m_CurTime);
-	DoUserGift();
+		if (m_CurTime - m_CheckPlayerOnlineTime >= MaxCheckTime)
+		{
+			m_CheckPlayerOnlineTime = m_CurTime;
+			CheckPlayerOnLine(m_CurTime);
+		}
 
-	if ( m_CurTime-m_CheckXieYiInOutTime > 1800 )
-	{
-		m_CheckXieYiInOutTime = m_CurTime;
-		PrintIOXieYi();
-	}
-	if ( m_CurTime-m_CheckXieYiSpeedTime > 600 )
-	{
-		m_CheckXieYiSpeedTime = m_CurTime;
-		PrintIOSpeed();
-	}
-	if ( m_CurTime-m_CheckUserProductTime>=5 )
-	{
-		m_CheckUserProductTime = m_CurTime;
-		OnCheckUserProduct();
-	}
-	if ( m_CurTime-m_CheckSendUserProductTime >= 60)
-	{
-		m_CheckSendUserProductTime = m_CurTime;
-		OnSendUserProduct();
-	}
+		CheckBotPlayerCached(m_CurTime);
+		DoUserGift();
 
-	if ( m_CurTime >= m_OneMinuteTime )
-	{
-		OnOneMinite(m_CurTime);
-	}
-	if ( m_CurTime >= m_TenMinuteTime )
-	{
-		OnTenMinite(m_CurTime);
-	}
-	if ( m_CurTime >= m_HourTime )
-	{
-		OnHour(m_CurTime);
-	}
+		if (m_CurTime - m_CheckXieYiInOutTime > 1800)
+		{
+			m_CheckXieYiInOutTime = m_CurTime;
+			PrintIOXieYi();
+		}
+		if (m_CurTime - m_CheckXieYiSpeedTime > 600)
+		{
+			m_CheckXieYiSpeedTime = m_CurTime;
+			PrintIOSpeed();
+		}
+		if (m_CurTime - m_CheckUserProductTime >= 5)
+		{
+			m_CheckUserProductTime = m_CurTime;
+			OnCheckUserProduct();
+		}
+		if (m_CurTime - m_CheckSendUserProductTime >= 60)
+		{
+			m_CheckSendUserProductTime = m_CurTime;
+			OnSendUserProduct();
+		}
 
-	s_nTimeEnd = Tool::GetMilliSecond();
-	s_nUseTime = INT32(s_nTimeEnd - s_nStartTime);
-	s_nTotalUseTime += s_nUseTime;
-	if ( s_nUseTime > s_nMaxUseTime )
-	{
-		s_nMaxUseTime = s_nUseTime;
-		DebugLogOut("DBserver OnTime CurUseTime=%d",s_nUseTime);
+		if (m_CurTime >= m_OneMinuteTime)
+		{
+			OnOneMinite(m_CurTime);
+		}
+		if (m_CurTime >= m_TenMinuteTime)
+		{
+			OnTenMinite(m_CurTime);
+		}
+		if (m_CurTime >= m_HourTime)
+		{
+			OnHour(m_CurTime);
+		}
+
+		s_nTimeEnd = Tool::GetMilliSecond();
+		s_nUseTime = INT32(s_nTimeEnd - s_nStartTime);
+		s_nTotalUseTime += s_nUseTime;
+		if (s_nUseTime > s_nMaxUseTime)
+		{
+			s_nMaxUseTime = s_nUseTime;
+			DebugLogOut("DBserver OnTime CurUseTime=%d", s_nUseTime);
+		}
+		if (m_CurTime%N_CeShiLog::c_DBOnTimeDiff == 0 || s_nUseTime >= N_CeShiLog::c_DBMaxOnTime)
+		{
+			DebugLogOut("DBserver OnTime MaxTime=%d CurUseTime=%d AveUseTime=%d", s_nMaxUseTime, s_nUseTime, int(s_nTotalUseTime / s_nOnTimeCount));
+		}
+		CeShiInfo("DBserver OnTime End ");
 	}
-	if ( m_CurTime%N_CeShiLog::c_DBOnTimeDiff==0 || s_nUseTime>=N_CeShiLog::c_DBMaxOnTime )
-	{
-		DebugLogOut("DBserver OnTime MaxTime=%d CurUseTime=%d AveUseTime=%d",s_nMaxUseTime,s_nUseTime,int(s_nTotalUseTime/s_nOnTimeCount));
+	catch (...){
+		DebugError("Stack Start OnTime .....................................................................");
+		VectorString& rVS = DBSTracePath::s_vectorPath;
+		while (rVS.size()){
+			for (size_t nSize = 0; nSize<rVS.size(); ++nSize){
+				DebugInfo("%s", rVS[nSize].c_str());
+			}
+			rVS.clear();
+		}
+		DebugError("Stack End OnTime .....................................................................");
 	}
-	CeShiInfo( "DBserver OnTime End ");
 }
 void CServer::OnCheckUserProduct()
 {
+	DBSTracePath logTP("CServer::OnCheckUserProduct");
 	CLogFuncTime lft(m_DBSFuncTime,"OnCheckUserProduct");
 	VectorUserProduct vectorUP;
 	if ( m_pDBOperator->ReadAllUserProduct(m_MaxProductIdx,vectorUP) != DB_RESULT_SUCCESS )
@@ -684,6 +701,7 @@ void CServer::OnCheckUserProduct()
 }
 void CServer::OnSendUserProduct()
 {
+	DBSTracePath logTP("CServer::OnSendUserProduct");
 	CLogFuncTime lft(m_DBSFuncTime,"OnSendUserProduct");
 
 	DBServerXY::DBS_To_GS_Flag msgGSF;
@@ -704,6 +722,8 @@ void CServer::OnSendUserProduct()
 }
 void CServer::PrintIOSpeed()
 {
+	DBSTracePath logTP("CServer::PrintIOSpeed");
+
 	int UserTime = max(m_CurTime - m_nServerStartTime,1);
 
 	DebugLogOut("InPacket=%-8lld  InByte=%-10lld    OutPacket=%-8lld OutByte=%-10lld",
@@ -724,6 +744,8 @@ void CServer::PrintIOSpeed()
 }
 void CServer::PrintIOXieYi()
 {
+	DBSTracePath logTP("CServer::PrintIOXieYi");
+
 	DebugInfo("Total:PacketIn=%-8lld PacketOut=%-8lld OutByte=%-8lld InByte=%-8lld",
 		CDBServerSocket::s_TotalInPacket,CDBServerSocket::s_TotalOutPacket,
 		CDBServerSocket::s_TotalOutByte,CDBServerSocket::s_TotalInByte );
@@ -1236,6 +1258,7 @@ int CServer::OnGameServerMsg( CDBServerSocket* pDBSocket,CRecvMsgPacket& msgPack
 
 int CServer::OnReqServerConnect( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqServerConnect");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqServerConnect");
 
 	DBServerXY::DBS_ReqServerConnect rsc;
@@ -1305,6 +1328,7 @@ int CServer::InitServerData()
 
 int CServer::OnReqBotPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqBotPlayerInfo");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqBotPlayerInfo");
 
 	DBServerXY::DBS_ReqBotPlayer msgRbp;
@@ -1516,6 +1540,7 @@ void CServer::PrintPlayerMoneyLog(DBServerPlayerInfo* pPlayerInfo)
 
 void CServer::UpdatePlayerDataToMemcach(DBServerPlayerInfo* pPlayerInfo)
 {
+	DBSTracePath logTP("CServer::UpdatePlayerDataToMemcach");
 	CLogFuncTime lft(m_DBSFuncTime,"UpdatePlayerDataToMemcach");
 
 	if ( pPlayerInfo && m_CurTime-pPlayerInfo->m_UpdateMemCachTime>N_Time::Day_1 )
@@ -1566,6 +1591,7 @@ int CServer::OnReqUserGiftInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack
 
 int CServer::OnRespPlayerOnLine( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnRespPlayerOnLine");
 	CLogFuncTime lft(m_DBSFuncTime,"OnRespPlayerOnLine");
 
 	DBServerXY::DBS_RespPlayerOnLine msgRespOnLine;
@@ -1613,6 +1639,7 @@ int CServer::OnRespPlayerOnLine( CDBServerSocket* pSocket,CRecvMsgPacket& msgPac
 
 int CServer::OnPlayerQuit( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnPlayerQuit");
 	CLogFuncTime lft(m_DBSFuncTime,"OnPlayerQuit");
 
 	DBServerXY::DBS_PlayerQuite msgPQ;
@@ -1639,6 +1666,7 @@ int CServer::OnPlayerQuit( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnReqRoomTableInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqRoomTableInfo");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqRoomTableInfo");
 
 	DBServerXY::DBS_ReqRoomTableInfo rrti;
@@ -1842,6 +1870,7 @@ int CServer::OnReqRoomTableInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPac
 
 void CServer::GetPlayerAwardInfo(INT16 AID,UINT32 PID,map<INT16,INT64>& mapAwardMoney)
 {
+	DBSTracePath logTP("CServer::GetPlayerAwardInfo");
 	CLogFuncTime lft(m_DBSFuncTime,"GetPlayerAwardInfo");
 
 	VectorAward vecUA;
@@ -1884,6 +1913,8 @@ void CServer::GetPlayerAwardInfo(INT16 AID,UINT32 PID,map<INT16,INT64>& mapAward
 INT64 CServer::GetPlayerRight(DBServerPlayerInfo* pPlayerInfo)
 {
 	assert(pPlayerInfo);
+
+	DBSTracePath logTP("CServer::GetPlayerRight");
 	CLogFuncTime lft(m_DBSFuncTime,"GetPlayerRight");
 	DebugLog("GetPlayerRight Start PID=%d Right",pPlayerInfo->m_PID);
 	
@@ -1918,6 +1949,7 @@ INT64 CServer::GetPlayerRight(DBServerPlayerInfo* pPlayerInfo)
 
 int CServer::OnReqPlayerLogin(CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqPlayerLogin");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqPlayerLogin");
 
 	DBServerXY::DBS_ReqServerPlayerLogin msgLogin;
@@ -2392,6 +2424,7 @@ int CServer::OnReqPlayerLogin(CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 }
 void CServer::DoUserProduct(const DBS::stUserProduct& stUP)
 {
+	DBSTracePath logTP("CServer::DoUserProduct");
 	CLogFuncTime lft(m_DBSFuncTime,"DoUserProduct");
 
 	int TempProductID = stUP.m_ProductID;
@@ -2440,6 +2473,7 @@ void CServer::DoUserProduct(const DBS::stUserProduct& stUP)
 }
 void CServer::DoPlayerHuiYuan(const DBS::stUserProduct& stUP,const DBS::stHuiYuanInfo& stHY)
 {
+	DBSTracePath logTP("CServer::DoPlayerHuiYuan");
 	CLogFuncTime lft(m_DBSFuncTime,"DoPlayerHuiYuan");
 	DebugInfo("DoPlayerHuiYuan Start");
 
@@ -2530,6 +2564,7 @@ void CServer::DoPlayerHuiYuan(const DBS::stUserProduct& stUP,const DBS::stHuiYua
 }
 void CServer::DoPlayerMoguiExchange(const DBS::stUserProduct& stUP,const DBS::stMoguiExchangeInfo& stME)
 {
+	DBSTracePath logTP("CServer::DoPlayerMoguiExchange");
 	CLogFuncTime lft(m_DBSFuncTime,"DoPlayerMoguiExchange");
 	DebugInfo("DoPlayerMoguiExchange Start");
 
@@ -2568,6 +2603,7 @@ void CServer::DoPlayerMoguiExchange(const DBS::stUserProduct& stUP,const DBS::st
 }
 int CServer::SendPlayerAward(INT16 AID,UINT32 PID)
 {
+	DBSTracePath logTP("CServer::SendPlayerAward");
 	CLogFuncTime lft(m_DBSFuncTime,"SendPlayerAward");
 	DebugInfo("SendPlayerAward Start");
 
@@ -2662,6 +2698,7 @@ int CServer::SendPlayerAward(INT16 AID,UINT32 PID)
 
 void CServer::SendPlayerGameData(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 {
+	DBSTracePath logTP("CServer::SendPlayerGameData");
 	CLogFuncTime lft(m_DBSFuncTime,"SendPlayerGameData");
 	DebugInfo("SendPlayerGameData Start");
 
@@ -2731,6 +2768,7 @@ void CServer::SendPlayerGameData(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 
 int CServer::OnReqPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqPlayerInfo");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqPlayerInfo");
 
 	DBServerXY::DBS_ReqPlayerInfo msgPI;
@@ -2835,6 +2873,7 @@ int CServer::OnReqPlayerInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnReqAddBotMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqAddBotMoney");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqAddBotMoney");
 	DBServerXY::DBS_ReqAddBotMoney msgABM;
 	TransplainMsg(msgPack,msgABM);
@@ -2916,6 +2955,7 @@ int CServer::OnReqAddBotMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 
 int CServer::OnReqPlayerGameMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqPlayerGameMoney");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqPlayerGameMoney");
 
 	DBServerXY::DBS_ReqPlayerGameMoney msgPGM;
@@ -2954,6 +2994,7 @@ int CServer::OnReqPlayerGameMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgP
 
 void CServer::SendPlayerFriend(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 {
+	DBSTracePath logTP("CServer::SendPlayerFriend");
 	CLogFuncTime lft(m_DBSFuncTime,"SendPlayerFriend");
 	DebugInfo("CServer::SendPlayerFriend Start ServerID=%d AID=%d PID=%d",pSocket->GetServerID(),AID,PID);
 
@@ -3093,6 +3134,7 @@ void CServer::CheckPlayerGameMoney(UINT32 PID)
 }
 void CServer::SendPlayerGift(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 {
+	DBSTracePath logTP("CServer::SendPlayerGift");
 	CLogFuncTime lft(m_DBSFuncTime,"SendPlayerGift");
 	DebugInfo("CServer::SendPlayerGift Start ServerID=%d AID=%d PID=%d",pSocket->GetServerID(),AID,PID);
 
@@ -3164,6 +3206,7 @@ void CServer::SendPlayerGift(CDBServerSocket* pSocket,INT16 AID,UINT32 PID)
 }
 void CServer::AddUserGameMoney(INT16 AID,UINT32 PID,INT64 nMoney,bool bUpToDB)
 {
+	DBSTracePath logTP("CServer::AddUserGameMoney");
 	CLogFuncTime lft(m_DBSFuncTime,"AddUserGameMoney");
 
 	DBServerPlayerInfo* pPlayerInfo = GetDBPlayerInfo(PID);
@@ -3235,6 +3278,7 @@ int CServer::UpdatePlayerDataToDB(DBServerPlayerInfo* pPlayerInfo)
 
 int CServer::UpdatePlayerRight(DBServerPlayerInfo* pPlayerInfo)
 {
+	DBSTracePath logTP("CServer::UpdatePlayerRight");
 	CLogFuncTime lft(m_DBSFuncTime,"UpdatePlayerRight");
 
 	if ( pPlayerInfo )
@@ -3256,6 +3300,7 @@ int CServer::UpdatePlayerRight(DBServerPlayerInfo* pPlayerInfo)
 
 int CServer::WDBWinLoss(DBServerXY::WDB_WinLoss& wl)
 {
+	DBSTracePath logTP("CServer::WDBWinLoss");
 	CLogFuncTime lft(m_DBSFuncTime,"WDBWinLoss");
 	DebugInfo("WDBWinLoss PID=%d Money=%s",wl.m_PID,Tool::N2S(wl.m_Money.get()).c_str());
 	if ( wl.m_PID > 0 )
@@ -3380,6 +3425,7 @@ int CServer::WDBWinLoss(DBServerXY::WDB_WinLoss& wl)
 
 int CServer::OnWDBWinLoss( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBWinLoss");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBWinLoss");
 
 	DBServerXY::WDB_WinLoss wl;
@@ -3403,6 +3449,7 @@ int CServer::OnWDBWinLoss( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnWDBWinLossList( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBWinLossList");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBWinLossList");
 
 	DBServerXY::WDB_WinLossList wll;
@@ -3431,6 +3478,7 @@ int CServer::OnWDBWinLossList( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 
 int CServer::OnWDBMatchResult( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBMatchResult");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBMatchResult");
 
 	DBServerXY::WDB_MatchResult msgMR;
@@ -3553,6 +3601,7 @@ int CServer::OnWDBMatchResult( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 
 int CServer::OnWDBSendMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBSendMoney");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBSendMoney");
 
 	DBServerXY::WDB_SendMoney msgSM;
@@ -3610,6 +3659,7 @@ int CServer::OnWDBSendMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnWDBShowFace( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBShowFace");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBShowFace");
 
 	DBServerXY::WDB_ShowFace msgSF;
@@ -3654,6 +3704,7 @@ int CServer::OnWDBShowFace( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnWDBSendGift( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBSendGift");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBSendGift");
 	DBServerXY::WDB_SendGift msgSG;
 	TransplainMsg(msgPack,msgSG);
@@ -3729,6 +3780,7 @@ int CServer::OnWDBSendGift( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnWDBSoldGift( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBSoldGift");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBSoldGift");
 
 	DBServerXY::WDB_SoldGift msgDBSG;
@@ -3785,6 +3837,7 @@ int CServer::OnWDBSoldGift( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 }
 int CServer::OnWDBChatMsg( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBChatMsg");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBChatMsg");
 
 	DBServerXY::WDB_ChatMsg msgChat;
@@ -3804,6 +3857,7 @@ int CServer::OnWDBChatMsg( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 }
 int CServer::OnWDBIncomeAndPay( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBIncomeAndPay");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBIncomeAndPay");
 
 	DBServerXY::WDB_IncomeAndPay msgIP;
@@ -3859,6 +3913,7 @@ int CServer::OnWDBIncomeAndPay( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack
 
 int CServer::OnWDBCreateTable( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBCreateTable");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBCreateTable");
 
 	DBServerXY::WDB_CreateTable msgCT;
@@ -3902,6 +3957,7 @@ int CServer::OnWDBCreateTable( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 }
 int CServer::OnReqPlayerAward( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnReqPlayerAward");
 	CLogFuncTime lft(m_DBSFuncTime,"OnReqPlayerAward");
 
 	DBServerXY::DBS_ReqPlayerAward msgPA;
@@ -3916,6 +3972,7 @@ int CServer::OnReqPlayerAward( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 }
 int CServer::OnWDBChangeName( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBChangeName");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBChangeName");
 
 	DBServerXY::WDB_ChangeUserInfo msgCN;
@@ -3965,6 +4022,7 @@ int CServer::OnWDBChangeName( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnWDBReportPlayerOnLine( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBReportPlayerOnLine");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBReportPlayerOnLine");
 
 	DBServerXY::WDB_ReportPlayerOnline msgRPOL;
@@ -3989,6 +4047,7 @@ int CServer::OnWDBReportPlayerOnLine( CDBServerSocket* pSocket,CRecvMsgPacket& m
 }
 int CServer::OnWDBChangeBankMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBChangeBankMoney");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBChangeBankMoney");
 
 	DBServerXY::ReqChangeBankMoney msgCBM;
@@ -4052,6 +4111,7 @@ int CServer::OnWDBChangeBankMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgP
 }
 int CServer::OnWDBMaxPai( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBMaxPai");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBMaxPai");
 
 	DBServerXY::WDB_MaxPai msgMP ;
@@ -4081,7 +4141,9 @@ int CServer::OnWDBMaxPai( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::OnWDBMaxWin( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBMaxWin");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBMaxWin");
+
 	DBServerXY::WDB_MaxWin msgMW;
 	TransplainMsg(msgPack,msgMW);
 
@@ -4108,7 +4170,9 @@ int CServer::OnWDBMaxWin( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 }
 int CServer::OnWDBMaxMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBMaxMoney");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBMaxMoney");
+
 	DBServerXY::WDB_MaxMoney msgMM;
 	TransplainMsg(msgPack,msgMM);
 
@@ -4136,7 +4200,9 @@ int CServer::OnWDBMaxMoney( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 
 int CServer::WDBMatchWinLoss(DBServerXY::WDB_MatchWinLoss& msgMWL)
 {
+	DBSTracePath logTP("CServer::WDBMatchWinLoss");
 	CLogFuncTime lft(m_DBSFuncTime,"WDBMatchWinLoss");
+
 	DebugInfo("WDBMatchWinLoss Start GUID=%s ",N2S(msgMWL.m_MatchGUID).c_str());
 
 	RWDB_MatchWinLoss rwdbMWL;
@@ -4190,6 +4256,9 @@ int CServer::WDBMatchWinLoss(DBServerXY::WDB_MatchWinLoss& msgMWL)
 
 int CServer::OnWDBMatchWinLoss( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBMatchWinLoss");
+	CLogFuncTime lft(m_DBSFuncTime, "OnWDBMatchWinLoss");
+
 	DBServerXY::WDB_MatchWinLoss msgMWL;
 	TransplainMsg(msgPack,msgMWL);
 
@@ -4205,6 +4274,7 @@ int CServer::OnWDBMatchWinLoss( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack
 
 int CServer::OnWDBCheckGameInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBCheckGameInfo");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBCheckGameInfo");
 
 	DBServerXY::WDB_ReqCheckGameInfo msgCGI;
@@ -4324,6 +4394,7 @@ int CServer::OnWDBCheckGameInfo( CDBServerSocket* pSocket,CRecvMsgPacket& msgPac
 }
 int CServer::OnWDBPlayerAward( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBPlayerAward");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBPlayerAward");
 
 	DBServerXY::WDB_PlayerAward msgPA;
@@ -4343,6 +4414,7 @@ int CServer::OnWDBPlayerAward( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 }
 int CServer::OnWDBPlayerActionLog( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBPlayerActionLog");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBPlayerActionLog");
 
 	DBServerXY::WDB_PlayerActionLog msgPAL;
@@ -4364,6 +4436,7 @@ int CServer::OnWDBPlayerActionLog( CDBServerSocket* pSocket,CRecvMsgPacket& msgP
 }
 int CServer::OnWDBPlayerClientError( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBPlayerClientError");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBPlayerClientError");
 
 	DBServerXY::WDB_PlayerClientError msgPCE;
@@ -4382,6 +4455,7 @@ int CServer::OnWDBPlayerClientError( CDBServerSocket* pSocket,CRecvMsgPacket& ms
 }
 int CServer::OnWDBFinishHonor( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBFinishHonor");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBFinishHonor");
 
 	DBServerXY::WDB_ReqFinishHonor msgFH;
@@ -4443,6 +4517,7 @@ int CServer::OnWDBFinishHonor( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack 
 }
 int CServer::OnGSToDBSFlag( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnGSToDBSFlag");
 	CLogFuncTime lft(m_DBSFuncTime,"OnGSToDBSFlag");
 	DebugInfo("OnGSToDBSFlag Start");
 
@@ -4499,6 +4574,7 @@ int CServer::OnGSToDBSFlag( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 }
 int CServer::OnXieYiList( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnXieYiList");
 	CLogFuncTime lft(m_DBSFuncTime,"OnXieYiList");
 	DebugInfo("CServer::OnXieYiList Start ServerID=%d,XYID=%d XYLen=%d",pSocket->GetServerID(),msgPack.m_XYID,msgPack.m_nLen );
 
@@ -4562,6 +4638,7 @@ int CServer::OnAddContinuPlay(INT16 AID,UINT32 PID)
 
 int CServer::OnWDBUserFriend( CDBServerSocket* pSocket,CRecvMsgPacket& msgPack )
 {
+	DBSTracePath logTP("CServer::OnWDBUserFriend");
 	CLogFuncTime lft(m_DBSFuncTime,"OnWDBUserFriend");
 
 	DBServerXY::WDB_UserFriend uf;

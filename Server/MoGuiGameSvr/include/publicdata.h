@@ -73,7 +73,6 @@ namespace MoGui
 	};
 
 	typedef std::vector<std::string> VectorString;
-
 	class TraceStackPath
 	{
 	public:
@@ -85,6 +84,22 @@ namespace MoGui
 	public:
 		TraceStackPath(const std::string& strEnter);
 		~TraceStackPath();
+
+	private:
+		std::string m_FuncName;
+	};
+
+	class DBSTracePath
+	{
+	public:
+		static bool s_bUseTrace;
+		static VectorString s_vectorPath;
+
+		static void PrintPath();
+
+	public:
+		DBSTracePath(const std::string& strEnter);
+		~DBSTracePath();
 
 	private:
 		std::string m_FuncName;

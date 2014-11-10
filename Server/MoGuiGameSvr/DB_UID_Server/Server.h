@@ -184,6 +184,7 @@ private:
 
 	void               InitCeShiLog();
 	
+public:
 	inline void        DebugError(const char* logstr,...);
 	inline void        DebugLogOut(const char* logstr,...);
 	inline void        DebugLog(const char* logstr,...);

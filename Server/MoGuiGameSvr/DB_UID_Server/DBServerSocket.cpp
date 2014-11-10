@@ -58,41 +58,55 @@ void CDBServerSocket::OnCheckHeart()
 int CDBServerSocket::OnMsg( const char* buf, int len )
 {
 	int FinishSize = 0;
-	if( m_nRecvPackets == 0 && (FinishSize = CheckFlash(buf,len)) )
-	{
-		return FinishSize;
-	}
 
-	//置为STOP状态的客户端是被顶替的玩家，因为要发送通知玩家的的消息，因此没有立即关掉SOCKET
-	//而是等待消息结束，然后超时关闭SOCKET，当然，玩家可以提前自己关掉，
-	if( m_SocketState == SOCKET_ST_STOP )
-	{
-		m_nRecvPackets++;
-		m_nRecvSize += len;
-
-		return len;
-	}
-
-	int   nLeftLen = len;
-	int   CurFinish = 0;
-	char* pRecvBuf = const_cast<char*>(buf);
-
-	CRecvMsgPacket recv_packet;
-	while( nLeftLen >= MIN_XY_LEN && (CurFinish = recv_packet.GetDataFromBuf(pRecvBuf+FinishSize,nLeftLen)) > 0 )
-	{
-		FinishSize += CurFinish;
-		nLeftLen -= CurFinish;
-		assert(nLeftLen>=0);
-		assert(FinishSize<=len);
-
-		if ( m_bCrypt )
+	try{
+		if (m_nRecvPackets == 0 && (FinishSize = CheckFlash(buf, len)))
 		{
-			m_Crypt.decrypt((BYTE*)recv_packet.m_DataBuf,(BYTE*)recv_packet.m_DataBuf,recv_packet.m_nLen);			
+			return FinishSize;
 		}
-		TransMsg(recv_packet);
-	}
 
-	if ( FinishSize ){ m_nActiveTime = m_pServer->GetCurTime(); }
+		//置为STOP状态的客户端是被顶替的玩家，因为要发送通知玩家的的消息，因此没有立即关掉SOCKET
+		//而是等待消息结束，然后超时关闭SOCKET，当然，玩家可以提前自己关掉，
+		if (m_SocketState == SOCKET_ST_STOP){
+			m_nRecvPackets++;
+			m_nRecvSize += len;
+
+			return len;
+		}
+
+		int   nLeftLen = len;
+		int   CurFinish = 0;
+		char* pRecvBuf = const_cast<char*>(buf);
+
+		CRecvMsgPacket recv_packet;
+		while (nLeftLen >= MIN_XY_LEN && (CurFinish = recv_packet.GetDataFromBuf(pRecvBuf + FinishSize, nLeftLen)) > 0)
+		{
+			FinishSize += CurFinish;
+			nLeftLen -= CurFinish;
+			assert(nLeftLen >= 0);
+			assert(FinishSize <= len);
+
+			if (m_bCrypt)
+			{
+				m_Crypt.decrypt((BYTE*)recv_packet.m_DataBuf, (BYTE*)recv_packet.m_DataBuf, recv_packet.m_nLen);
+			}
+			TransMsg(recv_packet);
+		}
+
+		if (FinishSize){ m_nActiveTime = m_pServer->GetCurTime(); }
+	}
+	catch (...){
+		m_pServer->DebugError("Stack Start CDBServerSocket::OnMsg ......");
+
+		VectorString& rVS = DBSTracePath::s_vectorPath;
+		while (rVS.size()){
+			for (size_t nSize = 0; nSize<rVS.size(); ++nSize){
+				m_pServer->DebugInfo("%s", rVS[nSize].c_str());
+			}
+			rVS.clear();
+		}
+		m_pServer->DebugError("Stack End CDBServerSocket::OnMsg ......");
+	}
 
 	return FinishSize;
 }
