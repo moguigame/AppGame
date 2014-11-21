@@ -1923,7 +1923,7 @@ void CDeZhouGameLogic::SetBotPlayerBlind()
 				if ( bWin && bNeedWin )
 				{
 					m_GP[Sit].m_MinBlind = CRandom::Random_Int(5,10)*nPaiValueType;
-					if ( CRandom::GetChangce(PAI_TYPE_KING,min(nPaiValueType*2,PAI_TYPE_KING)) )
+					if ( CRandom::GetChangce(PAI_TYPE_KING,min(nPaiValueType*3,PAI_TYPE_KING)) )
 					{
 						m_GP[Sit].m_MinBlind = CRandom::Random_Int(10,40)*nPaiValueType;
 					}					
@@ -1948,50 +1948,65 @@ void CDeZhouGameLogic::SetBotPlayerBlind()
 			}			
 			else if ( HandPaiType == HandPai_Level_3 )
 			{
-				if ( CRandom::GetChangce(2,1) && nPaiValueType < 5 )
+				if (bWin && bNeedWin)
 				{
-					m_GP[Sit].m_MaxBlind = 0;
-					m_GP[Sit].m_MinBlind = 0;
-				}
-				else
-				{
-					if ( bWin && bNeedWin )
+					if (CRandom::GetChangce(PAI_TYPE_KING, min(nPaiValueType, PAI_TYPE_KING)))
 					{
-						if ( CRandom::GetChangce(PAI_TYPE_KING,min(nPaiValueType,PAI_TYPE_KING)) )
-						{
-							m_GP[Sit].m_MinBlind = CRandom::Random_Int(nPaiValueType,10);
-							m_GP[Sit].m_MaxBlind = MAX_Blind;
-						}
-						else
-						{
-							m_GP[Sit].m_MinBlind = CRandom::Random_Int(1,nPaiValueType);
-							m_GP[Sit].m_MaxBlind = 100*nPaiValueType;
-						}
+						m_GP[Sit].m_MinBlind = CRandom::Random_Int(nPaiValueType, 10);
+						m_GP[Sit].m_MaxBlind = MAX_Blind;
 					}
 					else
 					{
-						m_GP[Sit].m_MinBlind = nPaiValueType/3;
-						m_GP[Sit].m_MaxBlind = CRandom::Random_Int(5,10)*nPaiValueType;
-
-						if ( CRandom::GetChangce(PAI_TYPE_KING*2,nPaiValueType) )
-						{
-							m_GP[Sit].m_MaxBlind *= CRandom::Random_Int(nPaiValueType,10);
-						}
+						m_GP[Sit].m_MinBlind = CRandom::Random_Int(1, nPaiValueType);
+						m_GP[Sit].m_MaxBlind = 100 * nPaiValueType;
 					}
+				}
+				else
+				{
+					if (CRandom::GetChangce(2, 1) && nPaiValueType < 5)
+					{
+						m_GP[Sit].m_MaxBlind = 0;
+						m_GP[Sit].m_MinBlind = 0;
+					}
+					else
+					{
+						m_GP[Sit].m_MinBlind = CRandom::Random_Int(nPaiValueType/3, nPaiValueType);
+						m_GP[Sit].m_MaxBlind = CRandom::Random_Int(5, 10)*nPaiValueType;
+						if (CRandom::GetChangce(PAI_TYPE_KING * 2, nPaiValueType))
+						{
+							m_GP[Sit].m_MaxBlind *= CRandom::Random_Int(nPaiValueType, 10);
+						}
+					}		
 				}
 			}
 			else  //Ö±½ÓÆúÅÆ
 			{
-				if ( nPaiValueType >= 5 )
+				if (bWin && bNeedWin)
 				{
-					m_GP[Sit].m_MinBlind = 1;
-					m_GP[Sit].m_MaxBlind = 30*(nPaiValueType-4);
+					if (CRandom::GetChangce(PAI_TYPE_KING, min(nPaiValueType, PAI_TYPE_KING)))
+					{
+						m_GP[Sit].m_MinBlind = CRandom::Random_Int(nPaiValueType, std::min<int>(10, nPaiValueType*2));
+						m_GP[Sit].m_MaxBlind = MAX_Blind;
+					}
+					else
+					{
+						m_GP[Sit].m_MinBlind = CRandom::Random_Int(1, nPaiValueType);
+						m_GP[Sit].m_MaxBlind = 50 * nPaiValueType;
+					}
 				}
 				else
 				{
-					m_GP[Sit].m_MinBlind = 0;
-					m_GP[Sit].m_MaxBlind = 0;
-				}
+					if (nPaiValueType >= 5)
+					{
+						m_GP[Sit].m_MinBlind = 1;
+						m_GP[Sit].m_MaxBlind = 30 * (nPaiValueType - 4);
+					}
+					else
+					{
+						m_GP[Sit].m_MinBlind = 0;
+						m_GP[Sit].m_MaxBlind = 0;
+					}
+				}				
 			}
 		}
 	}
