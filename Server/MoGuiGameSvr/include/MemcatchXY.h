@@ -33,10 +33,10 @@ namespace DeZhou
 		INT16     m_PassTime;            //当前步过去的时间
 
 		UINT32    m_FirstTimeToday;
-		UINT16    m_TodayGameSecond;
-		UINT16    m_TodayGameCount;
-		INT8      m_HaveAwardInvite;
-		INT8      m_JiuMingTimes;
+		int       m_TodayGameSecond;
+		int       m_TodayGameCount;
+		int       m_HaveAwardInvite;
+		int       m_JiuMingTimes;
 
 		memGSUserData(){ Reset();}
 		void Reset(){ memset(this, 0, sizeof(*this)); }

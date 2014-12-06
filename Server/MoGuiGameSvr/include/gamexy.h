@@ -72,8 +72,6 @@ namespace DeZhou
 
 	const short  GameXYID_SendGift                      = GameXYID_Start+131;
 	const short  GameXYID_RespSendGift                  = GameXYID_Start+132;
-	//const short  GameXYID_ReqChangGift                  = GameXYID_Start+133;
-	//const short  GameXYID_RespChangGift                 = GameXYID_Start+134;
 	
 	const short  GameXYID_ReqAddTableTime               = GameXYID_Start+136;
 	const short  GameXYID_RespAddTableTime              = GameXYID_Start+137;
@@ -1996,83 +1994,6 @@ namespace DeZhou
 			return bis;
 		}
 	};
-
-	//struct GameDeZhou_ReqChangGift
-	//{
-	//	enum { XY_ID = GameXYID_ReqChangGift };
-
-	//	unsigned int        m_PID;
-	//	int                 m_GiftIdx;
-	//
-	//	GameDeZhou_ReqChangGift() { ReSet(); }
-	//	void ReSet(){ memset(this,0,sizeof(*this));}
-
-	//	friend bostream& operator<<( bostream& bos, const GameDeZhou_ReqChangGift& src )
-	//	{
-	//		bos << src.m_PID;
-	//		bos << src.m_GiftIdx;		
-
-	//		return bos;
-	//	}
-
-	//	friend bistream& operator>>( bistream& bis, GameDeZhou_ReqChangGift& src )
-	//	{
-	//		src.ReSet();
-
-	//		bis >> src.m_PID;
-	//		bis >> src.m_GiftIdx;		
-
-	//		return bis;
-	//	}
-	//};
-
-	//struct GameDeZhou_RespChangGift
-	//{
-	//	enum { XY_ID = GameXYID_RespChangGift };
-	//	enum 
-	//	{
-	//		SUCCESS,
-	//		NOGIFT,            //你选择的礼物不存在
-	//		NOGIFTID,          //你选择礼物的种类不存在
-	//		OUTTIME,           //当前礼物超时,应该放入费品栏
-	//		CHEAP,             //你所选择的礼物级别不够
-	//		NOCHANGE,          //当前不能换礼物
-	//		UNSUCCESS          //失败
-	//	};
-
-	//	unsigned char       m_Flag;
-	//	unsigned int        m_PID;
-	//	int                 m_GiftID;
-
-	//	GameDeZhou_RespChangGift() { ReSet(); }
-	//	void ReSet(){ memset(this,0,sizeof(*this));}
-
-	//	friend bostream& operator<<( bostream& bos, const GameDeZhou_RespChangGift& src )
-	//	{
-	//		bos << src.m_Flag;
-	//		if ( src.m_Flag == SUCCESS )
-	//		{
-	//			bos << src.m_PID;
-	//			bos << src.m_GiftID;
-	//		}
-
-	//		return bos;
-	//	}
-
-	//	friend bistream& operator>>( bistream& bis, GameDeZhou_RespChangGift& src )
-	//	{
-	//		src.ReSet();
-
-	//		bis >> src.m_Flag;
-	//		if ( src.m_Flag == SUCCESS )
-	//		{
-	//			bis >> src.m_PID;
-	//			bis >> src.m_GiftID;
-	//		}
-	//		
-	//		return bis;
-	//	}
-	//};
 
 	struct GameDeZhou_ReqAddTableTime
 	{

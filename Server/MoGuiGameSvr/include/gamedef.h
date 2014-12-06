@@ -219,7 +219,9 @@ namespace MoGui
 				ACTION_POT = 64,                            //底注
 				ACTION_SMALLBLIND = 128,                    //小盲注
 				ACTION_BIGBLIND = 256,                      //大盲注
-				ACTION_WaitChip = 512,                      //等待下注
+				ACTION_NewBlind = 512,                      //新手盲注
+
+				ACTION_WaitChip = 8912,                     //等待下注
 			};
 
 			enum eTallyFlag

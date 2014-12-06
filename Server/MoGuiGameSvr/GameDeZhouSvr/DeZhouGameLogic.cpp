@@ -217,8 +217,7 @@ int CDeZhouGameLogic::InitGameRule()
 	{
 		m_BotLossEveryTime = INT32(itorKey->second);
 	}
-	if ( !(m_BotLossEveryTime>=-100 && m_BotLossEveryTime<=100) )
-	{
+	if ( !(m_BotLossEveryTime>=-100 && m_BotLossEveryTime<=100) )	{
 		m_pTable->DebugError("BotLoss=%d",m_BotLossEveryTime);
 	}
 
@@ -228,6 +227,7 @@ int CDeZhouGameLogic::InitGameRule()
 	{
 		m_WaitChipTime = INT32(itorKey->second);
 	}
+	assert(m_WaitChipTime >= 10 && m_WaitChipTime <= 20);
 	if ( !(m_WaitChipTime>=10 && m_WaitChipTime<=20) )
 	{
 		m_pTable->DebugError("waitchiptime=%d",m_WaitChipTime);
@@ -243,6 +243,7 @@ int CDeZhouGameLogic::InitGameRule()
 	{
 		m_MaxBotChipTime = m_WaitChipTime/2;
 	}
+	assert(m_MaxBotChipTime>1 && m_MaxBotChipTime<m_WaitChipTime);
 	if ( !(m_MaxBotChipTime>1 && m_MaxBotChipTime<m_WaitChipTime) )
 	{
 		m_pTable->DebugError("m_MaxBotChipTime=%d m_WaitChipTime=%d Frist=%s Second=%d",
@@ -255,6 +256,7 @@ int CDeZhouGameLogic::InitGameRule()
 	{
 		m_WaitStartTime = INT32(itorKey->second);
 	}
+	assert(m_WaitStartTime >= 2 && m_WaitStartTime <= 5);
 	if ( !(m_WaitStartTime>=2 && m_WaitStartTime<=5) )
 	{
 		m_pTable->DebugError("waitstarttime=%d",m_WaitStartTime);
@@ -354,16 +356,19 @@ int CDeZhouGameLogic::InitGameRule()
 
 		m_TableType = TABLE_TYPE_COMMON;
 		itorKey = mapRule.find("tabletype");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end())
 		{
 			m_TableType = INT32(itorKey->second);
 		}
+		assert(m_TableType >= TABLE_TYPE_COMMON && m_TableType<TABLE_TYPE_END);
 		if ( !(m_TableType>=TABLE_TYPE_COMMON && m_TableType<TABLE_TYPE_END) )
 		{
 			m_pTable->DebugError("tabletype=%d",m_TableType);
 		}
 
 		itorKey = mapRule.find("smallblind");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end())
 		{
 			m_nSmallBlind = INT32(itorKey->second);
@@ -374,6 +379,7 @@ int CDeZhouGameLogic::InitGameRule()
 		}
 
 		itorKey = mapRule.find("bigblind");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end())
 		{
 			m_nBigBlind = INT32(itorKey->second);
@@ -388,6 +394,7 @@ int CDeZhouGameLogic::InitGameRule()
 		}
 
 		itorKey = mapRule.find("servicepay");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_nServiceMoney = INT32(itorKey->second);
@@ -403,6 +410,7 @@ int CDeZhouGameLogic::InitGameRule()
 		}
 
 		itorKey = mapRule.find("mintake");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() && m_nBigBlind > 0 )
 		{
 			m_nMinTakeIn = (itorKey->second)*m_nBigBlind;
@@ -413,6 +421,7 @@ int CDeZhouGameLogic::InitGameRule()
 		}
 
 		itorKey = mapRule.find("maxtake");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() && m_nBigBlind > 0 )
 		{
 			m_nMaxTakeIn = (itorKey->second)*m_nBigBlind;
@@ -429,6 +438,7 @@ int CDeZhouGameLogic::InitGameRule()
 
 		m_nPotMoney = 0;
 		itorKey = mapRule.find("pot");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_nPotMoney = INT32(itorKey->second);
@@ -440,6 +450,7 @@ int CDeZhouGameLogic::InitGameRule()
 
 		m_nMinLeftForGame = 1;
 		itorKey = mapRule.find("minforgame");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_nMinLeftForGame = INT32(itorKey->second)*m_nBigBlind;
@@ -448,6 +459,7 @@ int CDeZhouGameLogic::InitGameRule()
 
 		m_MaxSitPlayerNumber = MAX_PALYER_ON_TABLE;
 		itorKey = mapRule.find("maxsit");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_MaxSitPlayerNumber = INT32(itorKey->second);
@@ -459,6 +471,7 @@ int CDeZhouGameLogic::InitGameRule()
 
 		m_MinPlayerForGame = MIN_PLAYER_FOR_GAME;
 		itorKey = mapRule.find("minplayer");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_MinPlayerForGame = INT32(itorKey->second);
@@ -469,6 +482,7 @@ int CDeZhouGameLogic::InitGameRule()
 		}
 
 		itorKey = mapRule.find("chiptime");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_WaitChipTime = INT32(itorKey->second);
@@ -479,6 +493,7 @@ int CDeZhouGameLogic::InitGameRule()
 		}
 
 		itorKey = mapRule.find("waittime");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_WaitStartTime = INT32(itorKey->second);
@@ -490,6 +505,7 @@ int CDeZhouGameLogic::InitGameRule()
 
 		m_Limite = TABLE_LIMITE_NO;
 		itorKey = mapRule.find("limite");
+		assert(itorKey != mapRule.end());
 		if ( itorKey != mapRule.end() )
 		{
 			m_Limite = BYTE(itorKey->second);
@@ -1063,8 +1079,7 @@ BYTE CDeZhouGameLogic::GetNextPlayingPlayerSitID( BYTE CurSitID)
 			}
 		}
 	}
-
-	//m_pTable->DebugError("CGameTable::GetNextPlayingPlayerSitID CurSitID=%d",TempSitID);
+	assert(0);
 
 	return 0;
 }
@@ -1520,24 +1535,17 @@ void CDeZhouGameLogic::OnHand()
 	m_pGameLog->AddStepString("m_nServiceMoney=" + N2S(m_nServiceMoney)+" m_MaxSitPlayerNumber=" + N2S(m_MaxSitPlayerNumber) 
 		+ " m_BigBlind=" + N2S(m_nBigBlind) );
 
-	if ( m_BankerSitID == 0 )
-	{
+	if ( m_BankerSitID == 0 ){
 		m_BankerSitID = CRandom::Random_Int(1,m_MaxSitPlayerNumber);
 	}
 	m_BankerSitID = GetNextPlayingPlayerSitID(m_BankerSitID);
 	m_SmallBlindSitID = GetNextPlayingPlayerSitID(m_BankerSitID);
 	m_BigBlindSitID = GetNextPlayingPlayerSitID(m_SmallBlindSitID);
 
-	assert( m_BankerSitID && m_SmallBlindSitID && m_BigBlindSitID && "OnHand" );
+	assert( m_BankerSitID>0 && m_SmallBlindSitID>0 && m_BigBlindSitID>0 && "OnHand" );
 
 	m_pGameLog->AddStepString("m_BankerSitID=" + N2S(m_BankerSitID)+" m_SmallBlindSitID=" + N2S(m_SmallBlindSitID)
 		+ " m_BigBlindSitID=" + N2S(m_BigBlindSitID) );
-
-	assert(m_BankerSitID&&m_SmallBlindSitID&&m_BigBlindSitID);
-	if ( !(m_BankerSitID&&m_SmallBlindSitID&&m_BigBlindSitID) )
-	{
-		m_pTable->DebugError("CGameTable::TableStartGame()");
-	}
 
 	GameDeZhou_Start st;
 	SendLogicMsgToAllPlayer(st);
@@ -1581,7 +1589,7 @@ void CDeZhouGameLogic::OnHand()
 				{
 					if ( pTempPlayer )
 					{
-						pTempPlayer->AddGameMoney(-nJuBaoChip);						
+						pTempPlayer->AddGameMoney(-nJuBaoChip);
 						pTempPlayer->AddMoneyLog(-nJuBaoChip,"JoinJuBaoPeng");
 					}
 					m_GP[Sit].m_JuBaoCount--;
@@ -1807,15 +1815,12 @@ void CDeZhouGameLogic::OnHand()
 		SetBotPlayerBlind();
 		ChangeBotBlind();
 	}
-
-	//m_pTable->CeShiInfo("OnHand() End");
 }
 
 void CDeZhouGameLogic::ChangeBotBlind()
 {
 	TraceStackPath logTP("CDeZhouGameLogic::ChangeBotBlind");
 	CLogFuncTime lft(s_LogicFuncTime,"ChangeBotBlind");
-	//m_pTable->CeShiInfo("ChangeBotBlind Start...");
 
 	if ( IsMatchTable() && CRandom::GetChangce(2,1) )
 	{
@@ -1963,7 +1968,7 @@ void CDeZhouGameLogic::SetBotPlayerBlind()
 				}
 				else
 				{
-					if (CRandom::GetChangce(2, 1) && nPaiValueType < 5)
+					if ( CRandom::GetChangce(nPaiValueType, 1) )
 					{
 						m_GP[Sit].m_MaxBlind = 0;
 						m_GP[Sit].m_MinBlind = 0;
@@ -1996,15 +2001,15 @@ void CDeZhouGameLogic::SetBotPlayerBlind()
 				}
 				else
 				{
-					if (nPaiValueType >= 5)
-					{
-						m_GP[Sit].m_MinBlind = 1;
-						m_GP[Sit].m_MaxBlind = 30 * (nPaiValueType - 4);
-					}
-					else
+					if (CRandom::GetChangce(nPaiValueType, 1))
 					{
 						m_GP[Sit].m_MinBlind = 0;
 						m_GP[Sit].m_MaxBlind = 0;
+					}
+					else
+					{
+						m_GP[Sit].m_MinBlind = 1;
+						m_GP[Sit].m_MaxBlind = 30 * (nPaiValueType - 4);
 					}
 				}				
 			}
@@ -2088,11 +2093,6 @@ int CDeZhouGameLogic::OnGameMsg(PlayerPtr pPlayer,CRecvMsgPacket& msgPack)
 			ret = OnReqPromoteTime(pPlayer,CTSMsg);
 		}
 		break;
-	//case GameDeZhou_ReqChangGift::XY_ID:
-	//	{
-	//		ret = OnReqChangeGift(pPlayer,CTSMsg);
-	//	}
-	//	break;
 	case GameDeZhou_ReqAddTableTime::XY_ID:
 		{
 			ret = OnReqAddTableTime(pPlayer,CTSMsg);
@@ -2855,44 +2855,7 @@ int CDeZhouGameLogic::OnLogicReqTailInfo(PlayerPtr pPlayer,GameXY::ClientToServe
 
 	return 0;
 }
-//int CDeZhouGameLogic::OnReqChangeGift(PlayerPtr pPlayer,GameXY::ClientToServerMessage& CTSMsg)
-//{
-//	TraceStackPath logTP("CDeZhouGameLogic::OnReqChangeGift");
-//	CLogFuncTime lft(s_LogicFuncTime,"OnReqChangeGift");
-//
-//	GameDeZhou_ReqChangGift msgCG;
-//	TransplainMsgCTS(CTSMsg,msgCG);
-//
-//	GameDeZhou_RespChangGift msgRespCG;
-//	msgRespCG.m_PID = msgCG.m_PID;
-//	msgRespCG.m_Flag = msgRespCG.UNSUCCESS;
-//
-//	if ( pPlayer && pPlayer->GetPID()==msgCG.m_PID ){
-//		DBServerXY::DBS_msgUserGiftInfo msgUGI;
-//		if ( pPlayer->GetCurUserGift(msgUGI,msgCG.m_GiftIdx) ){
-//			pPlayer->m_CurGiftIdx = msgUGI.m_GiftIdx;
-//			pPlayer->m_GiftID = msgUGI.m_GiftID;
-//
-//			msgRespCG.m_Flag = msgRespCG.SUCCESS;
-//			msgRespCG.m_GiftID = msgUGI.m_GiftID;
-//		}
-//		else{
-//			if ( msgCG.m_GiftIdx == 0 ){
-//				pPlayer->m_CurGiftIdx = 0;
-//				pPlayer->m_GiftID = 0;
-//
-//				msgRespCG.m_Flag = msgRespCG.SUCCESS;
-//				msgRespCG.m_GiftID = 0;	
-//			}
-//		}
-//	}
-//
-//	if ( msgRespCG.m_Flag == msgRespCG.SUCCESS ){
-//		SendLogicMsgToAllPlayer(msgRespCG);
-//	}
-//
-//	return 0;
-//}
+
 void CDeZhouGameLogic::DoJuBaoPengMsg()
 {
 	if ( m_listLogicMsg.size() )

@@ -315,20 +315,20 @@ public:
 
 	//记录玩家行为的数据
 	UINT32                        m_PlayerCreateTime;                        //记录游戏服务器创建玩家的时间
-	UINT32                        m_PlayerSitTime;                           //玩家坐在位置上的时间
+	int                           m_PlayerSitTime;                           //玩家坐在位置上的时间
 
 	int                           m_OneLifeGameTime;
 	int                           m_OneLifeMatchTime;
-	INT16                         m_EnterRoomTimes;
-	INT16                         m_EnterTableTimes;
-	INT16                         m_SitDownTimes;
-	INT16                         m_OneLiftPlayTimes;
+	int                           m_EnterRoomTimes;
+	int                           m_EnterTableTimes;
+	int                           m_SitDownTimes;
+	int                           m_OneLiftPlayTimes;
 
-	UINT16                        m_TodayGameSecond;                         //当天游戏时间按秒算长度
-	short                         m_TodayGameCount;                          //当天游戏时间按局数算
-	UINT8                         m_HaveAwardInvite;                         //是否已经奖励过
+	int                           m_TodayGameSecond;                         //当天游戏时间按秒算长度
+	int                           m_TodayGameCount;                          //当天游戏时间按局数算
+	int                           m_HaveAwardInvite;                         //是否已经奖励过
 	
-	INT8                          m_JiuMingTimes;                            //当日赠送低保的次数
+	int                           m_JiuMingTimes;                            //当日赠送低保的次数
 
 	//和任务奖章有关的信息
 	int                           m_SendGiftTimes;
