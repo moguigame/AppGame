@@ -68,7 +68,7 @@ namespace MoGui
 		CMapFunctionTime& m_rMFT;
 		std::string       m_FuncName;
 
-		explicit CLogFuncTime(CMapFunctionTime& rMFT,const std::string& FuncName);	
+		CLogFuncTime(CMapFunctionTime& rMFT,const std::string& FuncName);	
 		~CLogFuncTime();
 	};
 

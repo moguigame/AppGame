@@ -140,29 +140,39 @@ namespace AGBase
 
 	void CDispatcher::CheckTimer( void )
 	{
+		static int s_startTime = time(0);
 		int nowms = int(time(NULL));
 		if ( nowms - m_lasttime >= 1 )
 		{
 			m_cpool->OnTimer( );
 			m_lasttime = nowms;
 
-			if ( nowms % 300 == 0 )
-			{
-				long long InPacket = 0;
-				long long OutPacket = 0;
+			if ( nowms % 30 == 0 ){
+				long long InPacket    = 0;
+				long long OutPacket   = 0;
+				int       nPacketSize = 0;
 				{
 					CSelfLock l( m_packetlock );
-					InPacket = m_packets.GetInPakcet();
-					OutPacket = m_packets.GetOutPacket();
+					InPacket    = m_packets.GetInPakcet();
+					OutPacket   = m_packets.GetOutPacket();
+					nPacketSize = m_packets.Size();
 				}
 
-				//fprintf(stderr, "\nPacket In=%lld Out=%lld Diff=%lld \n",InPacket,OutPacket,InPacket-OutPacket);
-				//fprintf(stderr, "Packet FinishPacket=%lld AverageTime=%lld Speed=%lld MaxUseTime=%d \n",
-				//	m_TotalFinishPacket,m_TotalWaitTime/max(1,m_TotalFinishPacket),m_TotalFinishPacket/max(1,nowms-m_StartTime),m_MaxWaitTime );
+				fprintf(stderr, "\nPacket In=%I64d Out=%I64d Diff=%I64d Size=%d \n",InPacket,OutPacket,InPacket-OutPacket,nPacketSize );
+				//Mogui_Log(" ");
+				//Mogui_Log("Packet In=%I64d Out=%I64d Diff=%I64d Size=%d ",InPacket,OutPacket,InPacket-OutPacket,nPacketSize);
 
-				//fprintf(stderr,"CPacket=%d Use=%d New=%lld Delete=%lld Diff=%lld \n\n",
-				//	CPacket::GetTotalCount(),CPacket::GetUseCount(),CPacket::GetNewTimes(),CPacket::GetDeleteTimes(),
-				//	CPacket::GetNewTimes()-CPacket::GetDeleteTimes() );
+				fprintf(stderr, "Packet FinishPacket=%I64d AverageTime=%I64d Speed=%I64d \n",
+					m_TotalFinishPacket,m_TotalWaitTime/max(1,m_TotalFinishPacket),m_TotalFinishPacket/std::max<int>(1,nowms-s_startTime) );
+				//Mogui_Log("Packet FinishPacket=%I64d AverageTime=%I64d Speed=%I64d",
+				//	m_TotalFinishPacket,m_TotalWaitTime/max(1,m_TotalFinishPacket),m_TotalFinishPacket/std::max<int>(1,nowms-s_startTime) );
+
+				fprintf(stderr,"CPacket=%d Use=%d New=%I64d Delete=%I64d Diff=%I64d \n\n",
+					CPacket::GetTotalCount(),CPacket::GetUseCount(),CPacket::GetNewTimes(),CPacket::GetDeleteTimes(),
+					CPacket::GetNewTimes()-CPacket::GetDeleteTimes() );
+				//Mogui_Log("CPacket=%d Use=%d New=%I64d Delete=%I64d Diff=%I64d ",
+				//	CPacket::GetTotalCount(),CPacket::GetUseCount(),CPacket::GetNewTimes(),CPacket::GetDeleteTimes(),CPacket::GetNewTimes()-CPacket::GetDeleteTimes());
+				//Mogui_Log(" ");
 			}
 		}
 	}
@@ -183,7 +193,7 @@ namespace AGBase
 			}
 		case CPacket::PT_ACCEPT:
 			{
-				fprintf(stderr, "%s Info: CPacket::PT_ACCEPT, %p\n", GetTimeString().c_str(),packet->m_socket);
+				//fprintf(stderr, "%s Info: CPacket::PT_ACCEPT, %p\n", GetTimeString().c_str(),packet->m_socket);
 				m_cpool->OnAccept(  packet->m_socket );
 				break;
 			}
@@ -198,7 +208,7 @@ namespace AGBase
 
 				m_cpool->OnClose(packet->m_socket, true, bnocallback);
 
-				fprintf(stderr, "%s Info: CDispatcher::OnPacket delete socket active %p\n", GetTimeString().c_str(),packet->m_socket);
+				//fprintf(stderr, "%s Info: CDispatcher::OnPacket delete socket active %p\n", GetTimeString().c_str(),packet->m_socket);
 
 				break;
 			}
@@ -208,7 +218,7 @@ namespace AGBase
 
 				m_cpool->OnClose(packet->m_socket, false, bnocallback);
 
-				fprintf(stderr, "%s Info: CDispatcher::OnPacket delete socket passtive %p\n", GetTimeString().c_str(),packet->m_socket);
+				//fprintf(stderr, "%s Info: CDispatcher::OnPacket delete socket passtive %p\n", GetTimeString().c_str(),packet->m_socket);
 
 				break;
 			}
